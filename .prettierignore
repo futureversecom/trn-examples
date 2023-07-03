@@ -1,0 +1,6 @@
+.next
+.yarn/*
+.data
+build
+coverage
+pnpm-*.yaml
