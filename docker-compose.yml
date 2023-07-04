@@ -1,0 +1,18 @@
+version: "3"
+services:
+  node:
+    image: ghcr.io/futureversecom/seed:latest
+    volumes:
+      - ./.docker/node:/node-data
+    command:
+      - --dev
+      - --alice
+      - --base-path=/node-data
+      - --unsafe-rpc-external
+      - --unsafe-ws-external
+      - --node-key=6c2276fece04635327774eea8584a958e69652f45572e1e4cd2211bfb7221943
+      - --rpc-cors=all
+    ports:
+      - "9933:9933"
+      - "9944:9944"
+      - "30333:30333"

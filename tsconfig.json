@@ -8,6 +8,11 @@
     "baseUrl": ".",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "paths": {}
+    "paths": {
+      "@trne/utils/*": ["./packages/utils/src/*"]
+    }
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }
