@@ -42,6 +42,8 @@ importers:
 
   examples/substrate/use-futurepass: {}
 
+  examples/substrate/use-nft: {}
+
   packages/utils:
     dependencies:
       '@polkadot/api':
