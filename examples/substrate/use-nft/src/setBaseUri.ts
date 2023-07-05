@@ -1,3 +1,4 @@
+import assert from "assert";
 import { collectArgs } from "@trne/utils/collectArgs";
 import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
@@ -13,8 +14,7 @@ const env = cleanEnv(process.env, {
 });
 
 export async function main() {
-  if (!("collectionId" in argv))
-    return console.log("Collection ID is required");
+  assert("collectionId" in argv, "Collection ID is required");
 
   const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
