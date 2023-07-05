@@ -3,8 +3,7 @@ import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { cleanEnv, str } from "envalid";
-import { Wallet, getDefaultProvider } from "ethers";
-import * as ethers from "ethers/lib/utils";
+import { Wallet, getDefaultProvider, utils as ethers } from "ethers";
 
 const env = cleanEnv(process.env, {
   CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
