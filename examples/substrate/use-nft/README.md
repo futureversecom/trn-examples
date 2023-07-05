@@ -1,5 +1,11 @@
 # Use NFT
 
+First run
+
+```
+export CALLER_PRIVATE_KEY=0x000...
+```
+
 ### Create Collection
 
 Using the `nft.createCollection(name, initialIssuance, maxIssuance, tokenOwner, metadataScheme, royaltiesSchedule, crossChainCompatibility)` extrinsic
@@ -23,10 +29,10 @@ api.tx.nft.createCollection(
 );
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+Run the command below to execute the example script
 
 ```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/createCollection.ts
+pnpm call src/createCollection.ts
 ```
 
 ### Mint NFT
@@ -45,10 +51,10 @@ api.tx.nft.mint(
 );
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY` and passed in a Collection ID
+Run the command below to execute the example script passing in a Collection ID
 
 ```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/mintNft.ts --collectionId=<Collection ID>
+pnpm call src/mintNft.ts --collectionId=<Collection ID>
 ```
 
 ### Transfer NFT
@@ -67,8 +73,29 @@ api.tx.nft.mint(
 );
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY` and passed in a Collection ID
+Run the command below to execute the example script passing in a Collection ID
 
 ```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/transferNft.ts --collectionId=<Collection ID>
+pnpm call src/transferNft.ts --collectionId=<Collection ID>
+```
+
+## Set NFT BaseURI
+
+Using the `nft.setBaseUri(collectionId, baseUri)` extrinsic
+
+- `collectionId` - The ID of the collection
+- `baseUri` - Hex of the new BaseURI
+- `newOwner` - The new token owner
+
+```
+api.tx.nft.setBaseUri(
+    97380,
+    "0x8324...",
+);
+```
+
+Run the command below to execute the example script passing in a Collection ID
+
+```
+pnpm call src/setBaseUri.ts --collectionId=<Collection ID>
 ```
