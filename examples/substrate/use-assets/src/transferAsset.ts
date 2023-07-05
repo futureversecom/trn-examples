@@ -3,7 +3,7 @@ import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { cleanEnv, str } from "envalid";
-import { formatUnits } from "ethers";
+import { utils as ethers } from "ethers";
 
 const env = cleanEnv(process.env, {
   CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -22,9 +22,9 @@ export async function main() {
 
   const target = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
   const extrinsic = api.tx.assets.transfer(
-    ASTO.id, // 			               Asset ID to transfer
-    target, // 				            Recipient address
-    formatUnits(100, ASTO.decimals) // Amount to transfer
+    ASTO.id, // 			                      Asset ID to transfer
+    target, // 				                   Recipient address
+    ethers.formatUnits(100, ASTO.decimals) // Amount to transfer
   );
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
