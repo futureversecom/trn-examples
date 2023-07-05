@@ -20,7 +20,6 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.4"
   },
-  "packageManager": "yarn@3.6.1",
   "dependencies": {
     "envalid": "^7.3.1"
   }
