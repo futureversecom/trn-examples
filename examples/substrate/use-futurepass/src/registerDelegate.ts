@@ -25,7 +25,7 @@ export async function main() {
     getDefaultProvider("https://porcini.rootnet.app/")
   );
 
-  const deadline = 10000;
+  const deadline = 75; // recommended low number, 75 blocks = 5 minutes
   const proxyType = ProxyType.Any;
   const delegate = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
   const futurepass = (
