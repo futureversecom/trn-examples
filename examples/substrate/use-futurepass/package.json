@@ -1,5 +1,5 @@
 {
-	"scripts": {
-		"call": "ts-node --project ../../../tsconfig.json"
-	}
+  "scripts": {
+    "call": "ts-node --project ../../../tsconfig.json"
+  }
 }
