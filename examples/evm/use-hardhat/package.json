@@ -1,0 +1,27 @@
+{
+  "scripts": {
+    "deploy:porcini": "hardhat deploy --network porcini",
+    "verify:porcini": "hardhat sourcify --network porcini",
+    "clean": "hardhat clean",
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@ethersproject/hash": "^5.7.0",
+    "@ethersproject/web": "^5.7.1",
+    "@nomicfoundation/ethereumjs-trie": "^6.0.1",
+    "@nomicfoundation/ethereumjs-util": "^9.0.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.1",
+    "@nomicfoundation/hardhat-ethers": "^3.0.2",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.0.3",
+    "@typechain/hardhat": "^8.0.0",
+    "chai": "^4.3.7",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.6.1",
+    "hardhat": "^2.16.0",
+    "hardhat-deploy": "^0.11.34",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.3"
+  }
+}
