@@ -85,7 +85,6 @@ Using the `nft.setBaseUri(collectionId, baseUri)` extrinsic
 
 - `collectionId` - The ID of the collection
 - `baseUri` - Hex of the new BaseURI
-- `newOwner` - The new token owner
 
 ```
 api.tx.nft.setBaseUri(
