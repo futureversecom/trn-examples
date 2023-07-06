@@ -22,7 +22,8 @@ export async function main() {
   const { tokenId } = argv as unknown as { tokenId: number };
   const { collectionId } = argv as unknown as { collectionId: number };
 
-  const serialNumbers = [[tokenId, 2]];
+  const quantity = 2;
+  const serialNumbers = [[tokenId, quantity]];
   const newOwner = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
 
   const extrinsic = api.tx.sft.transfer(collectionId, serialNumbers, newOwner);

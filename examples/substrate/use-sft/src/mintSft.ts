@@ -23,7 +23,8 @@ export async function main() {
   const { collectionId } = argv as unknown as { collectionId: number };
 
   const tokenOwner = caller.address;
-  const serialNumbers = [[tokenId, 10]];
+  const quantity = 10;
+  const serialNumbers = [[tokenId, quantity]];
 
   const extrinsic = api.tx.sft.mint(collectionId, serialNumbers, tokenOwner);
 
