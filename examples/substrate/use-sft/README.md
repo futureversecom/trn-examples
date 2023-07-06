@@ -34,7 +34,8 @@ pnpm call src/createCollection.ts
 
 Using the `sft.createToken(collectionId, tokenName, initialIssuance, maxIssuance, tokenOwner)` extrinsic
 
-- `tokenName` - The name of the collection
+- `collectionId` - The ID for the collection which will hold this token
+- `tokenName` - The name of the token
 - `initialIssuance` - Number of tokens to mint now
 - `maxIssuance` - Maximum number of tokens allowed in collection
 - `tokenOwner` - The token owner, defaults to the caller

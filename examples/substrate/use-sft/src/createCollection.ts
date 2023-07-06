@@ -13,13 +13,13 @@ export async function main() {
   const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
-  const name = "MyCollection";
+  const collectionName = "MyCollection";
   const collectionOwner = caller.address;
   const metadataScheme = stringToHex("https://example.com/metadata.json");
   const royaltiesSchedule = { entitlements: [[collectionOwner, 10_000]] };
 
   const extrinsic = api.tx.sft.createCollection(
-    name,
+    collectionName,
     collectionOwner,
     metadataScheme,
     royaltiesSchedule
