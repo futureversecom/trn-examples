@@ -37,7 +37,8 @@ export async function main() {
 
   console.log("Extrinsic Result", event.toJSON());
 
-  const tokenId = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_collectionId, tokenId] = (
     event.toJSON() as {
       event: {
         data: [[number, number]];

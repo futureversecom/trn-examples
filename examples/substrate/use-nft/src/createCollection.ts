@@ -18,7 +18,9 @@ export async function main() {
   const maxIssuance = 10_000;
   const tokenOwner = caller.address;
   const metadataScheme = stringToHex("https://example.com/metadata.json");
-  const royaltiesSchedule = { entitlements: [[caller.address, 1_000]] };
+  const royaltiesSchedule = {
+    entitlements: [[tokenOwner, 10_000 /* one percent */]],
+  };
   const crossChainCompatibility = false;
 
   const extrinsic = api.tx.nft.createCollection(

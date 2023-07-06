@@ -16,7 +16,9 @@ export async function main() {
   const collectionName = "MyCollection";
   const collectionOwner = caller.address;
   const metadataScheme = stringToHex("https://example.com/metadata.json");
-  const royaltiesSchedule = { entitlements: [[collectionOwner, 10_000]] };
+  const royaltiesSchedule = {
+    entitlements: [[collectionOwner, 10_000 /* one percent */]],
+  };
 
   const extrinsic = api.tx.sft.createCollection(
     collectionName,
