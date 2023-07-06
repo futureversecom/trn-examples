@@ -15,11 +15,13 @@ export async function main() {
   const futurepass = (
     await api.query.futurepass.holders(caller.address)
   ).toString();
+  // can be any extrinsic, using `system.remarkWithEvent` for simplicity sake
   const call = api.tx.system.remarkWithEvent("Hello World");
 
   const extrinsic = api.tx.futurepass.proxyExtrinsic(futurepass, call);
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
+  // depending on what extrinsic call you have, filter out the right event here
   const [remarkEvent] = filterExtrinsicEvents(result.events, [
     "System.Remarked",
   ]);
