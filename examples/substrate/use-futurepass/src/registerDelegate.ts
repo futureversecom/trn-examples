@@ -2,9 +2,10 @@ import { createKeyring } from "@trne/utils/createKeyring";
 import { fetchFinalisedHead } from "@trne/utils/fetchFinalisedHead";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { getChainApi } from "@trne/utils/getChainApi";
+import { getEthersProvider } from "@trne/utils/getEthersProvider";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { cleanEnv, str } from "envalid";
-import { Wallet, getDefaultProvider, utils as ethers } from "ethers";
+import { Wallet, utils as ethers } from "ethers";
 
 const env = cleanEnv(process.env, {
   CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -23,7 +24,7 @@ export async function main() {
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
   const wallet = new Wallet(
     env.CALLER_PRIVATE_KEY,
-    getDefaultProvider("https://porcini.rootnet.app/")
+    getEthersProvider("porcini")
   );
 
   const proxyType = ProxyType.Any;
