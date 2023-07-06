@@ -1,4 +1,5 @@
 import { createKeyring } from "@trne/utils/createKeyring";
+import { fetchFinalisedHead } from "@trne/utils/fetchFinalisedHead";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
@@ -39,8 +40,7 @@ export async function main() {
       [futurepass, delegate, proxyType, deadline]
     )
     .substring(2);
-  const encodedMessage = ethers.hexlify(ethers.toUtf8Bytes(message));
-  const signature = await wallet.signMessage(encodedMessage);
+  const signature = await wallet.signMessage(message);
 
   const extrinsic = api.tx.futurepass.registerDelegateWithSignature(
     futurepass, //        Futurepass account to register the account as delegate
