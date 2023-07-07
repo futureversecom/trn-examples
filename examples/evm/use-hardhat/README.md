@@ -6,16 +6,19 @@ This project demonstrates a basic smart contract deployment and verification to 
 
 1.  Install the necessary packages and Hardhat plugins.
 
-```
-yarn install
-```
+    ```
+    pnpm install
+    ```
 
-2.  Create an `.env` file and include your private key(s).
+2.  Run the commands below to your terminal:
 
-```
-DEPLOYER_PK={DEPLOYER_PRIVATE_KEY}
-DEPLOYER={DEPLOYER_PUBLIC_KEY}
-```
+    ```
+    export DEPLOYER_PRIVATE_KEY={DEPLOYER_PRIVATE_KEY}
+    export DEPLOYER_ADDRESS={DEPLOYER_ADDRESS}
+    ```
+
+    Note:
+    Replace the placeholders such as `{DEPLOYER_PRIVATE_KEY}`, and `{DEPLOYER_ADDRESS}` with the appropriate values according to your specific setup.
 
 3.  Configure the `hardhat.config.js` file.
 
@@ -23,20 +26,20 @@ DEPLOYER={DEPLOYER_PUBLIC_KEY}
 
 5.  Create your test file(s) under the `<rootDir>/test` folder. Then, run the tests using the following command:
 
-```
-yarn test
-```
+    ```
+    pnpm test
+    ```
 
 6.  Create your deployment script(s) inside `<rootDir>/deploy` folder.
 
 7.  To deploy the smart contracts (all the solidity files from the `<rootDir>/contracts` folder) to the TRN Porcini network, run the following command:
 
-```
-yarn deploy:porcini
-```
+    ```
+    pnpm deploy:porcini
+    ```
 
 8.  Finally, to verify the deployed smart contract on Sourcify, execute the following command:
 
-```
-yarn verify:porcini
-```
+    ```
+    pnpm verify:porcini
+    ```

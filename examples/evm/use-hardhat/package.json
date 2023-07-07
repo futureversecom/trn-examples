@@ -2,7 +2,7 @@
   "scripts": {
     "deploy:porcini": "hardhat deploy --network porcini",
     "verify:porcini": "hardhat sourcify --network porcini",
-    "clean": "hardhat clean",
+    "clean": "hardhat clean && rm -rf cache/",
     "test": "hardhat test"
   },
   "devDependencies": {
@@ -15,6 +15,7 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "@nomicfoundation/hardhat-verify": "^1.0.3",
+    "@therootnetwork/api": "^1.0.2",
     "@typechain/hardhat": "^8.0.0",
     "chai": "^4.3.7",
     "dotenv": "^16.3.1",
