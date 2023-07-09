@@ -19,7 +19,7 @@ export async function main() {
   const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
-  const metadataScheme = stringToHex("https://example.com/metadata.json");
+  const metadataScheme = stringToHex("https://example.com/token/");
   const { collectionId } = argv as unknown as { collectionId: number };
 
   const extrinsic = api.tx.sft.setBaseUri(collectionId, metadataScheme);

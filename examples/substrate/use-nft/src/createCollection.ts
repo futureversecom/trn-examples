@@ -17,7 +17,7 @@ export async function main() {
   const initialIssuance = 1_000;
   const maxIssuance = 10_000;
   const tokenOwner = caller.address;
-  const metadataScheme = stringToHex("https://example.com/metadata.json");
+  const metadataScheme = stringToHex("https://example.com/token/");
   const royaltiesSchedule = {
     entitlements: [[tokenOwner, 10_000 /* one percent */]],
   };

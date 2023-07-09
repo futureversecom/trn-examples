@@ -15,7 +15,7 @@ export async function main() {
 
   const collectionName = "MyCollection";
   const collectionOwner = caller.address;
-  const metadataScheme = stringToHex("https://example.com/metadata.json");
+  const metadataScheme = stringToHex("https://example.com/token/");
   const royaltiesSchedule = {
     entitlements: [[collectionOwner, 10_000 /* one percent */]],
   };
