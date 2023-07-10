@@ -28,6 +28,7 @@ export async function main() {
     env.DELEGATE_PRIVATE_KEY,
     getEthersProvider("porcini")
   );
+  const delegate = delegateWallet.address;
 
   const proxyType = ProxyType.Any;
   // recommended low number, 75 blocks ~= 5 minutes
@@ -39,14 +40,14 @@ export async function main() {
   const message = ethers
     .solidityKeccak256(
       ["address", "address", "uint8", "uint32"],
-      [futurepass, delegateWallet.address, proxyType, deadline]
+      [futurepass, delegate, proxyType, deadline]
     )
     .substring(2);
   const signature = await delegateWallet.signMessage(message);
 
   const extrinsic = api.tx.futurepass.registerDelegateWithSignature(
     futurepass, //        Futurepass account to register the account as delegate
-    delegateWallet.address, //          The delegated account for the futurepass
+    delegate, //          The delegated account for the futurepass
     proxyType, //         Delegate permission level
     deadline, //          Deadline for the signature
     signature //          Signature of the message parameters

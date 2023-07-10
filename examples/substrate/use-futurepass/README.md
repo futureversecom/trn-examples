@@ -4,6 +4,7 @@ First run
 
 ```
 export CALLER_PRIVATE_KEY=0x000...
+export DELEGATE_PRIVATE_KEY=0x000...
 ```
 
 ### Create Futurepass account
