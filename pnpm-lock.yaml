@@ -118,6 +118,12 @@ importers:
         specifier: ^12.3.2
         version: 12.3.2
 
+  examples/substrate/use-sft:
+    dependencies:
+      '@polkadot/util':
+        specifier: ^12.3.2
+        version: 12.3.2
+
   packages/utils:
     dependencies:
       '@polkadot/api':
