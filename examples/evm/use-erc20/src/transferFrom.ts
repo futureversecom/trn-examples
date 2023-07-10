@@ -1,8 +1,8 @@
 import { cleanEnv, str } from "envalid";
-import { Contract, getDefaultProvider, Wallet } from "ethers";
+import { getDefaultProvider, Wallet } from "ethers";
 import { getERC20PrecompileForAssetId } from "@trne/utils/getERC20PrecompileAddress";
 import assert from "assert";
-//BOB_PRIVATE_KEY=0x...dcf CALLER_PRIVATE_KEY=0x...6854 pnpm call src/transferFrom.ts
+
 const env = cleanEnv(process.env, {
   CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
   BOB_PRIVATE_KEY: str(),
