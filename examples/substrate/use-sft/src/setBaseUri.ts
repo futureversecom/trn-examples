@@ -19,13 +19,13 @@ export async function main() {
   const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
-  const baseUri = stringToHex("https://example.com/token/");
+  const metadataScheme = stringToHex("https://example.com/token/");
   const { collectionId } = argv as unknown as { collectionId: number };
 
-  const extrinsic = api.tx.nft.transfer(collectionId, baseUri);
+  const extrinsic = api.tx.sft.setBaseUri(collectionId, metadataScheme);
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-  const [event] = filterExtrinsicEvents(result.events, ["Nft.BaseUriSet"]);
+  const [event] = filterExtrinsicEvents(result.events, ["Sft.BaseUriSet"]);
 
   console.log("Extrinsic Result", event.toJSON());
 
