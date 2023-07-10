@@ -1,5 +1,4 @@
 import { cleanEnv, str } from "envalid";
-import { Contract, getDefaultProvider, Wallet } from "ethers";
 import { getERC20PrecompileForAssetId } from "@trne/utils/getERC20PrecompileAddress";
 import assert from "assert";
 
