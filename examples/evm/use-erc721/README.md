@@ -1,6 +1,12 @@
-# Use ERC721 precompile
+# Use ERC721 Precompile
 
-## This uses precompile
+First run
+
+```
+export CALLER_PRIVATE_KEY=0x000...
+```
+
+## Contract Read/Write
 
 ### Create Collection
 
@@ -13,15 +19,15 @@ Using the `nft.createCollection(name, initialIssuance, maxIssuance, tokenOwner, 
 - `metadataScheme` - The off-chain metadata referencing scheme for tokens in this
 - `royaltiesSchedule` - Defacto royalties plan for secondary sales, this will
 
-```
+```js
 api.tx.nft.createCollection(
-    "MyCollection",
-    1_000,
-    null,
-    null,
-    "0x8324...",
-    null,
-    false
+  "MyCollection",
+  1_000,
+  null,
+  null,
+  "0x8324...",
+  null,
+  false
 );
 ```
 
@@ -32,158 +38,128 @@ Get precompile contract for this collection id.
 
 In all the examples, we would be using the collection id (105572) created at [blockhash](https://portal.rootnet.cloud/?rpc=wss%3A%2F%2Fporcini.rootnet.app%2Farchive%2Fws#/explorer/query/0xf585b34a3e1b286058be39829bff1359b2934fba2b2fbf4fa5ec0d85789d4e93)
 
-```
+```js
 const { erc721Precompile, wallet } = getERC721Precompile(
-        env.CALLER_PRIVATE_KEY,
-        COLLECTION_ID
-    );
-
+  env.CALLER_PRIVATE_KEY,
+  COLLECTION_ID
+);
 ```
 
-### Mint nfts
-
-Using the `mint(address owner, uint32 quantity)` function from ERC721
+### `mint(address owner, uint32 quantity)`
 
 - `owner` - address of the owner who mints
 - `quantity` - number of tokens to mint
 
-```
-ERC721Precompile.connect(wallet).mint(wallet.address, 100);
-```
-
-Run the command below to execute the example script, ensure you have specified a valid
-`CALLER_PRIVATE_KEY`
-
-```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/mint.ts
+```js
+await erc721Precompile.connect(wallet).mint(wallet.address, 100);
 ```
 
-### BalanceOf address
+Run the command below to execute the example script
 
-Using the `balanceOf(address who)` function from ERC721
+```shell
+pnpm call src/mint.ts
+```
+
+### `balanceOf(address who)`
 
 - `who` - address
 
+```js
+await erc721Precompile.connect(wallet).balanceOf(wallet.address);
 ```
 
-const balance = await erc721Precompile.connect(wallet).balanceOf(wallet.address);
+Run the command below to execute the example script
 
+```shell
+pnpm call src/balanceOf.ts
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/balanceOf.ts
-
-```
-
-### TokenURI a tokenId
-
-Using the `tokenURI(uint256 tokenId)` function from ERC721
+### `tokenURI(uint256 tokenId)`
 
 - `tokenId` - tokenId/serial number
 
-```
+```js
 const tokenId = 4;
-const tokenURI = await erc721Precompile.connect(wallet).tokenURI(tokenId);
+await erc721Precompile.connect(wallet).tokenURI(tokenId);
+```
+
+Run the command below to execute the example script
+
+```shell
+pnpm call src/tokenURI.ts
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/tokenURI.ts
-
-```
-
-### OwnerOf a tokenId
-
-Using the `ownerOf(uint256 tokenId)` function from ERC721
+### `ownerOf(uint256 tokenId)`
 
 - `tokenId` - tokenId/serial number
 
-```
+```js
 const tokenId = 4;
-const ownerAddress = await erc721Precompile.connect(wallet).ownerOf(tokenId);
+await erc721Precompile.connect(wallet).ownerOf(tokenId);
+```
+
+Run the command below to execute the example script
+
+```shell
+pnpm call src/ownerOf.ts
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/ownerOf.ts
-
-```
-
-### Approved address
-
-Using the `getApproved(uint256 tokenId)` function from ERC721
+### `getApproved(uint256 tokenId)`
 
 - `tokenId` - serial number
 
-```
+```js
 const serialNumber = 12;
-const address = await ERC721Precompile.connect(wallet).getApproved(serialNumber);
+await erc721Precompile.connect(wallet).getApproved(serialNumber);
+```
+
+Run the command below to execute the example script
+
+```shell
+pnpm call src/getApproved.ts
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/getApproved.ts
-
-```
-
-### IsApprovedForAll
-
-Using the `isApprovedForAll(address owner, address operator)` function from ERC721
+### `isApprovedForAll(address owner, address operator)`
 
 - `owner` - original owner
 - `operator` - approved for owner
 
-```
-const bob = '0x25451A4de12dcCc2D166922fA938E900fCc4ED24';
-const address = await ERC721Precompile.connect(wallet).isApprovedForAll(wallet.address, bob);
-
-```
-
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
+```js
+const bob = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
+const address = await erc721Precompile
+  .connect(wallet)
+  .isApprovedForAll(wallet.address, bob);
 ```
 
-CALLER_PRIVATE_KEY=0x000... pnpm call src/isApprovedForAll.ts
+Run the command below to execute the example script
+
+```shell
+pnpm call src/isApprovedForAll.ts
 
 ```
 
-### SetApproval
-
-Using the `approve(address to, uint256 tokenId)` function from ERC721
+### `approve(address to, uint256 tokenId)`
 
 - `to` - Recipient address
 - `tokenId` - tokenId/serial number to approve
 
-```
-const bob = '0x25451A4de12dcCc2D166922fA938E900fCc4ED24';
+```js
+const bob = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
 const tokenId = 12;
-ERC721Precompile.connect(wallet).approve(bob, tokenId);
+await erc721Precompile.connect(wallet).approve(bob, tokenId);
+```
+
+Run the command below to execute the example script
+
+```shell
+pnpm call src/setApproval.ts
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/setApproval.ts
-
-```
-
-### TransferFrom tokenId
-
-Using the `transferFrom(address from, address to, uint256 tokenId)` function from ERC721
+### `transferFrom(address from, address to, uint256 tokenId)`
 
 - `from` - Sender address
 - `to` - Recipient address
@@ -191,80 +167,70 @@ Using the `transferFrom(address from, address to, uint256 tokenId)` function fro
 
 To use transferFrom we have to make sure approval is set for the recipient address from sender address for the said tokenId
 
+```js
+erc721Precompile
+  .connect(wallet)
+  .transferFrom(
+    "0xE04CC55ebEE1cBCE552f250e85c57B70B2E2625b",
+    "0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
+    100
+  );
 ```
 
-ERC721Precompile.connect(wallet).transferFrom("0xE04CC55ebEE1cBCE552f250e85c57B70B2E2625b","0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 100);
+Run the command below to execute the example script
 
-```
-
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY` and `BOB_PRIVATE_KEY`
-
-```
-
-BOB_PRIVATE_KEY=0x000 CALLER_PRIVATE_KEY=0x000... pnpm call src/transferFrom.ts
+```shell
+export BOB_PRIVATE_KEY=0x000...
+pnpm call src/transferFrom.ts
 
 ```
 
 ## Asset Metadata
 
-### Name
+### `name()`
 
-Using the `name()` function from ERC721
+```js
+await erc721Precompile.connect(wallet).name();
+```
+
+### `symbol()`
+
+```js
+await erc721Precompile.connect(wallet).symbol();
+```
+
+Run the command below to execute the example script
+
+```shell
+pnpm call src/metadata.ts
+```
+
+### `transferOwnership(address newOwner)`
+
+- `newOwner` - newOwner of the collection
+
+```js
+await erc721Precompile
+  .connect(wallet)
+  .transferOwnership("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
+```
+
+Run the command below to execute the example script
+
+```shell
+pnpm call src/transferOwnership.ts
 
 ```
 
-const name = await ERC721Precompile.connect(wallet).name();
+### `revokeOwnership()`
 
+```js
+await erc721Precompile.connect(wallet).revokeOwnership();
 ```
 
-### Symbol
+Run the command below to execute the example script
 
-Using the `symbol()` function from ERC721
-
-```
-const symbol = await ERC721Precompile.connect(wallet).symbol();
-```
-
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/metadata.ts
-```
-
-### TransferOwnership of the Collection/NFT
-
-Using the `transferOwnership(address newOwner)` function from Ownable
-
-- `newOwner` - newOwner of the colleciton
-
-```
-
-ERC721Precompile.connect(wallet).transferOwnership("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
-
-```
-
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/transferOwnership.ts
-
-```
-
-### RevokeOwnership of the Collection/NFT
-
-Using the `revokeOwnership()` function from Ownable
-
-```
-
-ERC721Precompile.connect(wallet).revokeOwnership();
-
-```
-
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/revokeOwnership.ts
+```shell
+pnpm call src/revokeOwnership.ts
 
 ```
