@@ -5,7 +5,6 @@ import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { cleanEnv, str } from "envalid";
-import { stringToHex } from "@polkadot/util";
 
 const argv = collectArgs();
 
@@ -14,18 +13,23 @@ const env = cleanEnv(process.env, {
 });
 
 export async function main() {
+  assert("tokenId" in argv, "Token ID is required");
   assert("collectionId" in argv, "Collection ID is required");
 
   const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
-  const baseUri = stringToHex("https://example.com/token/");
+  const { tokenId } = argv as unknown as { tokenId: number };
   const { collectionId } = argv as unknown as { collectionId: number };
 
-  const extrinsic = api.tx.nft.transfer(collectionId, baseUri);
+  const tokenOwner = caller.address;
+  const quantity = 10;
+  const serialNumbers = [[tokenId, quantity]];
+
+  const extrinsic = api.tx.sft.mint(collectionId, serialNumbers, tokenOwner);
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-  const [event] = filterExtrinsicEvents(result.events, ["Nft.BaseUriSet"]);
+  const [event] = filterExtrinsicEvents(result.events, ["Sft.Mint"]);
 
   console.log("Extrinsic Result", event.toJSON());
 
