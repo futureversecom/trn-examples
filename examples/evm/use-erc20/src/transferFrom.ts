@@ -1,7 +1,8 @@
 import { cleanEnv, str } from "envalid";
-import { getDefaultProvider, Wallet } from "ethers";
+import { Wallet } from "ethers";
 import { getERC20PrecompileForAssetId } from "@trne/utils/getERC20PrecompileAddress";
 import assert from "assert";
+import { getEthersProvider } from "@trne/utils/getEthersProvider";
 
 const env = cleanEnv(process.env, {
   CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -19,7 +20,7 @@ export async function main() {
   );
   const bobSigner = new Wallet(
     env.BOB_PRIVATE_KEY,
-    getDefaultProvider("https://porcini.rootnet.app/")
+    getEthersProvider("porcini")
   );
   const amountApproved = 200;
 
