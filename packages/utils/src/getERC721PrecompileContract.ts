@@ -1,6 +1,6 @@
 import { Contract, getDefaultProvider, Wallet } from "ethers";
-import { getPublicProviderUrl } from "@therootnetwork/api";
 import { getAddress } from "ethers/lib/utils";
+import { getEthersProvider } from "./getEthersProvider";
 
 export const collectionIdToERC721Address = (
   collectionId: string | number
@@ -58,10 +58,7 @@ export const getERC721Precompile = (
   precompileAddress: string,
   collectionId: string | number | null
 ) => {
-  const wallet = new Wallet(
-    privateKey,
-    getDefaultProvider(getPublicProviderUrl("porcini"))
-  );
+  const wallet = new Wallet(privateKey, getEthersProvider("porcini"));
 
   const erc721PrecompileAddress = precompileAddress
     ? precompileAddress
@@ -81,8 +78,5 @@ export const getERC721Precompile = (
 };
 
 export function getSignerWallet(privateKey: string) {
-  return new Wallet(
-    privateKey,
-    getDefaultProvider(getPublicProviderUrl("porcini"))
-  );
+  return new Wallet(privateKey, getEthersProvider("porcini"));
 }
