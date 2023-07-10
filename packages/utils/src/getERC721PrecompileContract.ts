@@ -55,14 +55,17 @@ export const ERC721_PRECOMPILE_ABI = [
 
 export const getERC721Precompile = (
   privateKey: string,
-  collectionId: string | number
+  precompileAddress: string,
+  collectionId: string | number | null
 ) => {
   const wallet = new Wallet(
     privateKey,
     getDefaultProvider(getPublicProviderUrl("porcini"))
   );
 
-  const erc721PrecompileAddress = collectionIdToERC721Address(collectionId);
+  const erc721PrecompileAddress = precompileAddress
+    ? precompileAddress
+    : collectionIdToERC721Address(collectionId as string);
 
   const erc721Precompile = new Contract(
     erc721PrecompileAddress,

@@ -36,7 +36,27 @@ Refer to [this](https://github.com/futureversecom/trn-examples/blob/main/example
 On executing the above extrinsic, it will create a collection id.
 Get precompile contract for this collection id.
 
-In all the examples, we would be using the collection id (105572) created at [blockhash](https://portal.rootnet.cloud/?rpc=wss%3A%2F%2Fporcini.rootnet.app%2Farchive%2Fws#/explorer/query/0xf585b34a3e1b286058be39829bff1359b2934fba2b2fbf4fa5ec0d85789d4e93)
+Collection can also be created using precompiles
+
+```js
+    const { nftPrecompile, wallet } = getNFTPrecompile(env.CALLER_PRIVATE_KEY)
+    const maxIssuance = BigNumber.from(0);
+    const metadataPath = ethers.utils.hexlify(ethers.utils.toUtf8Bytes("https://example.com/metadata/"));
+    const name = 'test';
+    const royaltyAddresses = [wallet.address];
+    const royaltyEntitlements = [1000];
+    // new collection with unlimited mintable supply
+    const tx = await nftPrecompile.connect(wallet).initializeCollection(
+        wallet.address,
+        ethers.utils.hexlify(ethers.utils.toUtf8Bytes(name)),
+        maxIssuance,
+        metadataPath,
+        royaltyAddresses,
+        royaltyEntitlements,
+    );
+    const receipt = await tx.wait();
+    const erc721PrecompileAddress = (receipt?.events as any)[0].args.precompileAddress;
+```
 
 ```js
 const { erc721Precompile, wallet } = getERC721Precompile(

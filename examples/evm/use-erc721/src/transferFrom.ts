@@ -9,11 +9,14 @@ const env = cleanEnv(process.env, {
   BOB_PRIVATE_KEY: str(),
 });
 
-const COLLECTION_ID = 105572;
 const serialNumber = 43;
+const COLLECTION_ID = null; // If user knows the collection id, can pass collection over erc721PrecompileAddress
+const erc721PrecompileAddress = "0xaaAAAAAA0001A864000000000000000000000000";
+
 export async function main() {
   const { erc721Precompile, wallet } = getERC721Precompile(
     env.CALLER_PRIVATE_KEY,
+    erc721PrecompileAddress,
     COLLECTION_ID
   );
   const bobSigner = getSignerWallet(env.BOB_PRIVATE_KEY);

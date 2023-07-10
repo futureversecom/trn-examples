@@ -6,11 +6,13 @@ const env = cleanEnv(process.env, {
   CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
 });
 
-const COLLECTION_ID = 105572;
+const COLLECTION_ID = null; // If user knows the collection id, can pass collection over erc721PrecompileAddress
+const erc721PrecompileAddress = "0xaaAAAAAA0001A864000000000000000000000000";
 
 export async function main() {
   const { erc721Precompile, wallet } = getERC721Precompile(
     env.CALLER_PRIVATE_KEY,
+    erc721PrecompileAddress,
     COLLECTION_ID
   );
   const bob = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
