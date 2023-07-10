@@ -1,0 +1,13 @@
+[profile.default]
+src = 'contracts'
+test = 'test'
+out = 'forge-artifacts'
+libs = ['lib']
+solc = "0.8.17"
+
+optimizer = true
+optimizer-runs = 200
+verbosity = 2
+
+[rpc_endpoints]
+porcini = "${PORCINI_RPC_URL}"
