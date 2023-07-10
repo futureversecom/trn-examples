@@ -142,8 +142,8 @@ importers:
         specifier: ^12.3.2
         version: 12.3.2(@polkadot/util@12.3.2)
       '@therootnetwork/api':
-        specifier: ^1.0.1
-        version: 1.0.1(@polkadot/api@10.9.1)(@polkadot/types@10.9.1)
+        specifier: ^1.0.2
+        version: 1.0.2(@polkadot/api@10.9.1)(@polkadot/types@10.9.1)
 
 packages:
 
@@ -1475,8 +1475,8 @@ packages:
   /@substrate/ss58-registry@1.41.0:
     resolution: {integrity: sha512-TLz5VkEaJRNFzf1Oiix9gqknKer3aKbLfjK9XHBFCIhdxlQpI+S6lZGu3wT4DHAGXPakYfXb8+9ZIOtWLcQ/2Q==}
 
-  /@therootnetwork/api@1.0.1(@polkadot/api@10.9.1)(@polkadot/types@10.9.1):
-    resolution: {integrity: sha512-DzLVL8OWIAeZkmzY6kZGefg5otXiFhTGfAVLuKDSKCWrqDylTn7Iw5FU8j2ZZWrauylsKoLNGmQd6iZM4EUZkw==}
+  /@therootnetwork/api@1.0.2(@polkadot/api@10.9.1)(@polkadot/types@10.9.1):
+    resolution: {integrity: sha512-3ZcgnaFOP1KMcteGLVc4zmkT4iLCdp1VIw62864u6MVndh0FRumGie9utniNXQujSeoT1cQCTRXhnbbDL8AWrg==}
     peerDependencies:
       '@polkadot/api': ^10.8.1
       '@polkadot/types': ^10.8.1
