@@ -25,13 +25,10 @@ export async function main() {
     .approve(bobSigner.address, serialNumber);
   await tx.wait();
 
-  const txSafeTransfer = await erc721Precompile
-    .connect(bobSigner)
-    ["safeTransferFrom(address,address,uint256)"](
-      wallet.address,
-      bobSigner.address,
-      serialNumber
-    );
+  const txSafeTransfer = await erc721Precompile.connect(bobSigner)[
+    // eslint-disable-next-line no-unexpected-multiline
+    "safeTransferFrom(address,address,uint256)"
+  ](wallet.address, bobSigner.address, serialNumber);
   const receipt = await txSafeTransfer.wait();
   const { event } = (receipt?.events as any)[0];
   const { from, to, tokenId } = (receipt?.events as any)[0].args;
