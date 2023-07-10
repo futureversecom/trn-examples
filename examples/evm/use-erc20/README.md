@@ -1,47 +1,46 @@
-# Use ERC20 precompile
+# Use ERC20 Precompile
 
-## This uses precompile and solidity smart contract
+First run
 
-Get precompile contract for existing asset id.
+```
+export CALLER_PRIVATE_KEY=0x000...
+```
 
-### TotalSupply of an asset
+## Contract Read/Write
 
-````
+### `totalSupply` method
+
+```
 const XRP_TOKEN_ID = 2
-const { erc20Precompile, wallet } = getERC20PrecompileForAssetId(env.CALLER_PRIVATE_KEY, XRP_TOKEN_ID);```
+const { erc20Precompile, wallet } = getERC20PrecompileForAssetId(env.CALLER_PRIVATE_KEY, XRP_TOKEN_ID);
 const totalSupply = await erc20Precompile.connect(wallet).totalSupply();
+```
 
-````
+Run the command below to execute the example script
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+```
+pnpm call src/totalSupply.ts
 
 ```
 
-CALLER_PRIVATE_KEY=0x000... pnpm call src/totalSupply.ts
-
-```
-
-### BalanceOf an address
+### `balanceOf` method
 
 Using the `balanceOf(address who)` function from ERC20
 
 - `who` - address
 
 ```
-
 const balance = await erc20Precompile.connect(wallet).balanceOf();
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+Run the command below to execute the example script
 
 ```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/balanceOf.ts
-
+pnpm call src/balanceOf.ts
 ```
 
-### Allowance of an address
+### `allowance` method
 
 Using the `allowance(address owner, address spender)` function from ERC20
 
@@ -49,20 +48,17 @@ Using the `allowance(address owner, address spender)` function from ERC20
 - `spender` - spender address
 
 ```
-
 const allowance = await erc20Precompile.connect(wallet).allowance(wallet.address, '0x25451A4de12dcCc2D166922fA938E900fCc4ED24');
+```
+
+Run the command below to execute the example script
+
+```
+pnpm call src/allowance.ts
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/allowance.ts
-
-```
-
-### Transfer Asset
+### `transfer` method
 
 Using the `transfer(address who, uint256 amount)` function from ERC20
 
@@ -70,20 +66,16 @@ Using the `transfer(address who, uint256 amount)` function from ERC20
 - `amount` - Amount to transfer
 
 ```
-
 erc20Precompile.connect(wallet).transfer("0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 1);
-
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+Run the command below to execute the example script
 
 ```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/transferAsset.ts
-
+pnpm call src/transferAsset.ts
 ```
 
-### SetApproval
+### `setApproval` method
 
 Using the `approve(address to, uint256 amountToApprove)` function from ERC20
 
@@ -91,20 +83,17 @@ Using the `approve(address to, uint256 amountToApprove)` function from ERC20
 - `amount` - Amount to transfer
 
 ```
-
 erc20Precompile.connect(wallet).approve(0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 100);
+```
+
+Run the command below to execute the example script
+
+```
+pnpm call src/setApproval.ts
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
-
-```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/setApproval.ts
-
-```
-
-### TransferFrom Asset
+### `transferFrom` method
 
 Using the `transferFrom(address from, address to, uint256 amount)` function from ERC20
 
@@ -115,55 +104,43 @@ Using the `transferFrom(address from, address to, uint256 amount)` function from
 To use transferFrom we have to make sure approval is set for the recipient address from sender address for the said amount
 
 ```
-
 erc20Precompile.connect(wallet).transferFrom("0xE04CC55ebEE1cBCE552f250e85c57B70B2E2625b","0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 100);
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY` and `BOB_PRIVATE_KEY`
+Run the command below to execute the example script
+
+```
+export BOB_PRIVATE_KEY=0x000...
+pnpm call src/transferFrom.ts
 
 ```
 
-BOB_PRIVATE_KEY=0x000 CALLER_PRIVATE_KEY=0x000... pnpm call src/transferFrom.ts
+## Contract Metadata
+
+### `name` method
 
 ```
-
-## Asset Metadata
-
-### Name
-
-Using the `name()` function from ERC20
-
-```
-
 const name = await erc20Precompile.connect(wallet).name();
-
 ```
 
-### Symbol
-
-Using the `symbol()` function from ERC20
+### `symbol` method
 
 ```
-
 const symbol = await erc20Precompile.connect(wallet).symbol();
 
 ```
 
-### Decimals
-
-Using the `symbol()` function from ERC20
+### `decimals` method
 
 ```
-
 const symbol = await erc20Precompile.connect(wallet).decimals();
 
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+Run the command below to execute the example script
 
 ```
-
-CALLER_PRIVATE_KEY=0x000... pnpm call src/metadata.ts
+pnpm call src/metadata.ts
 
 ```
