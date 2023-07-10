@@ -13,8 +13,8 @@ export CALLER_PRIVATE_KEY=0x000...
 ```js
 const XRP_TOKEN_ID = 2;
 const { erc20Precompile, wallet } = getERC20PrecompileForAssetId(
-	env.CALLER_PRIVATE_KEY,
-	XRP_TOKEN_ID
+  env.CALLER_PRIVATE_KEY,
+  XRP_TOKEN_ID
 );
 const totalSupply = await erc20Precompile.connect(wallet).totalSupply();
 ```
@@ -47,8 +47,8 @@ pnpm call src/balanceOf.ts
 
 ```js
 await erc20Precompile
-	.connect(wallet)
-	.allowance(wallet.address, "0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
+  .connect(wallet)
+  .allowance(wallet.address, "0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
 ```
 
 Run the command below to execute the example script
@@ -65,8 +65,8 @@ pnpm call src/allowance.ts
 
 ```js
 await erc20Precompile
-	.connect(wallet)
-	.transfer("0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 1);
+  .connect(wallet)
+  .transfer("0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 1);
 ```
 
 Run the command below to execute the example script
@@ -82,8 +82,8 @@ pnpm call src/transferAsset.ts
 
 ```js
 await erc20Precompile
-	.connect(wallet)
-	.approve("0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 100);
+  .connect(wallet)
+  .approve("0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 100);
 ```
 
 Run the command below to execute the example script
@@ -103,12 +103,12 @@ To use transferFrom we have to make sure approval is set for the recipient addre
 
 ```js
 await erc20Precompile
-	.connect(wallet)
-	.transferFrom(
-		"0xE04CC55ebEE1cBCE552f250e85c57B70B2E2625b",
-		"0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
-		100
-	);
+  .connect(wallet)
+  .transferFrom(
+    "0xE04CC55ebEE1cBCE552f250e85c57B70B2E2625b",
+    "0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
+    100
+  );
 ```
 
 Run the command below to execute the example script
