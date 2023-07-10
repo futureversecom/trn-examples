@@ -15,7 +15,7 @@ Using the `nft.createCollection(name, initialIssuance, maxIssuance, tokenOwner, 
 - `maxIssuance` - Maximum number of tokens allowed in collection
 - `tokenOwner` - The token owner, defaults to the caller
 - `metadataScheme` - The off-chain metadata referencing scheme for tokens in this
-- `royaltiesSchedule` - Defacto royalties plan for secondary sales, this will
+- `royaltiesSchedule` - Defacto royalties plan for secondary sales, this will apply to all tokens in the collection by default
 
 ```
 api.tx.nft.createCollection(
