@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -50,6 +50,8 @@ importers:
         version: 5.0.4
 
   examples/evm/use-erc20: {}
+
+  examples/evm/use-erc721: {}
 
   examples/evm/use-hardhat:
     devDependencies:
