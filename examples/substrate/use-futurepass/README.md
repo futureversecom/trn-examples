@@ -86,7 +86,18 @@ Run the command below to execute the example script
 pnpm call src/proxyExtrinsic.ts
 ```
 
-### Decode Proxy Error
+### Decoding Proxy Error
+
+Using the `api.registry.findMetaError({index, error})` utility
+
+```
+import { BN, hexToU8a } from "@polkadot/util";
+
+const { section, name, docs } = api.registry.findMetaError({
+  index: new BN(index),
+  error: hexToU8a(error),
+});
+```
 
 Run the command below to execute the example script
 
