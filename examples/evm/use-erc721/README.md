@@ -8,7 +8,7 @@ export CALLER_PRIVATE_KEY=0x000...
 
 ## Contract Read/Write
 
-### Create Collection
+### `initializeCollection(...)`
 
 ```solidity
 interface TRNNFT is IERC165 {
