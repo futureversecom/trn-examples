@@ -96,6 +96,9 @@ out
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+.vscode
+.idea
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
@@ -104,4 +107,6 @@ out
 .pnp.*
 
 .docker
-.idea
+
+# Forge output directory
+forge-artifacts
