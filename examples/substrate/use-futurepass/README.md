@@ -85,3 +85,11 @@ Run the command below to execute the example script
 ```
 pnpm call src/proxyExtrinsic.ts
 ```
+
+### Decode Proxy Error
+
+Run the command below to execute the example script
+
+```
+pnpm call src/decodeProxyError.ts
+```
