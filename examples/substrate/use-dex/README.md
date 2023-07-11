@@ -6,7 +6,7 @@ First run
 export CALLER_PRIVATE_KEY=0x000...
 ```
 
-### Swap
+### Swap Tokens
 
 Using the `dex.swapWithExactSupply(amountIn, amountOutMin, path, to, deadline)` extrinsic
 
@@ -23,7 +23,7 @@ api.tx.dex.swapWithExactSupply(1_000_000, 500_000, [1, 2], null, null);
 Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
 
 ```
-pnpm call src/swap.ts
+pnpm call src/swapTokens.ts
 ```
 
 ### Add Liquidity
