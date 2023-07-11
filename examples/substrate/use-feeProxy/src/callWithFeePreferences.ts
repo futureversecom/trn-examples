@@ -44,17 +44,15 @@ export async function main() {
   );
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-  // depending on what extrinsic call you have, filter out the right event here
-  const [remarkEvent] = filterExtrinsicEvents(result.events, [
-    "System.Remarked",
-  ]);
-  const [proxyEvent] = filterExtrinsicEvents(result.events, [
+  const [proxyEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
     "FeeProxy.CallWithFeePreferences",
+    // depending on what extrinsic call you have, filter out the right event here
+    "System.Remarked",
   ]);
 
   console.log("Extrinsic Result", {
-    remark: remarkEvent.toJSON(),
     proxy: proxyEvent.toJSON(),
+    remark: remarkEvent.toJSON(),
   });
 
   await api.disconnect();
