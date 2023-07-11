@@ -104,3 +104,4 @@ out
 .pnp.*
 
 .docker
+.idea
