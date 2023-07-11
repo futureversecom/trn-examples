@@ -10,59 +10,30 @@ export CALLER_PRIVATE_KEY=0x000...
 
 ### Create Collection
 
-Using the `nft.createCollection(name, initialIssuance, maxIssuance, tokenOwner, metadataScheme, royaltiesSchedule, crossChainCompatibility)` extrinsic
-
-- `name` - The name of the collection
-- `initialIssuance` - Number of tokens to mint now
-- `maxIssuance` - Maximum number of tokens allowed in collection
-- `tokenOwner` - The token owner, defaults to the caller
-- `metadataScheme` - The off-chain metadata referencing scheme for tokens in this
-- `royaltiesSchedule` - Defacto royalties plan for secondary sales, this will
-
-```js
-api.tx.nft.createCollection(
-  "MyCollection",
-  1_000,
-  null,
-  null,
-  "0x8324...",
-  null,
-  false
-);
-```
-
-Refer to [this](https://github.com/futureversecom/trn-examples/blob/main/examples/substrate/use-nft/src/createCollection.ts) example.
-
-On executing the above extrinsic, it will create a collection id.
-Get precompile contract for this collection id.
-
-Collection can also be created using precompiles
-
-```js
-    const { nftPrecompile, wallet } = getNFTPrecompile(env.CALLER_PRIVATE_KEY)
-    const maxIssuance = BigNumber.from(0);
-    const metadataPath = ethers.utils.hexlify(ethers.utils.toUtf8Bytes("https://example.com/metadata/"));
-    const name = 'test';
-    const royaltyAddresses = [wallet.address];
-    const royaltyEntitlements = [1000];
-    // new collection with unlimited mintable supply
-    const tx = await nftPrecompile.connect(wallet).initializeCollection(
-        wallet.address,
-        ethers.utils.hexlify(ethers.utils.toUtf8Bytes(name)),
-        maxIssuance,
-        metadataPath,
-        royaltyAddresses,
-        royaltyEntitlements,
-    );
-    const receipt = await tx.wait();
-    const erc721PrecompileAddress = (receipt?.events as any)[0].args.precompileAddress;
+```solidity
+interface TRNNFT is IERC165 {
+    event InitializeCollection(address indexed collectionOwner, address precompileAddress);
+    function initializeCollection(address owner, bytes calldata name, uint32 maxIssuance, bytes calldata metadataPath, address[] calldata royaltyAddresses, uint32[] calldata royaltyEntitlements) external returns (address, uint32);
+}
 ```
 
 ```js
-const { erc721Precompile, wallet } = getERC721Precompile(
-  env.CALLER_PRIVATE_KEY,
-  COLLECTION_ID
-);
+await nftPrecompile
+  .connect(wallet)
+  .initializeCollection(
+    wallet.address,
+    ethers.utils.hexlify(ethers.utils.toUtf8Bytes(name)),
+    maxIssuance,
+    metadataPath,
+    royaltyAddresses,
+    royaltyEntitlements
+  );
+```
+
+Run the command below to execute the example script
+
+```shell
+pnpm call src/createCollection.ts
 ```
 
 ### `mint(address owner, uint32 quantity)`
