@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -112,7 +112,13 @@ importers:
 
   examples/substrate/use-assets: {}
 
-  examples/substrate/use-fee-proxy: {}
+  examples/substrate/use-batch:
+    dependencies:
+      '@polkadot/util':
+        specifier: ^12.3.2
+        version: 12.3.2
+
+  examples/substrate/use-feeProxy: {}
 
   examples/substrate/use-futurepass: {}
 
