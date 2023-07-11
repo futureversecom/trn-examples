@@ -97,6 +97,7 @@ out
 .vscode-test
 
 .vscode
+.idea
 
 # yarn v2
 .yarn/cache
