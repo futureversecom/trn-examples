@@ -31,20 +31,42 @@ pnpm call src/swap.ts
 Using the `dex.addLiquidity(tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin, to, deadline)` extrinsic
 
 - `tokenA` - Asset id A
-- `tokenB` - Bsset id B
+- `tokenB` - Asset id B
 - `amountADesired` - Amount A desired to add
-- `amountBDesired` - Bmount B desired to add
+- `amountBDesired` - Amount B desired to add
 - `amountAMin` - Amount A minimum willing to add
-- `amountBMin` - Bmount B minimum willing to add
-- `to` - The recipient of the swapped token asset. The caller is the default recipient if it is set to None
+- `amountBMin` - Amount B minimum willing to add
+- `to` - The recipient of the LP token. The caller is the default recipient if it is set to None
 - `deadline` - The deadline of executing this extrinsic. The deadline won't be checked if it is set to None
 
 ```
 api.tx.dex.addLiquidity(1, 2, 1_000_000, 1_000_000, 0, 0, null, null);
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+Run the command below to execute the example script
 
 ```
 pnpm call src/addLiquidity.ts
+```
+
+### Remove Liquidity
+
+Using the `dex.removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline)` extrinsic
+
+- `tokenA` - Asset id A
+- `tokenB` - Asset id B
+- `liquidity` - Liquidity amount to remove
+- `amountAMin` - Minimum amount of asset A to be withdrawn from LP token
+- `amountBMin` - Minimum amount of asset B to be withdrawn from LP token
+- `to` - The recipient of the withdrawn token assets. The caller is the default recipient if it is set to None
+- `deadline` - The deadline of executing this extrinsic. The deadline won't be checked if it is set to None
+
+```
+api.tx.dex.removeLiquidity(1, 2, 1_000_000, 0, 0, null, null);
+```
+
+Run the command below to execute the example script, passing in `Liquidity` from `src/addLiquidity`
+
+```
+pnpm call src/removeLiquidity.ts --liquidity=<Liquidity>
 ```
