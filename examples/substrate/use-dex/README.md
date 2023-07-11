@@ -1,41 +1,27 @@
-# Use FuturePass
+# Use Dex
 
-### Create Asset
-
-Using the `assets.create(assetId, admin, minBalance)` extrinsic
-
-- `assetId` - Identifier of the new asset
-- `admin` - Admin of this class of assets
-- `minBalance` - The minimum balance of this new asset that any single account must have
+First run
 
 ```
-api.tx.assets.create(17508, "0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 1);
+export CALLER_PRIVATE_KEY=0x000...
 ```
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+### Swap
+
+Using the `dex.swap(amountIn, amountOutMin, path, to, deadline)` extrinsic
+
+- `amountIn` - Exact supply amount
+- `amountOutMin` - Acceptable minimum target amount
+- `path` - Trading path
+- `to` - The recipient of the swapped token asset. The caller is the default recipient if it is set to None
+- `deadline` - The deadline of executing this extrinsic. The deadline won't be checked if it is set to None
 
 ```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/createAsset.ts
-```
-
-### Transfer Asset
-
-Using the `assets.transfer(assetId, target, amount)` extrinsic
-
-- `assetId` - Asset ID to transfer
-- `target` - Recipient address
-- `amount` - Amount to transfer
-
-```
-const ASTO = {
-  id: 17508,
-  decimals: 18,
-};
-api.tx.assets.transfer(ASTO.id, "0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 1 * 10 ** ASTO.decimals);
+api.tx.dex.swap(1_000_000, 500_000, [1, 2], null, null);
 ```
 
 Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
 
 ```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/transferAsset.ts
+pnpm call src/swap.ts
 ```
