@@ -53,6 +53,8 @@ importers:
 
   examples/evm/use-erc721: {}
 
+  examples/evm/use-forge: {}
+
   examples/evm/use-hardhat:
     devDependencies:
       '@ethersproject/hash':
@@ -117,6 +119,8 @@ importers:
       '@polkadot/util':
         specifier: ^12.3.2
         version: 12.3.2
+
+  examples/substrate/use-dex: {}
 
   examples/substrate/use-feeProxy: {}
 
