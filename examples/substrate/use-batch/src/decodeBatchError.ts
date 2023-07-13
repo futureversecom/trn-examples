@@ -14,6 +14,7 @@ export async function main() {
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
   const calls = new Array(10).fill(1).map((n, i) => {
+    // Force error as Asset ID 3 does not exist
     if (i === 6) return api.tx.assets.transfer(3, caller.address, 1);
     return api.tx.system.remark(`Call ${n + i}`);
   });
