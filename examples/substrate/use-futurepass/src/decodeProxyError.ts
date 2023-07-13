@@ -16,6 +16,7 @@ export async function main() {
   const futurepass = (
     await api.query.futurepass.holders(caller.address)
   ).toString();
+  // Force error as Asset ID 3 does not exist
   const call = api.tx.assets.transfer(3, futurepass, 1);
 
   const extrinsic = api.tx.futurepass.proxyExtrinsic(futurepass, call);
