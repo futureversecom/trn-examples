@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -52,6 +52,8 @@ importers:
   examples/evm/use-erc20: {}
 
   examples/evm/use-erc721: {}
+
+  examples/evm/use-forge: {}
 
   examples/evm/use-hardhat:
     devDependencies:
@@ -114,9 +116,13 @@ importers:
 
   examples/substrate/use-dex: {}
 
-  examples/substrate/use-fee-proxy: {}
+  examples/substrate/use-feeProxy: {}
 
-  examples/substrate/use-futurepass: {}
+  examples/substrate/use-futurepass:
+    dependencies:
+      '@polkadot/util':
+        specifier: ^12.3.2
+        version: 12.3.2
 
   examples/substrate/use-nft:
     dependencies:

@@ -1,5 +1,8 @@
 {
   "scripts": {
     "call": "ts-node --project ../../../tsconfig.json"
+  },
+  "dependencies": {
+    "@polkadot/util": "^12.3.2"
   }
 }
