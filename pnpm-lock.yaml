@@ -114,6 +114,12 @@ importers:
 
   examples/substrate/use-assets: {}
 
+  examples/substrate/use-batch:
+    dependencies:
+      '@polkadot/util':
+        specifier: ^12.3.2
+        version: 12.3.2
+
   examples/substrate/use-dex: {}
 
   examples/substrate/use-feeProxy: {}
