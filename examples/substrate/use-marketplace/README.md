@@ -48,10 +48,10 @@ api.tx.marketplace.auctionNft(
 );
 ```
 
-Run the command below to execute the example script
+Run the command below to execute the example script, passing in a Collection ID & Serial Numbers
 
 ```
-pnpm call src/auctionNft.ts
+pnpm call src/auctionNft.ts --collectionId=<CollectionID> --serialNumbers=<Serial Numbers>
 ```
 
 ### Sell NFT
