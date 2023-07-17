@@ -25,22 +25,26 @@ export async function main() {
   const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
+  const buyer = null;
   const duration = null;
   const marketplaceId = 2;
   const paymentAsset = RootAsset.assetId;
-  const reservePrice = ethers.parseUnits("1", RootAsset.decimals).toString();
+  const fixedPrice = ethers.parseUnits("1", RootAsset.decimals).toString();
 
-  const extrinsic = api.tx.marketplace.auctionNft(
+  const extrinsic = api.tx.marketplace.sellNft(
     collectionId,
     serialNumbers,
+    buyer,
     paymentAsset,
-    reservePrice,
+    fixedPrice,
     duration,
     marketplaceId
   );
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-  const [event] = filterExtrinsicEvents(result.events, ["Nft.AuctionOpen"]);
+  const [event] = filterExtrinsicEvents(result.events, [
+    "Nft.FixedPriceSaleList",
+  ]);
 
   console.log("Extrinsic Result", event.toJSON());
 
