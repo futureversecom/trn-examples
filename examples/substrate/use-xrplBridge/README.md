@@ -1,87 +1,55 @@
-# Use Futurepass
+# Use XRPL bridge
 
 First run
 
 ```
 export CALLER_PRIVATE_KEY=0x000...
-export DELEGATE_PRIVATE_KEY=0x000...
 ```
 
-### Create Futurepass account
+### Bridge XRP tokens from XRPL -> TRN
 
-Using the `futurepass.create(account)` extrinsic
-
-- `account` - Owner of the newly created FuturePass account
+Using the `xrpl client` deposit/"send payment" to DOOR account with memodata field, once the tx is received by DOOR account.. the relayer will relay the tx to the root network
 
 ```
-api.tx.futurepass.create("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
+const request = {
+    TransactionType: "Payment",
+    Destination: XRP_BRIDGE_ADDRESS,
+    Account: wallet.address,
+    Amount: xrpToDrops(amount),
+    Memos: [
+      {
+        Memo: {
+          MemoType: convertStringToHex("Address"),
+          MemoData: convertStringToHex(receiver),
+        },
+      },
+    ],
+  } as unknown as Transaction;
+  const response = await xrplApi.submit(request, { wallet: wallet });
 ```
 
 Run the command below to execute the example script
 
 ```
-pnpm call src/createFuturepassAccount.ts
+pnpm call src/bridgeXRPLToTRN
 ```
 
-### Register a Delegate
+### Bridge XRP tokens from TRN -> XRPL
 
-Using the `futurepass.registerDelegateWithSignature(futurepass, delegate, proxyType, deadline, signature)` extrinsic
+Using the `xrplBridge.withdrawXrp(amount, recipientAddress)` extrinsic
 
-- `futurepass` - Futurepass account to register the account as delegate
-- `delegate` - The delegated account for the futurepass
-- `proxyType` - Delegate permission level
-- `deadline` - Deadline for the signature
-- `signature` - Signature of the message parameters
+- `amount` - Amount received on xrpl chain
+- `recipientAddress` - Classic address on xrp where amount is received (convert to ethereum address)
 
 ```
-api.tx.futurepass.registerDelegateWithSignature(
-    "0xfFfFfFFF0000000000000000000000000000001F",
-    "0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
-    1,
+api.tx.xrplBridge.withdrawXrp(
     10_000,
-    "0x2324u..."
+    "0x3E9D4A2B8AA0780F682D..."
 );
 ```
 
 Run the command below to execute the example script
 
 ```
-pnpm call src/registerDelegate.ts
-```
-
-### Unregister a Delegate
-
-Using the `futurepass.unregisterDelegate(futurepass, delegate)` extrinsic
-
-- `futurepass` - Futurepass account to unregister the delegate from
-- `delegate` - The delegated account for the futurepass
-
-```
-api.tx.futurepass.unregisterDelegate(
-    "0xfFfFfFFF0000000000000000000000000000001F",
-    "0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
-);
-```
-
-Run the command below to execute the example script
-
-```
-pnpm call src/unregisterDelegate.ts
-```
-
-### Proxy Extrinsic
-
-Using the `futurepass.proxyExtrinsic(futurepass, call)` extrinsic
-
-- `futurepass` - The FuturePass account though which the call is dispatched
-- `call` - The call that needs to be dispatched through the FuturePass account
-
-```
-api.tx.futurepass.proxyExtrinsic("0xFfFfFfff...", api.tx.system.remark("Hello World"));
-```
-
-Run the command below to execute the example script
-
-```
-pnpm call src/proxyExtrinsic.ts
+pnpm call src/bridgeTRNToXRPL
 ```
