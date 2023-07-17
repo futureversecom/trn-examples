@@ -12,25 +12,17 @@ export async function main() {
   const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
-  const futurepass = (
-    await api.query.futurepass.holders(caller.address)
-  ).toString();
-  // can be any extrinsic, using `system.remarkWithEvent` for simplicity sake
-  const call = api.tx.system.remarkWithEvent("Hello World");
-
-  const extrinsic = api.tx.futurepass.proxyExtrinsic(futurepass, call);
+  const calls = new Array(10)
+    .fill(1)
+    .map((n, i) => api.tx.system.remark(`Call ${n + i}`));
+  const extrinsic = api.tx.utility.batch(calls);
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-  const [proxyEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
-    "Futurepass.ProxyExecuted",
-    // depending on what extrinsic call you have, filter out the right event here
-    "System.Remarked",
+  const [event] = filterExtrinsicEvents(result.events, [
+    "Utility.BatchCompleted",
   ]);
 
-  console.log("Extrinsic Result", {
-    proxy: proxyEvent.toJSON(),
-    remark: remarkEvent.toJSON(),
-  });
+  console.log("Extrinsic Result", event.toJSON());
 
   await api.disconnect();
 }

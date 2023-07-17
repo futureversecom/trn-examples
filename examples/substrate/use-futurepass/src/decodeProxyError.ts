@@ -3,6 +3,7 @@ import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { cleanEnv, str } from "envalid";
+import { BN, hexToU8a } from "@polkadot/util";
 
 const env = cleanEnv(process.env, {
   CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -15,22 +16,30 @@ export async function main() {
   const futurepass = (
     await api.query.futurepass.holders(caller.address)
   ).toString();
-  // can be any extrinsic, using `system.remarkWithEvent` for simplicity sake
-  const call = api.tx.system.remarkWithEvent("Hello World");
+  // Force error as Asset ID 3 does not exist
+  const call = api.tx.assets.transfer(3, futurepass, 1);
 
   const extrinsic = api.tx.futurepass.proxyExtrinsic(futurepass, call);
 
   const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-  const [proxyEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
-    "Futurepass.ProxyExecuted",
-    // depending on what extrinsic call you have, filter out the right event here
-    "System.Remarked",
+  const [{ event }] = filterExtrinsicEvents(result.events, [
+    "Proxy.ProxyExecuted",
   ]);
 
-  console.log("Extrinsic Result", {
-    proxy: proxyEvent.toJSON(),
-    remark: remarkEvent.toJSON(),
+  const { err } = event.data[0].toJSON() as {
+    err: {
+      module: {
+        index: number;
+        error: `0x${string}`;
+      };
+    };
+  };
+
+  const { section, name, docs } = api.registry.findMetaError({
+    index: new BN(err.module.index),
+    error: hexToU8a(err.module.error),
   });
+  console.log(`Proxy extrinsic failed, [${section}.${name}] ${docs}`);
 
   await api.disconnect();
 }
