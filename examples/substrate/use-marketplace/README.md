@@ -67,7 +67,7 @@ Using the `marketplace.sellNft(collectionId, serialNumbers, buyer, paymentAsset,
 - `marketplaceId` - The ID of the marketplace
 
 ```
-api.tx.marketplace.auctionNft(
+api.tx.marketplace.sellNft(
     100,
     [1, 2, 3],
     null,
@@ -112,7 +112,7 @@ Using the `marketplace.makeSimpleOffer(tokenId, amount, assetId, marketplaceId)`
 - `marketplaceId` - The ID of the marketplace
 
 ```
-api.tx.marketplace.auctionNft(
+api.tx.marketplace.makeSimpleOffer(
     12,
     10_000,
     1,
