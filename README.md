@@ -11,7 +11,7 @@ Enjoy our curated collection of examples and solutions on how to interact with t
 
 ## Requirements
 
-This repo uses `@forge/cli` for `use-forge` examples. Instruction installations can be found [here](https://www.npmjs.com/package/@forge/cli)
+This repo uses `@forge/cli` for `use-forge` examples. Installation instructions can be found [here](https://www.npmjs.com/package/@forge/cli)
 
 ## Provide Feedback
 
