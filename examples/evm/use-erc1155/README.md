@@ -10,19 +10,6 @@ export CALLER_PRIVATE_KEY=0x000...
 
 ### Create erc1155 NFT or SFT Collection
 
-- Using extrinsic
-
-Using the `nft.createCollection(name, initialIssuance, maxIssuance, tokenOwner, metadataScheme, royaltiesSchedule, crossChainCompatibility)` extrinsic
-
-- `name` - The name of the collection
-- `collectionOwner` - The collection owner, defaults to the caller
-- `metadataScheme` - The off-chain metadata referencing scheme for tokens in this
-- `royaltiesSchedule` - Defacto royalties plan for secondary sales, this will
-
-```js
-api.tx.sft.createCollection("MySFTCollection", null, "0x8324...", null);
-```
-
 Refer to [this](https://github.com/futureversecom/trn-examples/blob/main/examples/substrate/use-sft/src/createCollection.ts) example.
 
 On executing the above extrinsic, it will create a collection id.
