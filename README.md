@@ -9,6 +9,10 @@ Enjoy our curated collection of examples and solutions on how to interact with t
 - [Substrate](/examples/substrate) – Provide examples on how to interact with TRN native pallets using [extrinsics](https://docs.substrate.io/learn/transaction-types/)
 - [UI](/examples/ui) – Examples on how use popular UI solutions, e.g MetaMask with TRN
 
+## Requirements
+
+This repo uses `@forge/cli` for `use-forge` examples. Installation instructions can be found [here](https://www.npmjs.com/package/@forge/cli)
+
 ## Provide Feedback
 
 - [Start a Discussion](https://github.com/futureversecom/trn-examples/discussions) with a question, piece of feedback, or idea you want to share with the team.

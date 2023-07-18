@@ -6,33 +6,32 @@ import { cleanEnv, str } from "envalid";
 import { utils as ethers } from "ethers";
 
 const env = cleanEnv(process.env, {
-  CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
+	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
 });
 
 // Find token details at
 // https://explorer.rootnet.cloud/tokens
 const ASTO = {
-  id: 17508,
-  decimals: 18,
+	id: 17508,
+	decimals: 18,
 };
 
 export async function main() {
-  const api = await getChainApi("porcini");
-  const caller = createKeyring(env.CALLER_PRIVATE_KEY);
+	const api = await getChainApi("porcini");
+	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
-  const target = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
-  const extrinsic = api.tx.assets.transfer(
-    ASTO.id, // 			                      Asset ID to transfer
-    target, // 				                   Recipient address
-    ethers.formatUnits(100, ASTO.decimals) // Amount to transfer
-  );
+	const assetId = ASTO.id;
+	const target = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
+	const amount = ethers.parseUnits("100", ASTO.decimals).toString();
 
-  const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-  const [event] = filterExtrinsicEvents(result.events, ["Assets.Transferred"]);
+	const extrinsic = api.tx.assets.transfer(assetId, target, amount);
 
-  console.log("Extrinsic Result", event.toJSON());
+	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
+	const [event] = filterExtrinsicEvents(result.events, ["Assets.Transferred"]);
 
-  await api.disconnect();
+	console.log("Extrinsic Result", event.toJSON());
+
+	await api.disconnect();
 }
 
 main();
