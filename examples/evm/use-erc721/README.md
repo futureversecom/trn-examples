@@ -19,15 +19,15 @@ interface TRNNFT is IERC165 {
 
 ```js
 await nftPrecompile
-  .connect(wallet)
-  .initializeCollection(
-    wallet.address,
-    ethers.utils.hexlify(ethers.utils.toUtf8Bytes(name)),
-    maxIssuance,
-    metadataPath,
-    royaltyAddresses,
-    royaltyEntitlements
-  );
+	.connect(wallet)
+	.initializeCollection(
+		wallet.address,
+		ethers.utils.hexlify(ethers.utils.toUtf8Bytes(name)),
+		maxIssuance,
+		metadataPath,
+		royaltyAddresses,
+		royaltyEntitlements
+	);
 ```
 
 Run the command below to execute the example script
@@ -120,9 +120,7 @@ pnpm call src/getApproved.ts
 
 ```js
 const bob = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
-const address = await erc721Precompile
-  .connect(wallet)
-  .isApprovedForAll(wallet.address, bob);
+const address = await erc721Precompile.connect(wallet).isApprovedForAll(wallet.address, bob);
 ```
 
 Run the command below to execute the example script
@@ -160,12 +158,12 @@ To use transferFrom we have to make sure approval is set for the recipient addre
 
 ```js
 erc721Precompile
-  .connect(wallet)
-  .transferFrom(
-    "0xE04CC55ebEE1cBCE552f250e85c57B70B2E2625b",
-    "0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
-    100
-  );
+	.connect(wallet)
+	.transferFrom(
+		"0xE04CC55ebEE1cBCE552f250e85c57B70B2E2625b",
+		"0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
+		100
+	);
 ```
 
 Run the command below to execute the example script
@@ -202,8 +200,8 @@ pnpm call src/metadata.ts
 
 ```js
 await erc721Precompile
-  .connect(wallet)
-  .transferOwnership("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
+	.connect(wallet)
+	.transferOwnership("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
 ```
 
 Run the command below to execute the example script
