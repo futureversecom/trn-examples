@@ -8,10 +8,10 @@ export CALLER_PRIVATE_KEY=0x000...
 
 ### Bridge XRP tokens from XRPL -> TRN
 
-Using the `xrpl client` deposit/"send payment" to DOOR account with memodata field, once the tx is received by DOOR account.. the relayer will relay the tx to the root network
+Using the `xrpl client` deposit (send payment) to DOOR account with memodata field, once the tx is received by DOOR account.. the relayer will relay the tx to the root network
 
 ```
-const request = {
+const request: Payment = {
     TransactionType: "Payment",
     Destination: XRP_BRIDGE_ADDRESS,
     Account: wallet.address,
@@ -24,7 +24,7 @@ const request = {
         },
       },
     ],
-  } as unknown as Transaction;
+  };
   const response = await xrplApi.submit(request, { wallet: wallet });
 ```
 
