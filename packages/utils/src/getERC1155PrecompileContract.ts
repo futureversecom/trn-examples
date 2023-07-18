@@ -1,5 +1,6 @@
 import { Contract, ethers, getDefaultProvider, Wallet } from "ethers";
 import { getAddress } from "ethers/lib/utils";
+import { getEthersProvider } from "@trne/utils/getEthersProvider";
 
 export const getCollectionPrecompileAddress = (collectionId: number) => {
   const collectionIdBin = (+collectionId).toString(2).padStart(22, "0");
@@ -64,10 +65,7 @@ export const getERC1155Precompile = (
   collectionId: string | number | null
 ) => {
   // const provider = getLocalProvider(false).provider;
-  const wallet = new Wallet(
-    privateKey,
-    getDefaultProvider(`http://127.0.0.1:9933`)
-  );
+  const wallet = new Wallet(privateKey, getEthersProvider("porcini"));
 
   const erc1155PrecompileAddress = precompileAddress
     ? precompileAddress
@@ -105,5 +103,5 @@ export async function createToken(
 }
 
 export function getSignerWallet(privateKey: string) {
-  return new Wallet(privateKey, getDefaultProvider(`http://127.0.0.1:9933`));
+  return new Wallet(privateKey, getEthersProvider("porcini"));
 }
