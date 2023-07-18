@@ -6,7 +6,7 @@ import type { ApiPromise } from "@polkadot/api";
  * @returns Block height
  */
 export async function fetchFinalisedHead(api: ApiPromise): Promise<number> {
-  const blockHash = await api.rpc.chain.getFinalizedHead();
-  const { block } = await api.rpc.chain.getBlock(blockHash);
-  return block.header.number.toNumber();
+	const blockHash = await api.rpc.chain.getFinalizedHead();
+	const { block } = await api.rpc.chain.getBlock(blockHash);
+	return block.header.number.toNumber();
 }
