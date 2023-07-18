@@ -17,7 +17,7 @@ const env = cleanEnv(process.env, {
 export async function main() {
   assert("paymentAsset" in argv, "Payment asset ID is required");
 
-  const api = await getChainApi("local");
+  const api = await getChainApi("porcini");
   const caller = createKeyring(env.CALLER_PRIVATE_KEY);
   const fpassAddress = (
     await api.query.futurepass.holders(caller.address)
