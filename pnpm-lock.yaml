@@ -52,6 +52,8 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
 
+  examples/evm/use-erc1155: {}
+
   examples/evm/use-erc20: {}
 
   examples/evm/use-erc721: {}
@@ -125,6 +127,8 @@ importers:
 
   examples/substrate/use-dex: {}
 
+  examples/substrate/use-ethBridge: {}
+
   examples/substrate/use-feeProxy: {}
 
   examples/substrate/use-futurepass:
@@ -132,6 +136,8 @@ importers:
       '@polkadot/util':
         specifier: ^12.3.2
         version: 12.3.2
+
+  examples/substrate/use-marketplace: {}
 
   examples/substrate/use-nft:
     dependencies:
