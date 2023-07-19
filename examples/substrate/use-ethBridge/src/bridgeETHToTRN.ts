@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { collectArgs } from "@trne/utils/collectArgs";
 import { getChainApi } from "@trne/utils/getChainApi";
-import assert from "assert";
 import { cleanEnv, str } from "envalid";
 import { utils as ethers, getDefaultProvider, Wallet } from "ethers";
 
@@ -23,14 +22,12 @@ const EthAsset = {
 };
 
 export async function main() {
-	assert("asset" in argv, "Asset is required");
 	const { asset } = argv as unknown as { asset: string };
 	const isETH = asset === "ETH";
 
 	const api = await getChainApi("porcini");
 	const provider = getDefaultProvider("goerli");
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
-
 	const syloContract = getERC20Contract(SyloAsset.address, wallet);
 	const { bridgeContract, erc20PegContract } = getBridgeContracts("goerli", wallet);
 
@@ -39,13 +36,14 @@ export async function main() {
 	// Bridge requires a small fee
 	const sendMessageFee = ethers.formatEther(await bridgeContract.sendMessageFee());
 	const transferAmount = isETH ? "0.001" : "1";
-	const amount = ethers.parseEther(transferAmount);
+	const amount = ethers.parseUnits(transferAmount, isETH ? EthAsset.decimals : SyloAsset.decimals);
 
 	const args = [tokenAddress, amount, destination];
 	const value = ethers.parseEther(
 		isETH ? String(Number(transferAmount) + Number(sendMessageFee)) : sendMessageFee
 	);
 
+	// ERC20 tokens require approval
 	if (!isETH) {
 		const approveTx = await syloContract.approve(erc20PegContract.address, amount);
 		const approveReceipt = await approveTx.wait();
@@ -63,24 +61,29 @@ export async function main() {
 	const receipt = await tx.wait();
 	console.log("deposited", receipt.transactionHash);
 
-	// subscribe to system events via storage
-	api.query.system.events((events: any[]) => {
-		console.log(`\nReceived ${events.length} event(s):`);
+	await new Promise<void>((resolve) => {
+		// subscribe to system events via storage
+		api.query.system.events((events: any[]) => {
+			console.log(`\nReceived ${events.length} event(s):`);
 
-		// loop through the Vec<EventRecord>
-		events.forEach((record) => {
-			const { event } = record;
-			console.log("event", event.section, event.method);
-			if (event.section === "ethBridge" && event.method === "EventSubmit") {
-				console.log(`ETH Bridge transaction added successfully, for event id ${event.data[0]}`);
-			}
+			// loop through the Vec<EventRecord>
+			events.forEach((record) => {
+				const { event } = record;
+				if (event.section === "ethBridge" && event.method === "EventSubmit") {
+					console.log(`ETH Bridge transaction added successfully, for event id ${event.data[0]}`);
+				}
 
-			if (event.section === "ethBridge" && event.method === "ProcessingOk") {
-				console.log(`ETH Bridge transaction executed successfully, for event id ${event.data[0]}`);
-				api.disconnect().then(() => process.exit(0));
-			}
+				if (event.section === "ethBridge" && event.method === "ProcessingOk") {
+					console.log(
+						`ETH Bridge transaction executed successfully, for event id ${event.data[0]}`
+					);
+					resolve();
+				}
+			});
 		});
 	});
+
+	await api.disconnect();
 }
 
 main();
