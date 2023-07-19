@@ -32,7 +32,7 @@ export async function main() {
     innerCall
   );
   const maxPayment = 1000000;
-  const feeproxiedCall = api.tx.feeProxy.callWithFeePreferences(
+  const feeProxiedCall = api.tx.feeProxy.callWithFeePreferences(
     paymentAsset,
     maxPayment,
     proxyExtrinsic
