@@ -1,4 +1,4 @@
-import { Contract, getDefaultProvider, Wallet } from "ethers";
+import { Contract, Wallet } from "ethers";
 import { getAddress } from "ethers/lib/utils";
 
 import { getEthersProvider } from "./getEthersProvider";

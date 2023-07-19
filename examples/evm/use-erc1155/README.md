@@ -50,9 +50,9 @@ Either specify the collection id or precompile address to get erc1155Precompile
 
 ```js
 const { erc1155Precompile, wallet } = getERC1155Precompile(
-  env.CALLER_PRIVATE_KEY,
-  precompileAddress,
-  COLLECTION_ID
+	env.CALLER_PRIVATE_KEY,
+	precompileAddress,
+	COLLECTION_ID
 );
 ```
 
@@ -93,12 +93,8 @@ pnpm call src/mint.ts
 
 ```js
 await erc1155Precompile
-  .connect(wallet)
-  .mintBatch(
-    receiverAddress,
-    [serialNumber1, serialNumber2],
-    [initialIssuance1, initialIssuance2]
-  );
+	.connect(wallet)
+	.mintBatch(receiverAddress, [serialNumber1, serialNumber2], [initialIssuance1, initialIssuance2]);
 ```
 
 Run the command below to execute the example script
@@ -114,9 +110,7 @@ pnpm call src/mintBatch.ts
 - `burnAmount` - amount of serial numbers to burn
 
 ```js
-await erc1155Precompile
-  .connect(wallet)
-  .burn(wallet.address, serialNumber, burnAmount);
+await erc1155Precompile.connect(wallet).burn(wallet.address, serialNumber, burnAmount);
 ```
 
 Run the command below to execute the example script
@@ -133,12 +127,8 @@ pnpm call src/burn.ts
 
 ```js
 await erc1155Precompile
-  .connect(wallet)
-  .burnBatch(
-    ownerAddress,
-    [serialNumber1, serialNumber2],
-    [burnAmount1, burnAmount2]
-  );
+	.connect(wallet)
+	.burnBatch(ownerAddress, [serialNumber1, serialNumber2], [burnAmount1, burnAmount2]);
 ```
 
 Run the command below to execute the example script
@@ -169,8 +159,8 @@ pnpm call src/balanceOf.ts
 
 ```js
 await erc1155Precompile
-  .connect(wallet)
-  .balanceOf(["0x00..", "0x00.."], [serialNumber1, serialNumber2]);
+	.connect(wallet)
+	.balanceOf(["0x00..", "0x00.."], [serialNumber1, serialNumber2]);
 ```
 
 Run the command below to execute the example script
@@ -212,9 +202,7 @@ pnpm call src/owner.ts
 - `id` - serial number
 
 ```js
-const collectionOwner = await erc1155Precompile
-  .connect(wallet)
-  .totalSupply(serialNumber);
+const collectionOwner = await erc1155Precompile.connect(wallet).totalSupply(serialNumber);
 ```
 
 Run the command below to execute the example script
@@ -230,9 +218,7 @@ pnpm call src/totalSupply.ts
 
 ```js
 const bob = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
-const address = await erc1155Precompile
-  .connect(wallet)
-  .isApprovedForAll(wallet.address, bob);
+const address = await erc1155Precompile.connect(wallet).isApprovedForAll(wallet.address, bob);
 ```
 
 Run the command below to execute the example script
@@ -271,14 +257,14 @@ To use safetransferFrom we have to make sure approval is set for the recipient a
 
 ```js
 erc1155Precompile
-  .connect(toSignerWallet)
-  .transferFrom(
-    from,
-    to,
-    serialNumber,
-    100,
-    ethers.utils.hexlify(ethers.utils.toUtf8Bytes("data"))
-  );
+	.connect(toSignerWallet)
+	.transferFrom(
+		from,
+		to,
+		serialNumber,
+		100,
+		ethers.utils.hexlify(ethers.utils.toUtf8Bytes("data"))
+	);
 ```
 
 Run the command below to execute the example script
@@ -299,14 +285,14 @@ pnpm call src/safetransferFrom.ts
 
 ```js
 erc1155Precompile
-  .connect(fromSignerWallet)
-  .transferFrom(
-    from,
-    to,
-    serialNumber,
-    100,
-    ethers.utils.hexlify(ethers.utils.toUtf8Bytes("data"))
-  );
+	.connect(fromSignerWallet)
+	.transferFrom(
+		from,
+		to,
+		serialNumber,
+		100,
+		ethers.utils.hexlify(ethers.utils.toUtf8Bytes("data"))
+	);
 ```
 
 Run the command below to execute the example script
@@ -327,11 +313,11 @@ pnpm call src/safetransferFromOwner.ts
 
 ```js
 const tx = await erc1155Precompile.safeBatchTransferFrom(
-  wallet.address,
-  bobSigner.address,
-  [serialNumber1, serialNumber2],
-  [transferAmount1, transferAmount2],
-  callData
+	wallet.address,
+	bobSigner.address,
+	[serialNumber1, serialNumber2],
+	[transferAmount1, transferAmount2],
+	callData
 );
 ```
 
@@ -349,8 +335,8 @@ pnpm call src/safeBatchTransferFrom.ts
 
 ```js
 await erc1155Precompile
-  .connect(wallet)
-  .transferOwnership("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
+	.connect(wallet)
+	.transferOwnership("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
 ```
 
 Run the command below to execute the example script
@@ -382,8 +368,8 @@ pnpm call src/revokeOwnership.ts
 const newMetadataPath = "https://example.com/sft/updated/";
 
 const baseURITx = await erc1155Precompile
-  .connect(wallet)
-  .setBaseURI(ethers.utils.hexlify(ethers.utils.toUtf8Bytes(newMetadataPath)));
+	.connect(wallet)
+	.setBaseURI(ethers.utils.hexlify(ethers.utils.toUtf8Bytes(newMetadataPath)));
 ```
 
 Run the command below to execute the example script
@@ -399,9 +385,7 @@ pnpm call src/setBaseURI.ts
 - `maxSupply` - maximum supply
 
 ```js
-const tx = await erc1155Precompile
-  .connect(wallet)
-  .setMaxSupply(serialNumber, maxIssuance);
+const tx = await erc1155Precompile.connect(wallet).setMaxSupply(serialNumber, maxIssuance);
 const receipt = await tx.wait();
 ```
 
