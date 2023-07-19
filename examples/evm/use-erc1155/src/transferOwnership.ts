@@ -36,7 +36,7 @@ export async function main() {
 	const transferOwnershipBackTx = await erc1155Precompile
 		.connect(bobSigner)
 		.transferOwnership(wallet.address);
-	await transferOwnershipTx.wait();
+	await transferOwnershipBackTx.wait();
 }
 
 main();

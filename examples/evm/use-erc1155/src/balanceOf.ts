@@ -18,13 +18,14 @@ export async function main() {
 	const serialNumber = await createToken(erc1155Precompile, 0, wallet);
 	console.log("serialNumber:", serialNumber);
 	const initialIssuance = 100;
-	// //
+
 	const mintTx = await erc1155Precompile
 		.connect(wallet)
 		.mint(wallet.address, serialNumber, initialIssuance);
 	await mintTx.wait();
+
 	const balance = await erc1155Precompile.balanceOf(wallet.address, serialNumber);
-	console.log("balanceOf:::::", balance.toString());
+	console.log("balanceOf:", balance.toString());
 	// Verify balance is correct
 	assert(
 		balance.toNumber() === initialIssuance,

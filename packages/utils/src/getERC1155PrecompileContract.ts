@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getEthersProvider } from "@trne/utils/getEthersProvider";
-import { Contract, ethers, getDefaultProvider, Wallet } from "ethers";
+import { Contract, ethers, Wallet } from "ethers";
 import { getAddress } from "ethers/lib/utils";
 
 export const getCollectionPrecompileAddress = (collectionId: number) => {
@@ -62,7 +63,6 @@ export const getERC1155Precompile = (
 	precompileAddress: string | null,
 	collectionId: string | number | null
 ) => {
-	// const provider = getLocalProvider(false).provider;
 	const wallet = new Wallet(privateKey, getEthersProvider("porcini"));
 
 	const erc1155PrecompileAddress = precompileAddress
@@ -71,7 +71,6 @@ export const getERC1155Precompile = (
 
 	console.log("erc1155PrecompileAddress:", erc1155PrecompileAddress);
 	const erc1155Precompile = new Contract(erc1155PrecompileAddress, ERC1155_PRECOMPILE_ABI, wallet);
-	// console.log('erc1155Precompile;:',erc1155Precompile);
 
 	// Create precompiles contract
 	return {
@@ -92,7 +91,7 @@ export async function createToken(
 		.createToken(tokenName, initialIssuance, maxIssuance, tokenOwner.address);
 	const receipt = await tx.wait();
 	const serialNumber = (receipt?.events as any)[0].args.serialNumber;
-	console.log("serialNumber::", serialNumber);
+	console.log("serialNumber:", serialNumber);
 	return serialNumber;
 }
 
