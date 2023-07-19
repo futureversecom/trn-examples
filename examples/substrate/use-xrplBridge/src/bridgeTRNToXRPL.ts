@@ -43,6 +43,7 @@ export async function main() {
 			tx.tx.Amount === xrpToDrops(amount)
 	);
 	console.log(`Txs bridged on XRP at ${JSON.stringify(findTx.tx)}`);
+	process.exit(0);
 }
 
 main();
