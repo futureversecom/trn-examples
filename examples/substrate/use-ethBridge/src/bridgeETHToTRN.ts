@@ -21,7 +21,7 @@ const EthAsset = {
 	address: "0x0000000000000000000000000000000000000000",
 };
 
-export async function main() {
+async function main() {
 	const { asset } = argv as unknown as { asset: string };
 	const isETH = asset === "ETH";
 
@@ -86,4 +86,4 @@ export async function main() {
 	await api.disconnect();
 }
 
-main();
+main().then(() => process.exit(0));
