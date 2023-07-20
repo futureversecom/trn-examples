@@ -1,4 +1,3 @@
-import { getERC721Precompile } from "@trne/utils/getERC721PrecompileContract";
 import { getNFTPrecompile } from "@trne/utils/getNFTPrecompile";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";

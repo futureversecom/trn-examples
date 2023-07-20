@@ -1,33 +1,30 @@
+import { collectArgs } from "@trne/utils/collectArgs";
 import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import assert from "assert";
 import { cleanEnv, str } from "envalid";
-import { utils as ethers } from "ethers";
+
+const argv = collectArgs();
 
 const env = cleanEnv(process.env, {
 	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
 });
 
-// Find token details at
-// https://explorer.rootnet.cloud/tokens
-const ASTO = {
-	id: 17508,
-	decimals: 18,
-};
-
 export async function main() {
+	assert("listingId" in argv, "Listing ID is required");
+	const { listingId } = argv as unknown as {
+		listingId: number;
+	};
+
 	const api = await getChainApi("porcini");
 	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
-	const assetId = ASTO.id;
-	const target = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
-	const amount = ethers.parseUnits("100", ASTO.decimals).toString();
-
-	const extrinsic = api.tx.assets.transfer(assetId, target, amount);
+	const extrinsic = api.tx.marketplace.buy(listingId);
 
 	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-	const [event] = filterExtrinsicEvents(result.events, ["Assets.Transferred"]);
+	const [event] = filterExtrinsicEvents(result.events, ["Nft.FixedPriceSaleComplete"]);
 
 	console.log("Extrinsic Result", event.toJSON());
 
