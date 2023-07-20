@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { useTransfer } from "../../lib/hooks/useTransfer";
 import { useWallet } from "../../lib/hooks/useWallet";
-// import { Button } from "@trne/ui-utils/components/Button";
 import { Button } from "./Button";
 
 export default function Demo() {

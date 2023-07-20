@@ -13,7 +13,7 @@ const ASTO = {
 	id: 17508,
 	decimals: 18,
 };
-const target = "0x59421c2502aa55BAEa01799D8d9E713ccD752414";
+const target = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
 
 type Extrinsic = SubmittableExtrinsic<"promise", ISubmittableResult>;
 

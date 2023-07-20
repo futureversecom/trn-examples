@@ -3,7 +3,7 @@ const config = require("@trne/ui-utils/tailwind.config.js");
 
 module.exports = {
 	plugins: {
-		tailwindcss: {},
+		tailwindcss: { config },
 		autoprefixer: {},
 	},
 };

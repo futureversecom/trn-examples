@@ -215,6 +215,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@polkadot/api':
+        specifier: ^10.9.1
+        version: 10.9.1
       '@trne/utils':
         specifier: workspace:^
         version: link:../utils
