@@ -11,7 +11,7 @@ export async function executeGraphQuery(
 	const fetchResponse = await fetch(
 		accessToken
 			? `https://ap-southeast-2.aws.realm.mongodb.com/api/client/v2.0/app/${RootNetwork[network].MongoAppId}/graphql`
-			: `https://rootnet-${network}.hasura.app/v1/graphql`,
+			: `https://rootnet-${network === "root" ? "mainnet" : network}.hasura.app/v1/graphql`,
 		{
 			method: "POST",
 			body: JSON.stringify({
