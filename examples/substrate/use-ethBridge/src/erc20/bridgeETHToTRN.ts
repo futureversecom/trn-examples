@@ -4,7 +4,7 @@ import { getChainApi } from "@trne/utils/getChainApi";
 import { cleanEnv, str } from "envalid";
 import { utils as ethers, getDefaultProvider, Wallet } from "ethers";
 
-import { getBridgeContracts, getERC20Contract } from "./contracts";
+import { getBridgeContracts, getERC20Contract } from "../contracts";
 
 const argv = collectArgs();
 const env = cleanEnv(process.env, {

@@ -6,7 +6,7 @@ import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { cleanEnv, str } from "envalid";
 import { utils as ethers, getDefaultProvider, Wallet } from "ethers";
 
-import { getBridgeContracts } from "./contracts";
+import { getBridgeContracts } from "../contracts";
 
 const env = cleanEnv(process.env, {
 	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -23,6 +23,7 @@ async function main() {
 	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
 	const { bridgeContract } = getBridgeContracts("goerli", wallet);
+	const bridgeFee = await bridgeContract.bridgeFee();
 
 	// Submit withdraw extrinsic on The Root Network
 	const assetId = EthAsset.assetId;
@@ -57,7 +58,7 @@ async function main() {
 			...signature,
 		},
 	];
-	const value = await bridgeContract.bridgeFee();
+	const value = bridgeFee;
 
 	const gasLimit = await bridgeContract.estimateGas.receiveMessage(...args, {
 		value,
