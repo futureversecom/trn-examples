@@ -1,4 +1,4 @@
-# Use ERC1155 Precompile
+# Use FeeProxy
 
 First run
 
@@ -8,81 +8,53 @@ export CALLER_PRIVATE_KEY=0x000...
 
 ## Contract Read/Write
 
-### Create erc1155 NFT or SFT Collection
-
-Refer to [this](https://github.com/futureversecom/trn-examples/blob/main/examples/substrate/use-sft/src/createCollection.ts) example.
-
-On executing the above extrinsic, it will create a collection id.
-Get precompile contract for this collection id.
-
-Collection can also be created using precompiles
+Either specify the payment asset id to get paymentPrecompileAddress
 
 ```js
-
-const { sftPrecompile, wallet } = getSFTPrecompile(env.CALLER_PRIVATE_KEY);
-
-const owner = wallet.address;
-const name = ethers.utils.hexlify(ethers.utils.toUtf8Bytes("My Collection"));
-const metadataPath = ethers.utils.hexlify(
-    ethers.utils.toUtf8Bytes("https://example.com/sft/metadata")
-);
-const royaltyAddresses = [wallet.address];
-const royaltyEntitlements = [1000];
-
-const initializeTx = await sftPrecompile
-    .connect(wallet)
-    .initializeCollection(
-        owner,
-        name,
-        metadataPath,
-        royaltyAddresses,
-        royaltyEntitlements
-    );
-const receipt = await initializeTx.wait();
-    const {nftPrecompile, wallet} = getSFTPrecompile(env.CALLER_PRIVATE_KEY)
-// The precompile address of transaction
-const { precompileAddress } = (receipt?.events as any)[0]
-    .args;
-
-```
-
-Either specify the collection id or precompile address to get erc1155Precompile
-
-```js
-const { erc1155Precompile, wallet } = getERC1155Precompile(
+const { erc20Precompile, wallet } = getERC20PrecompileForAssetId(
 	env.CALLER_PRIVATE_KEY,
-	precompileAddress,
-	COLLECTION_ID
+	paymentAsset
 );
+const feeToken = erc20Precompile;
 ```
 
-### `mint(address owner, uint256 id, uint256 amount)`
+Create FeeToken contract
 
-- `owner` - address of the owner who mints
-- `id` - serial number
-- `amount` - number of tokens of serial number to mint
+```
+const feeProxy = new Contract(FEE_PROXY_ADDRESS, FEE_PROXY_ABI, wallet);
+```
+
+### `callWithFeePreferences(address asset, uint128 maxPayment, address target, bytes input)`
+
+- `asset` - precompile address for payment asset
+- `maxPayment` - max payment user is willing to be pay in payment asset
+- `target` - precompile address for payment asset
+- `input` - transaction for which fee is to be paid in payment asset
 
 ```js
-const tokenName = ethers.utils.hexlify(ethers.utils.toUtf8Bytes("MyToken"));
-const maxIssuance = 0;
-const initialIssuance = 100;
-const tx = await erc1155Precompile
-    .connect(wallet)
-    .createToken(tokenName, initialIssuance, maxIssuance, wallet.address);
-const receipt = await tx.wait();
-const serialNumber = (receipt?.events as any)[0].args.serialNumber;
-const quantity = 105;
-//
-await erc1155Precompile
-    .connect(wallet)
-    .mint(wallet.address, serialNumber, quantity);
-await erc1155Precompile.connect(wallet).mint(wallet.address, serialNumber, 100);
+const unsignedTx = {
+	type: 0,
+	from: wallet.address,
+	to: FEE_PROXY_ADDRESS,
+	nonce: nonce,
+	data: feeProxy.interface.encodeFunctionData("callWithFeePreferences", [
+		feeToken.address,
+		maxFeePaymentInToken,
+		feeToken.address,
+		transferInput,
+	]),
+	gasLimit: gasEstimate,
+	gasPrice: fees.gasPrice,
+};
+
+await wallet.signTransaction(unsignedTx);
+const tx = await wallet.sendTransaction(unsignedTx);
 ```
 
 Run the command below to execute the example script
 
 ```shell
-pnpm call src/mint.ts
+pnpm call src/callWithFeePreferences.ts
 ```
 
 ### `mintBatch(address owner, uint256[] ids, uint256[] amounts)`

@@ -31,19 +31,14 @@ export async function main() {
 		env.CALLER_PRIVATE_KEY,
 		paymentAsset
 	);
-	console.log("Wallet:", wallet.address);
 	const feeToken = erc20Precompile;
 	const transferAmount = 1;
 	const iface = new utils.Interface(ERC20_ABI);
 	const transferInput = iface.encodeFunctionData("transfer", [destination, transferAmount]);
-
+	const maxFeePaymentInToken = 10000000000;
 	const feeProxy = new Contract(FEE_PROXY_ADDRESS, FEE_PROXY_ABI, wallet);
 	const gasEstimate = await feeToken.estimateGas.transfer(destination, transferAmount);
-	console.log("gasEstimate::", gasEstimate.toString());
-	const estimatedTokenTxCost = await getAmountIn(provider, gasEstimate, paymentAsset);
-	console.log("estimatedTokenTxCost:::", estimatedTokenTxCost.toString());
 	const nonce = await wallet.getTransactionCount();
-	console.log("nonce:", nonce.toString());
 	const unsignedTx = {
 		type: 0,
 		from: wallet.address,
@@ -51,7 +46,7 @@ export async function main() {
 		nonce: nonce,
 		data: feeProxy.interface.encodeFunctionData("callWithFeePreferences", [
 			feeToken.address,
-			estimatedTokenTxCost,
+			maxFeePaymentInToken,
 			feeToken.address,
 			transferInput,
 		]),
@@ -66,8 +61,6 @@ export async function main() {
 	// check updated balances
 	const tokenBalanceUpdated = await feeToken.balanceOf(wallet.address);
 	console.log("tokenBalanceUpdated::", tokenBalanceUpdated.toString());
-
-	// await api.disconnect();
 }
 
 main();
