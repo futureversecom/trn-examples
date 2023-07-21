@@ -8,7 +8,7 @@ export CALLER_PRIVATE_KEY=0x000...
 
 ## Contract Read/Write
 
-Either specify the payment asset id to get paymentPrecompileAddress
+Specify the payment asset id to get paymentPrecompileAddress
 
 ```js
 const { erc20Precompile, wallet } = getERC20PrecompileForAssetId(
