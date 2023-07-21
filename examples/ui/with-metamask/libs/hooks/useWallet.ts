@@ -1,8 +1,8 @@
-"use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import detectEthereumProvider from "@metamask/detect-provider";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { Maybe } from "@metamask/providers/dist/utils";
+import { getPublicProvider } from "@therootnetwork/api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface MetaMaskEthereumProvider {
@@ -18,7 +18,7 @@ interface MetaMaskEthereumProvider {
 const CHAIN_INFO = {
 	chainId: "0x1df8",
 	chainName: "The Root Network Porcini",
-	rpcUrls: ["https://porcini.rootnet.app/archive"],
+	rpcUrls: [getPublicProvider("porcini")],
 	nativeCurrency: {
 		name: "XRP",
 		symbol: "XRP",
@@ -60,9 +60,10 @@ export const useWallet = () => {
 	const getProvider = useCallback(async () => {
 		const provider = await detectEthereumProvider({ silent: true });
 		setProvider(provider);
-		setHasProvider(Boolean(provider)); // transform provider to true or false
+		setHasProvider(!!provider); // transform provider to true or false
 
 		if (provider) {
+			// request access to the account via MetaMask
 			const accounts = await window.ethereum.request({
 				method: "eth_accounts",
 			});
@@ -110,6 +111,7 @@ export const useWallet = () => {
 				}
 			}
 			// handle other "switch" errors
+			console.log(switchError);
 		}
 	};
 

@@ -1,5 +1,3 @@
-"use client";
-
 import { ApiPromise } from "@polkadot/api";
 import { getChainApi } from "@trne/utils/src/getChainApi";
 import { useEffect, useState } from "react";
@@ -12,14 +10,18 @@ export const useRootApi = () => {
 		(async function () {
 			try {
 				setIsConnecting(true);
-				const rootApi = await getChainApi("porcini");
-				setRootApi(rootApi);
+				const api = await getChainApi("porcini");
+				setRootApi(api);
 			} catch (error) {
 				console.log("error on useRootApi", error);
 			} finally {
 				setIsConnecting(false);
 			}
 		})();
+
+		return () => {
+			rootApi?.disconnect();
+		};
 	}, []);
 
 	return { rootApi, isConnecting };

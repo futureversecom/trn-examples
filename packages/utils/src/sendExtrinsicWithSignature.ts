@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { SubmittableExtrinsic, SubmittableResultValue } from "@polkadot/api/types";
 import { ISubmittableResult } from "@polkadot/types/types";
 

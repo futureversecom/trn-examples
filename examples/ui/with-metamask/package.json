@@ -13,6 +13,7 @@
     "@metamask/providers": "^11.1.0",
     "@polkadot/api": "^10.9.1",
     "@polkadot/types": "^10.9.1",
+    "@therootnetwork/api": "^1.0.2",
     "@types/node": "^20.2.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "18.2.7",
