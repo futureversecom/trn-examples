@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { collectArgs } from "@trne/utils/collectArgs";
 import { createKeyring } from "@trne/utils/createKeyring";
 import { fetchTRNEvent } from "@trne/utils/fetchTRNEvent";
@@ -6,7 +7,7 @@ import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";
-import { getDefaultProvider, Wallet } from "ethers";
+import { BigNumber, getDefaultProvider, Wallet } from "ethers";
 
 import { getBridgeContracts } from "../contracts";
 
@@ -27,7 +28,16 @@ async function main() {
 	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
 	const { bridgeContract } = getBridgeContracts("goerli", wallet);
-	const bridgeFee = await bridgeContract.bridgeFee();
+
+	// Bridge requires a small fee
+	let bridgeFee: BigNumber | undefined;
+	// This can fail when using `defaultProvider`
+	try {
+		bridgeFee = await bridgeContract.bridgeFee();
+	} catch (error: any) {
+		if (error?.code === "CALL_EXCEPTION") await main();
+		return;
+	}
 
 	// Submit withdraw extrinsic on The Root Network
 	const tokenIds = [[tokenId]];
