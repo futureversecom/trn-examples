@@ -35,6 +35,7 @@ async function main() {
 	try {
 		bridgeFee = await bridgeContract.bridgeFee();
 	} catch (error: any) {
+		// Error code associated with `defaultProvider` failure
 		if (error?.code === "CALL_EXCEPTION") await main();
 		return;
 	}
