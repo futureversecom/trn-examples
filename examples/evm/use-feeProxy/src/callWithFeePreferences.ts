@@ -37,30 +37,32 @@ export async function main() {
 	const transferInput = iface.encodeFunctionData("transfer", [destination, transferAmount]);
 	const maxFeePaymentInToken = 10000000000;
 	const feeProxy = new Contract(FEE_PROXY_ADDRESS, FEE_PROXY_ABI, wallet);
-	const gasEstimate = await feeToken.estimateGas.transfer(destination, transferAmount);
+	const gasLimit = await feeToken.estimateGas.transfer(destination, transferAmount);
 	const nonce = await wallet.getTransactionCount();
+	const data = feeProxy.interface.encodeFunctionData("callWithFeePreferences", [
+		feeToken.address,
+		maxFeePaymentInToken,
+		feeToken.address,
+		transferInput,
+	]);
+	const gasPrice = fees.gasPrice!;
 	const unsignedTx = {
 		type: 0,
 		from: wallet.address,
 		to: FEE_PROXY_ADDRESS,
 		nonce: nonce,
-		data: feeProxy.interface.encodeFunctionData("callWithFeePreferences", [
-			feeToken.address,
-			maxFeePaymentInToken,
-			feeToken.address,
-			transferInput,
-		]),
-		gasLimit: gasEstimate,
-		gasPrice: fees.gasPrice!,
+		data,
+		gasLimit,
+		gasPrice,
 	};
 
 	await wallet.signTransaction(unsignedTx);
 	const tx = await wallet.sendTransaction(unsignedTx);
 	const receipt = await tx.wait();
-	console.log("receipt::", receipt);
+	console.log("receipt:", receipt);
 	// check updated balances
 	const tokenBalanceUpdated = await feeToken.balanceOf(wallet.address);
-	console.log("tokenBalanceUpdated::", tokenBalanceUpdated.toString());
+	console.log("tokenBalanceUpdated:", tokenBalanceUpdated.toString());
 }
 
 main();
