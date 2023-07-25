@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { collectArgs } from "@trne/utils/collectArgs";
 import { getChainApi } from "@trne/utils/getChainApi";
 import { cleanEnv, str } from "envalid";
-import { utils as ethers, getDefaultProvider, Wallet } from "ethers";
+import { BigNumber, utils as ethers, getDefaultProvider, Wallet } from "ethers";
 
-import { getBridgeContracts, getERC20Contract } from "./contracts";
+import { getBridgeContracts, getERC20Contract } from "../contracts";
 
 const argv = collectArgs();
 const env = cleanEnv(process.env, {
@@ -31,10 +33,20 @@ async function main() {
 	const syloContract = getERC20Contract(SyloAsset.address, wallet);
 	const { bridgeContract, erc20PegContract } = getBridgeContracts("goerli", wallet);
 
+	// Bridge requires a small fee
+	let sendMessageFeeBN: BigNumber | undefined;
+	// This can fail when using `defaultProvider`
+	try {
+		sendMessageFeeBN = await bridgeContract.sendMessageFee();
+	} catch (error: any) {
+		// Error code associated with `defaultProvider` failure
+		if (error?.code === "CALL_EXCEPTION") await main();
+		return;
+	}
+	const sendMessageFee = ethers.formatEther(sendMessageFeeBN!);
+
 	const destination = wallet.address;
 	const tokenAddress = isETH ? EthAsset.address : SyloAsset.address;
-	// Bridge requires a small fee
-	const sendMessageFee = ethers.formatEther(await bridgeContract.sendMessageFee());
 	const transferAmount = isETH ? "0.001" : "1";
 	const amount = ethers.parseUnits(transferAmount, isETH ? EthAsset.decimals : SyloAsset.decimals);
 
