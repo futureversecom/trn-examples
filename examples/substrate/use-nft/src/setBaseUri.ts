@@ -1,24 +1,14 @@
 import { stringToHex } from "@polkadot/util";
 import { collectArgs } from "@trne/utils/collectArgs";
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import assert from "assert";
-import { cleanEnv, str } from "envalid";
 
 const argv = collectArgs();
+assert("collectionId" in argv, "Collection ID is required");
 
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
-
-export async function main() {
-	assert("collectionId" in argv, "Collection ID is required");
-
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	const baseUri = stringToHex("https://example.com/token/");
 	const { collectionId } = argv as unknown as { collectionId: number };
 
@@ -28,8 +18,4 @@ export async function main() {
 	const [event] = filterExtrinsicEvents(result.events, ["Nft.BaseUriSet"]);
 
 	console.log("Extrinsic Result", event.toJSON());
-
-	await api.disconnect();
-}
-
-main();
+});

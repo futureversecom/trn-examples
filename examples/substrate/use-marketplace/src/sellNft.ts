@@ -1,29 +1,20 @@
 import { collectArgs } from "@trne/utils/collectArgs";
 import { collectArrayFromString } from "@trne/utils/collectArrayFromString";
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import assert from "assert";
-import { cleanEnv, str } from "envalid";
 import { utils as ethers } from "ethers";
 
 const argv = collectArgs();
-
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
 
 const RootAsset = {
 	assetId: 1,
 	decimals: 6,
 };
 
-export async function main() {
+withChainApi("porcini", async (api, caller) => {
 	const { collectionId, serialNumbers } = formatArgs();
-
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 
 	const buyer = null;
 	const duration = null;
@@ -45,11 +36,7 @@ export async function main() {
 	const [event] = filterExtrinsicEvents(result.events, ["Nft.FixedPriceSaleList"]);
 
 	console.log("Extrinsic Result", event.toJSON());
-
-	await api.disconnect();
-}
-
-main();
+});
 
 function formatArgs() {
 	assert("collectionId" in argv, "Collection ID is required");

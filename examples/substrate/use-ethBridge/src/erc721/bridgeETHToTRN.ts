@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { collectArgs } from "@trne/utils/collectArgs";
-import { getChainApi } from "@trne/utils/getChainApi";
+import type { ApiPromise } from "@trne/utils/getChainApi";
+import { withChainApi } from "@trne/utils/withChainApi";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";
 import { BigNumber, getDefaultProvider, Wallet } from "ethers";
@@ -15,11 +16,10 @@ const env = cleanEnv(process.env, {
 
 const TheNextLegends = "0x5085CC0236ae108812571eADF24beeE4fe8E0c50";
 
-async function main() {
+async function main(api: ApiPromise) {
 	assert("tokenId" in argv, "Token ID is required");
 	const { tokenId } = argv as unknown as { tokenId: number };
 
-	const api = await getChainApi("porcini");
 	const provider = getDefaultProvider("goerli");
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
 	const TheNextLegendsContract = getERC721Contract(TheNextLegends, wallet);
@@ -37,7 +37,7 @@ async function main() {
 		sendMessageFee = await bridgeContract.sendMessageFee();
 	} catch (error: any) {
 		// Error code associated with `defaultProvider` failure
-		if (error?.code === "CALL_EXCEPTION") await main();
+		if (error?.code === "CALL_EXCEPTION") await main(api);
 		return;
 	}
 
@@ -79,4 +79,4 @@ async function main() {
 	});
 }
 
-main();
+withChainApi("porcini", main);

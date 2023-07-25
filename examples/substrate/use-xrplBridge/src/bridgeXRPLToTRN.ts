@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getChainApi } from "@trne/utils/getChainApi";
 import { getXrplClient } from "@trne/utils/getXrplClient";
+import { withChainApi } from "@trne/utils/withChainApi";
 import { cleanEnv, str } from "envalid";
 import { convertStringToHex, Payment, Wallet, xrpToDrops } from "xrpl";
 
@@ -8,9 +8,8 @@ const env = cleanEnv(process.env, {
 	SECRET_SEED_XRP: str(),
 });
 
-export async function main() {
+withChainApi("porcini", async (api) => {
 	const xrplApi = await getXrplClient("wss://s.altnet.rippletest.net:51233");
-	const api = await getChainApi("porcini");
 	// Send xrp to door account, XRPL bridge relayer will bridge it to root network
 	const wallet = Wallet.fromSeed(env.SECRET_SEED_XRP);
 	console.log("wallet.address", wallet.address);
@@ -62,6 +61,4 @@ export async function main() {
 			}
 		});
 	});
-}
-
-main();
+});

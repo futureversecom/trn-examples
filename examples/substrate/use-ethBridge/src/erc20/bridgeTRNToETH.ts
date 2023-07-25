@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createKeyring } from "@trne/utils/createKeyring";
+import type { Signer } from "@trne/utils/createKeyring";
 import { fetchTRNEvent } from "@trne/utils/fetchTRNEvent";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
+import type { ApiPromise } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import { cleanEnv, str } from "envalid";
 import { BigNumber, utils as ethers, getDefaultProvider, Wallet } from "ethers";
 
@@ -18,10 +19,8 @@ const EthAsset = {
 	assetId: 1124,
 };
 
-async function main() {
-	const api = await getChainApi("porcini");
+async function main(api: ApiPromise, caller: Signer) {
 	const provider = getDefaultProvider("goerli");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
 	const { bridgeContract } = getBridgeContracts("goerli", wallet);
 
@@ -32,7 +31,7 @@ async function main() {
 		bridgeFee = await bridgeContract.bridgeFee();
 	} catch (error: any) {
 		// Error code associated with `defaultProvider` failure
-		if (error?.code === "CALL_EXCEPTION") await main();
+		if (error?.code === "CALL_EXCEPTION") await main(api, caller);
 		return;
 	}
 
@@ -87,6 +86,8 @@ async function main() {
 
 	const receipt = await tx.wait();
 	console.log("Claimed", receipt.transactionHash);
+
+	process.exit(0);
 }
 
-main().then(() => process.exit(0));
+withChainApi("porcini", main);
