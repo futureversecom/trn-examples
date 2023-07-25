@@ -1,14 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { collectArgs } from "@trne/utils/collectArgs";
-import { createKeyring } from "@trne/utils/createKeyring";
-import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getAmountIn } from "@trne/utils/getAmountIn";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { ERC20_ABI, getERC20PrecompileForAssetId } from "@trne/utils/getERC20PrecompileAddress";
 import { getEthersProvider } from "@trne/utils/getEthersProvider";
-import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";
-import { Contract, utils, Wallet } from "ethers";
+import { Contract, utils } from "ethers";
 
 const argv = collectArgs();
 
