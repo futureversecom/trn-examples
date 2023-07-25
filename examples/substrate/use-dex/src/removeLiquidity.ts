@@ -1,27 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { collectArgs } from "@trne/utils/collectArgs";
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import assert from "assert";
-import { cleanEnv, str } from "envalid";
 
 const argv = collectArgs();
-
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
+assert("liquidity" in argv, "Liquidity is required");
 
 const XrpAssetId = 2;
 const RootAssetId = 1;
 
-export async function main() {
-	assert("liquidity" in argv, "Liquidity is required");
-
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	const tokenA = RootAssetId;
 	const tokenB = XrpAssetId;
 	const amountAMin = 0;
@@ -44,8 +34,4 @@ export async function main() {
 	const [event] = filterExtrinsicEvents(result.events, ["Dex.RemoveLiquidity"]);
 
 	console.log("Extrinsic Result", event.toJSON());
-
-	await api.disconnect();
-}
-
-main();
+});
