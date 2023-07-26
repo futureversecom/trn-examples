@@ -32,7 +32,7 @@ export async function main() {
 		maxPayment,
 		proxyExtrinsic
 	);
-	const { result } = await sendExtrinsic(feeproxiedCall, caller, {
+	const { result } = await sendExtrinsic(feeProxiedCall, caller, {
 		log: console,
 	});
 
