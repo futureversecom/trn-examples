@@ -1,25 +1,15 @@
 import { collectArgs } from "@trne/utils/collectArgs";
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import assert from "assert";
-import { cleanEnv, str } from "envalid";
 
 const argv = collectArgs();
-
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
+assert("paymentAsset" in argv, "Payment asset ID is required");
 
 const XrpAssetId = 2;
 
-export async function main() {
-	assert("paymentAsset" in argv, "Payment asset ID is required");
-
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
 	const call = api.tx.system.remarkWithEvent("Hello World");
 	const paymentInfo = await call.paymentInfo(caller.address);
@@ -50,8 +40,4 @@ export async function main() {
 		proxy: proxyEvent.toJSON(),
 		remark: remarkEvent.toJSON(),
 	});
-
-	await api.disconnect();
-}
-
-main();
+});

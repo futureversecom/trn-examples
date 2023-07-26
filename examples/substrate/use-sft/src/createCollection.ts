@@ -1,18 +1,9 @@
 import { stringToHex } from "@polkadot/util";
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
-import { cleanEnv, str } from "envalid";
+import { withChainApi } from "@trne/utils/withChainApi";
 
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
-
-export async function main() {
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	const collectionName = "MyCollection";
 	const collectionOwner = caller.address;
 	const metadataScheme = stringToHex("https://example.com/token/");
@@ -40,8 +31,4 @@ export async function main() {
 		}
 	).event.data[0];
 	console.log("Collection ID", collectionId);
-
-	await api.disconnect();
-}
-
-main();
+});

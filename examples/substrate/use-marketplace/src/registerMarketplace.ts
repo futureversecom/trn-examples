@@ -1,17 +1,8 @@
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
-import { cleanEnv, str } from "envalid";
+import { withChainApi } from "@trne/utils/withChainApi";
 
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
-
-export async function main() {
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	const marketplaceAccount = caller.address;
 	const entitlement = 10_000; // One percent
 
@@ -30,8 +21,4 @@ export async function main() {
 		}
 	).event.data[2];
 	console.log("Marketplace ID", marketplaceId);
-
-	await api.disconnect();
-}
-
-main();
+});

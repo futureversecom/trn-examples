@@ -1,20 +1,11 @@
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
-import { cleanEnv, str } from "envalid";
-
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
+import { withChainApi } from "@trne/utils/withChainApi";
 
 const XrpAssetId = 2;
 const RootAssetId = 1;
 
-export async function main() {
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	const oneXrp = 1_000_000;
 
 	// querying the dex for swap price, to determine the `amountOutMin` you are willing to accept
@@ -38,8 +29,4 @@ export async function main() {
 	const [event] = filterExtrinsicEvents(result.events, ["Dex.Swap"]);
 
 	console.log("Extrinsic Result", event.toJSON());
-
-	await api.disconnect();
-}
-
-main();
+});

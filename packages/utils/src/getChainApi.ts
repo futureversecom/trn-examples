@@ -6,7 +6,7 @@ import {
 	NetworkName,
 } from "@therootnetwork/api";
 
-export async function getChainApi(name: NetworkName | "local") {
+async function getChainApi(name: NetworkName | "local") {
 	const api = await ApiPromise.create({
 		noInitWarn: true,
 		...getApiOptions(),
@@ -15,3 +15,5 @@ export async function getChainApi(name: NetworkName | "local") {
 
 	return api;
 }
+
+export { ApiPromise, getChainApi };

@@ -1,4 +1,4 @@
-import { Client } from "xrpl";
+import { Client, type LedgerCurrentRequest, type LedgerCurrentResponse } from "xrpl";
 
 let client: Client;
 export async function getXrplClient(xrplApiUrl: string): Promise<Client> {
@@ -9,9 +9,9 @@ export async function getXrplClient(xrplApiUrl: string): Promise<Client> {
 }
 
 export async function getCurrentLedgerIndex(client: Client): Promise<number> {
-	const currentLedger = await client.request({
+	const currentLedger: LedgerCurrentResponse = await client.request({
 		method: "ledger_current",
 		params: [{}],
-	} as any);
-	return (currentLedger.result as any).ledger_current_index;
+	} as unknown as LedgerCurrentRequest);
+	return currentLedger.result.ledger_current_index;
 }
