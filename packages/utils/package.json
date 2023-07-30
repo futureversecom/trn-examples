@@ -7,6 +7,7 @@
     "@polkadot/util": "^12.3.2",
     "@polkadot/util-crypto": "^12.3.2",
     "@therootnetwork/api": "^1.0.2",
+    "@therootnetwork/evm": "^1.0.0",
     "realm-web": "^2.0.0"
   }
 }

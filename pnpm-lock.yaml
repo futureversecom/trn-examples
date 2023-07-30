@@ -61,6 +61,8 @@ importers:
 
   examples/evm/use-erc721: {}
 
+  examples/evm/use-feeProxy: {}
+
   examples/evm/use-forge: {}
 
   examples/evm/use-hardhat:
@@ -280,6 +282,9 @@ importers:
       '@therootnetwork/api':
         specifier: ^1.0.2
         version: 1.0.2(@polkadot/api@10.9.1)(@polkadot/types@10.9.1)
+      '@therootnetwork/evm':
+        specifier: ^1.0.0
+        version: 1.0.0
       realm-web:
         specifier: ^2.0.0
         version: 2.0.0
@@ -1883,6 +1888,7 @@ packages:
 
   /@substrate/connect-extension-protocol@1.0.1:
     resolution: {integrity: sha512-161JhCC1csjH3GE5mPLEd7HbWtwNSPJBg3p1Ksz9SFlTzj/bgEwudiRN2y5i0MoLGCIJRYKyKGMxVnd29PzNjg==}
+    requiresBuild: true
     optional: true
 
   /@substrate/connect@0.7.26:
@@ -1926,6 +1932,10 @@ packages:
     dependencies:
       '@polkadot/api': 10.9.1
       '@polkadot/types': 10.9.1
+
+  /@therootnetwork/evm@1.0.0:
+    resolution: {integrity: sha512-59hu6gRIfMTpXWsiAfgj/hEGlWMkC+wkV15pVgkllOWZMuu5EfzHWylauDCmu4oMU0TeK7VaLpjZ+k15nb929g==}
+    dev: false
 
   /@trivago/prettier-plugin-sort-imports@4.1.1(prettier@2.8.8):
     resolution: {integrity: sha512-dQ2r2uzNr1x6pJsuh/8x0IRA3CBUB+pWEW3J/7N98axqt7SQSm+2fy0FLNXvXGg77xEDC7KHxJlHfLYyi7PDcw==}
@@ -2410,6 +2420,7 @@ packages:
   /amdefine@1.0.1:
     resolution: {integrity: sha512-S2Hw0TtNkMJhIabBwIojKL9YHO5T0n5eNqWJ7Lrlel/zDbftQpxpapi8tZs3X1HWa+u+QeydGmzzNU0m09+Rcg==}
     engines: {node: '>=0.4.2'}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -4111,6 +4122,7 @@ packages:
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
+    requiresBuild: true
     optional: true
 
   /eventemitter3@5.0.1:
@@ -6171,6 +6183,7 @@ packages:
 
   /pako@2.1.0:
     resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
+    requiresBuild: true
     optional: true
 
   /parent-module@1.0.1:
@@ -6898,6 +6911,7 @@ packages:
 
   /smoldot@1.0.4:
     resolution: {integrity: sha512-N3TazI1C4GGrseFH/piWyZCCCRJTRx2QhDfrUKRT4SzILlW5m8ayZ3QTKICcz1C/536T9cbHHJyP7afxI6Mi1A==}
+    requiresBuild: true
     dependencies:
       pako: 2.1.0
       ws: 8.13.0
@@ -7379,6 +7393,7 @@ packages:
 
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -7777,11 +7792,13 @@ packages:
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+    requiresBuild: true
     dev: false
     optional: true
 
   /whatwg-url@5.0.0:
     resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
+    requiresBuild: true
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
