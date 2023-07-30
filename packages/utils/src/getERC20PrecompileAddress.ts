@@ -1,30 +1,12 @@
-import { getPublicProviderUrl } from "@therootnetwork/api";
-import { Contract, getDefaultProvider, Wallet } from "ethers";
-import { getAddress } from "ethers/lib/utils";
+import { assetIdToERC20Address, ERC20_ABI } from "@therootnetwork/evm";
+import { Contract } from "ethers";
 
-export const assetIdToERC20ContractAddress = (assetId: string | number): string => {
-	const asset_id_hex = (+assetId).toString(16).padStart(8, "0");
-	return getAddress(`0xCCCCCCCC${asset_id_hex.toUpperCase()}000000000000000000000000`);
-};
+import { getSignerWallet } from "./getSignerWallet";
 
-export const ERC20_ABI = [
-	"event Transfer(address indexed from, address indexed to, uint256 value)",
-	"event Approval(address indexed owner, address indexed spender, uint256 value)",
-	"function approve(address spender, uint256 amount) public returns (bool)",
-	"function allowance(address owner, address spender) public view returns (uint256)",
-	"function balanceOf(address who) public view returns (uint256)",
-	"function name() public view returns (string memory)",
-	"function symbol() public view returns (string memory)",
-	"function decimals() public view returns (uint8)",
-	"function totalSupply() external view returns (uint256)",
-	"function transfer(address who, uint256 amount)",
-	"function transferFrom(address from, address to, uint256 amount)",
-];
+const getERC20PrecompileForAssetId = (privateKey: string, assetId: string | number) => {
+	const wallet = getSignerWallet(privateKey);
 
-export const getERC20PrecompileForAssetId = (privateKey: string, assetId: string | number) => {
-	const wallet = new Wallet(privateKey, getDefaultProvider(getPublicProviderUrl("porcini")));
-
-	const erc20PrecompileAddress = assetIdToERC20ContractAddress(assetId);
+	const erc20PrecompileAddress = assetIdToERC20Address(assetId);
 
 	// Create precompiles contract
 	return {
@@ -32,3 +14,5 @@ export const getERC20PrecompileForAssetId = (privateKey: string, assetId: string
 		wallet,
 	};
 };
+
+export { ERC20_ABI, getERC20PrecompileForAssetId };
