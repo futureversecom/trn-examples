@@ -1,4 +1,4 @@
-import { getERC721Precompile} from "@trne/utils/getERC721PrecompileContract";
+import { getERC721Precompile } from "@trne/utils/getERC721PrecompileContract";
 import { getSignerWallet } from "@trne/utils/getSignerWallet";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";
