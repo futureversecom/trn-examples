@@ -8,7 +8,7 @@ const getERC20PrecompileForAssetId = (privateKey: string, assetId: string | numb
 
 	const erc20PrecompileAddress = assetIdToERC20Address(assetId);
 
-	// Create precompiles contract
+	// Create precompile contract
 	return {
 		erc20Precompile: new Contract(erc20PrecompileAddress, ERC20_ABI, wallet),
 		wallet,

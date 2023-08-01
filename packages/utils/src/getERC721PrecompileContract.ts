@@ -16,7 +16,7 @@ const getERC721Precompile = (
 
 	const erc721Precompile = new Contract(erc721PrecompileAddress, ERC721_PRECOMPILE_ABI, wallet);
 
-	// Create precompiles contract
+	// Create precompile contract
 	return {
 		erc721Precompile,
 		wallet,

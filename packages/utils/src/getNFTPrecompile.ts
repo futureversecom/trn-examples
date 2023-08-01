@@ -14,7 +14,7 @@ export const getNFTPrecompile = (privateKey: string) => {
 	const wallet = new Wallet(privateKey, getEthersProvider("porcini"));
 	const nftPrecompile = new Contract(NFT_PRECOMPILE_ADDRESS, NFT_PRECOMPILE_ABI, wallet);
 
-	// Create precompiles contract
+	// Create precompile contract
 	return {
 		nftPrecompile,
 		wallet,
