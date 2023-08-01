@@ -14,7 +14,7 @@ export const getSFTPrecompile = (privateKey: string) => {
 	const wallet = new Wallet(privateKey, getEthersProvider("porcini"));
 	const sftPrecompile = new Contract(SFT_PRECOMPILE_ADDRESS, SFT_PRECOMPILE_ABI, wallet);
 
-	// Create precompiles contract
+	// Create precompile contract
 	return {
 		sftPrecompile,
 		wallet,

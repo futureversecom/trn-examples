@@ -1,8 +1,5 @@
-import {
-	createToken,
-	getERC1155Precompile,
-	getSignerWallet,
-} from "@trne/utils/getERC1155PrecompileContract";
+import { createToken, getERC1155Precompile } from "@trne/utils/getERC1155PrecompileContract";
+import { getSignerWallet } from "@trne/utils/getSignerWallet";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";
 import { ethers } from "ethers";

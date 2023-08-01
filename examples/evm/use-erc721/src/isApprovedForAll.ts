@@ -1,6 +1,3 @@
-//const precompileGasEstimate = await erc721Precompile
-//       .connect(alithSigner)
-//       .estimateGas.isApprovedForAll(alithSigner.address, bobSigner.address);
 import { getERC721Precompile } from "@trne/utils/getERC721PrecompileContract";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";
