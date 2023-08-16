@@ -1,21 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
-import { cleanEnv, str } from "envalid";
-
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
+import { withChainApi } from "@trne/utils/withChainApi";
 
 const XrpAssetId = 2;
 const RootAssetId = 1;
 
-export async function main() {
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	const tokenA = RootAssetId;
 	const tokenB = XrpAssetId;
 	const amountADesired = 10_000_000;
@@ -52,8 +43,4 @@ export async function main() {
 	} = event;
 	const liquidity = data[5].toString();
 	console.log("Liquidity", liquidity);
-
-	await api.disconnect();
-}
-
-main();
+});

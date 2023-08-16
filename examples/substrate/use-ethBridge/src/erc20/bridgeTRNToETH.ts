@@ -1,12 +1,14 @@
-import { createKeyring } from "@trne/utils/createKeyring";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Signer } from "@trne/utils/createKeyring";
 import { fetchTRNEvent } from "@trne/utils/fetchTRNEvent";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
+import type { ApiPromise } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import { cleanEnv, str } from "envalid";
-import { utils as ethers, getDefaultProvider, Wallet } from "ethers";
+import { BigNumber, utils as ethers, getDefaultProvider, Wallet } from "ethers";
 
-import { getBridgeContracts } from "./contracts";
+import { getBridgeContracts } from "../contracts";
 
 const env = cleanEnv(process.env, {
 	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -17,12 +19,21 @@ const EthAsset = {
 	assetId: 1124,
 };
 
-async function main() {
-	const api = await getChainApi("porcini");
+async function main(api: ApiPromise, caller: Signer) {
 	const provider = getDefaultProvider("goerli");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
 	const { bridgeContract } = getBridgeContracts("goerli", wallet);
+
+	// Bridge requires a small fee
+	let bridgeFee: BigNumber | undefined;
+	// This can fail when using `defaultProvider`
+	try {
+		bridgeFee = await bridgeContract.bridgeFee();
+	} catch (error: any) {
+		// Error code associated with `defaultProvider` failure
+		if (error?.code === "CALL_EXCEPTION") await main(api, caller);
+		return;
+	}
 
 	// Submit withdraw extrinsic on The Root Network
 	const assetId = EthAsset.assetId;
@@ -57,7 +68,7 @@ async function main() {
 			...signature,
 		},
 	];
-	const value = await bridgeContract.bridgeFee();
+	const value = bridgeFee;
 
 	const gasLimit = await bridgeContract.estimateGas.receiveMessage(...args, {
 		value,
@@ -75,6 +86,8 @@ async function main() {
 
 	const receipt = await tx.wait();
 	console.log("Claimed", receipt.transactionHash);
+
+	process.exit(0);
 }
 
-main().then(() => process.exit(0));
+withChainApi("porcini", main);

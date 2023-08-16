@@ -1,8 +1,7 @@
 import { getERC20PrecompileForAssetId } from "@trne/utils/getERC20PrecompileAddress";
-import { getEthersProvider } from "@trne/utils/getEthersProvider";
+import { getSignerWallet } from "@trne/utils/getSignerWallet";
 import assert from "assert";
 import { cleanEnv, str } from "envalid";
-import { Wallet } from "ethers";
 
 const env = cleanEnv(process.env, {
 	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -18,7 +17,7 @@ export async function main() {
 		env.CALLER_PRIVATE_KEY,
 		XRP_TOKEN_ID
 	);
-	const bobSigner = new Wallet(env.BOB_PRIVATE_KEY, getEthersProvider("porcini"));
+	const bobSigner = getSignerWallet(env.BOB_PRIVATE_KEY);
 	const amountApproved = 200;
 
 	const tx = await erc20Precompile.connect(wallet).approve(bobSigner.address, amountApproved);

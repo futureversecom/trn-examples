@@ -1,34 +1,20 @@
 import { collectArgs } from "@trne/utils/collectArgs";
-import { createKeyring } from "@trne/utils/createKeyring";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import assert from "assert";
-import { cleanEnv, str } from "envalid";
 
 const argv = collectArgs();
+assert("listingId" in argv, "Listing ID is required");
 
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
-
-export async function main() {
-	assert("listingId" in argv, "Listing ID is required");
+withChainApi("porcini", async (api, caller) => {
 	const { listingId } = argv as unknown as {
 		listingId: number;
 	};
-
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
 	const extrinsic = api.tx.marketplace.buy(listingId);
 
 	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
 	const [event] = filterExtrinsicEvents(result.events, ["Nft.FixedPriceSaleComplete"]);
 
 	console.log("Extrinsic Result", event.toJSON());
-
-	await api.disconnect();
-}
-
-main();
+});

@@ -1,12 +1,12 @@
-import { Client } from "xrpl";
+import { type AccountTxResponse, Client } from "xrpl";
 
 export async function getTxsInLedger(
 	ledgerIndex: number,
 	address: string,
 	client: Client
-): Promise<any> {
+): Promise<AccountTxResponse["result"]["transactions"]> {
 	let txns;
-	let query = await client.request({
+	let query: AccountTxResponse = await client.request({
 		command: "account_tx",
 		account: address,
 		ledger_index_min: ledgerIndex,

@@ -1,14 +1,12 @@
-import { createKeyring } from "@trne/utils/createKeyring";
 import { fetchFinalisedHead } from "@trne/utils/fetchFinalisedHead";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { getChainApi } from "@trne/utils/getChainApi";
 import { getEthersProvider } from "@trne/utils/getEthersProvider";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
+import { withChainApi } from "@trne/utils/withChainApi";
 import { cleanEnv, str } from "envalid";
 import { utils as ethers, Wallet } from "ethers";
 
 const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
 	DELEGATE_PRIVATE_KEY: str(),
 });
 
@@ -20,10 +18,7 @@ enum ProxyType {
 	Staking = 4,
 }
 
-export async function main() {
-	const api = await getChainApi("porcini");
-	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-
+withChainApi("porcini", async (api, caller) => {
 	const delegateWallet = new Wallet(env.DELEGATE_PRIVATE_KEY, getEthersProvider("porcini"));
 	const delegate = delegateWallet.address;
 
@@ -52,8 +47,4 @@ export async function main() {
 	const [event] = filterExtrinsicEvents(result.events, ["Futurepass.DelegateRegistered"]);
 
 	console.log("Extrinsic Result", event.toJSON());
-
-	await api.disconnect();
-}
-
-main();
+});
