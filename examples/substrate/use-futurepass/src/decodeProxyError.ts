@@ -4,7 +4,8 @@ import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
 withChainApi("porcini", async (api, caller) => {
-	const futurepass = (await api.query.futurepass.holders(caller.address)).toString();
+	const futurepass = (await api.query.futurepass.holders(caller.address)).unwrap();
+
 	// Force error as Asset ID 3 does not exist
 	const call = api.tx.assets.transfer(3, futurepass, 1);
 

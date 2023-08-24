@@ -13,7 +13,7 @@ export async function main() {
 	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
 	const newOwner = "0x0E17C1a78d2A77298Df58e5956B33376A1B9f4c2";
 
-	const futurepass = (await api.query.futurepass.holders(caller.address)).toString();
+	const futurepass = (await api.query.futurepass.holders(caller.address)).unwrap();
 	// transfer futurepass
 	const call = api.tx.futurepass.transferFuturepass(caller.address, newOwner);
 

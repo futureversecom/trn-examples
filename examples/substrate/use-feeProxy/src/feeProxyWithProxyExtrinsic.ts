@@ -19,13 +19,15 @@ export async function main() {
 
 	const api = await getChainApi("porcini");
 	const caller = createKeyring(env.CALLER_PRIVATE_KEY);
-	const fpassAddress = (await api.query.futurepass.holders(caller.address)).toString();
+
+	const futurepass = (await api.query.futurepass.holders(caller.address)).unwrap();
+
 	const { paymentAsset } = argv as unknown as { paymentAsset: number };
 
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
 	const innerCall = api.tx.system.remarkWithEvent("Hello World");
 
-	const proxyExtrinsic = api.tx.futurepass.proxyExtrinsic(fpassAddress, innerCall);
+	const proxyExtrinsic = api.tx.futurepass.proxyExtrinsic(futurepass, innerCall);
 	const maxPayment = 1000000;
 	const feeProxiedCall = api.tx.feeProxy.callWithFeePreferences(
 		paymentAsset,

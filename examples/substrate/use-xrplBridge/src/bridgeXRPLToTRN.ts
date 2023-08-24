@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getXrplClient } from "@trne/utils/getXrplClient";
 import { withChainApi } from "@trne/utils/withChainApi";
 import { cleanEnv, str } from "envalid";
@@ -34,7 +33,7 @@ withChainApi("porcini", async (api) => {
 	const response = await xrplApi.submit(request, { wallet: wallet });
 	console.log("Response", response);
 	// subscribe to system events via storage
-	api.query.system.events((events: any[]) => {
+	api.query.system.events((events) => {
 		console.log(`\nReceived ${events.length} event(s):`);
 
 		// loop through the Vec<EventRecord>

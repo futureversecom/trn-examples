@@ -74,7 +74,7 @@ async function main(api: ApiPromise) {
 	console.log("deposited", receipt.transactionHash);
 
 	// subscribe to system events via storage
-	api.query.system.events((events: any[]) => {
+	api.query.system.events((events) => {
 		console.log(`\nReceived ${events.length} event(s):`);
 
 		// loop through the Vec<EventRecord>
