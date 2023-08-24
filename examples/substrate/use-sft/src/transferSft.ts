@@ -1,3 +1,4 @@
+import type { u32, u128 } from "@polkadot/types";
 import { collectArgs } from "@trne/utils/collectArgs";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
@@ -12,8 +13,8 @@ withChainApi("porcini", async (api, caller) => {
 	const { tokenId, collectionId } = formatArgs();
 
 	const quantity = 2;
-	const serialNumbers = [[tokenId, quantity]];
 	const newOwner = "0x25451A4de12dcCc2D166922fA938E900fCc4ED24";
+	const serialNumbers = [[tokenId, quantity]] as unknown as [[u32, u128]];
 
 	const extrinsic = api.tx.sft.transfer(collectionId, serialNumbers, newOwner);
 

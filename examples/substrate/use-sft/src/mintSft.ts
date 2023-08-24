@@ -1,3 +1,4 @@
+import type { u32, u128 } from "@polkadot/types";
 import { collectArgs } from "@trne/utils/collectArgs";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
@@ -10,7 +11,7 @@ withChainApi("porcini", async (api, caller) => {
 
 	const tokenOwner = caller.address;
 	const quantity = 10;
-	const serialNumbers = [[tokenId, quantity]];
+	const serialNumbers = [[tokenId, quantity]] as unknown as [[u32, u128]];
 
 	const extrinsic = api.tx.sft.mint(collectionId, serialNumbers, tokenOwner);
 
@@ -21,7 +22,5 @@ withChainApi("porcini", async (api, caller) => {
 });
 
 function formatArgs() {
-	const { tokenId, collectionId } = argv as unknown as { tokenId: number; collectionId: number };
-
-	return { tokenId, collectionId };
+	return argv as unknown as { tokenId: number; collectionId: number };
 }

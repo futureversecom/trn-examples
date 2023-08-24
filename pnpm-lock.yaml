@@ -21,6 +21,9 @@ importers:
       '@eslint/create-config':
         specifier: ^0.4.3
         version: 0.4.3
+      '@polkadot/types':
+        specifier: ^10.9.1
+        version: 10.9.1
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.1.1
         version: 4.1.1(prettier@2.8.8)
@@ -270,9 +273,6 @@ importers:
       '@polkadot/keyring':
         specifier: ^12.3.2
         version: 12.3.2(@polkadot/util-crypto@12.3.2)(@polkadot/util@12.3.2)
-      '@polkadot/types':
-        specifier: ^10.9.1
-        version: 10.9.1
       '@polkadot/util':
         specifier: ^12.3.2
         version: 12.3.2

@@ -106,7 +106,7 @@ pnpm call src/buyNft.ts --listingId=<Listing ID>
 
 Using the `marketplace.makeSimpleOffer(tokenId, amount, assetId, marketplaceId)` extrinsic
 
-- `tokenId` - The ID of the token
+- `tokenId` - The ID of the token (CollectionId, TokenId)
 - `amount` - Offer price
 - `assetId` - Fungible Asset ID to make payment with
 - `marketplaceId` - The ID of the marketplace
@@ -120,8 +120,8 @@ api.tx.marketplace.makeSimpleOffer(
 );
 ```
 
-Run the command below to execute the example script, passing in a Token & Marketplace ID
+Run the command below to execute the example script, passing in a Collection, Token & Marketplace ID
 
 ```
-pnpm call src/simpleOffer.ts --tokenId=<Token ID> --marketplaceId=<Marketplace ID>
+pnpm call src/simpleOffer.ts --collectionId=<Collection ID> --tokenId=<Token ID> --marketplaceId=<Marketplace ID>
 ```

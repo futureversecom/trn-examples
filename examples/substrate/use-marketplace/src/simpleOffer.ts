@@ -13,12 +13,17 @@ const RootAsset = {
 };
 
 withChainApi("porcini", async (api, caller) => {
-	const { tokenId, marketplaceId } = formatArgs();
+	const { tokenId, collectionId, marketplaceId } = formatArgs();
 
 	const assetId = RootAsset.assetId;
 	const amount = ethers.parseUnits("1", RootAsset.decimals).toString();
 
-	const extrinsic = api.tx.marketplace.makeSimpleOffer(tokenId, amount, assetId, marketplaceId);
+	const extrinsic = api.tx.marketplace.makeSimpleOffer(
+		[collectionId, tokenId],
+		amount,
+		assetId,
+		marketplaceId
+	);
 
 	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
 	const [event] = filterExtrinsicEvents(result.events, ["Nft.Offer"]);
@@ -28,12 +33,12 @@ withChainApi("porcini", async (api, caller) => {
 
 function formatArgs() {
 	assert("tokenId" in argv, "Token ID is required");
+	assert("collectionId" in argv, "Collection ID is required");
 	assert("marketplaceId" in argv, "Marketplace ID is required");
 
-	const { tokenId, marketplaceId } = argv as unknown as {
-		tokenId: number;
+	return argv as unknown as {
+		tokenId: string;
+		collectionId: string;
 		marketplaceId: number;
 	};
-
-	return { tokenId, marketplaceId };
 }
