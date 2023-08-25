@@ -9,6 +9,10 @@ assert("paymentAsset" in argv, "Payment asset ID is required");
 
 const XrpAssetId = 2;
 
+interface AmountsIn {
+	Ok: [number, number];
+}
+
 withChainApi("porcini", async (api, caller) => {
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
 	const call = api.tx.system.remarkWithEvent("Hello World");
@@ -20,10 +24,10 @@ withChainApi("porcini", async (api, caller) => {
 	// querying the dex for swap price, to determine the `maxPayment` you are willing to pay
 	const {
 		Ok: [amountIn],
-	} = (
-		await // eslint-disable-next-line @typescript-eslint/no-explicit-any
-		(api.rpc as any).dex.getAmountsIn(estimatedFee, [paymentAsset, XrpAssetId])
-	).toJSON();
+	} = (await api.rpc.dex.getAmountsIn(estimatedFee, [
+		paymentAsset,
+		XrpAssetId,
+	])) as unknown as AmountsIn;
 	// allow a buffer to prevent extrinsic failure
 	const maxPayment = Number(amountIn * 1.5).toFixed();
 
