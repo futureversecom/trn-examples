@@ -3,7 +3,7 @@ import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
 withChainApi("porcini", async (api, caller) => {
-	const futurepass = (await api.query.futurepass.holders(caller.address)).toString();
+	const futurepass = (await api.query.futurepass.holders(caller.address)).unwrap();
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity sake
 	const call = api.tx.system.remarkWithEvent("Hello World");
 

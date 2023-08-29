@@ -5,16 +5,17 @@ import { withChainApi } from "@trne/utils/withChainApi";
 const XrpAssetId = 2;
 const RootAssetId = 1;
 
+interface AmountsOut {
+	Ok: [number, number];
+}
+
 withChainApi("porcini", async (api, caller) => {
 	const oneXrp = 1_000_000;
 
 	// querying the dex for swap price, to determine the `amountOutMin` you are willing to accept
 	const {
 		Ok: [amountIn, amountOutMin],
-	} = (
-		await // eslint-disable-next-line @typescript-eslint/no-explicit-any
-		(api.rpc as any).dex.getAmountsOut(oneXrp, [XrpAssetId, RootAssetId])
-	).toJSON();
+	} = (await api.rpc.dex.getAmountsOut(oneXrp, [XrpAssetId, RootAssetId])) as unknown as AmountsOut;
 
 	const extrinsic = api.tx.dex.swapWithExactSupply(
 		amountIn,

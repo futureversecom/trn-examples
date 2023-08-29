@@ -40,9 +40,10 @@ async function main(api: ApiPromise, caller: Signer) {
 	}
 
 	// Submit withdraw extrinsic on The Root Network
-	const tokenIds = [[tokenId]];
 	const destination = wallet.address;
-	const collectionIds = [(await api.query.nftPeg.ethToRootNft(TheNextLegends)).toJSON()];
+	const tokenIds = api.createType("Vec<Vec<u32>>", [[tokenId]]);
+	const tnlCollection = (await api.query.nftPeg.ethToRootNft(TheNextLegends)).unwrap();
+	const collectionIds = [tnlCollection];
 
 	const extrinsic = api.tx.nftPeg.withdraw(collectionIds, tokenIds, destination);
 

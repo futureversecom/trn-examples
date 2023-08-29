@@ -12,7 +12,7 @@ withChainApi("porcini", async (api, caller) => {
 	const baseUri = stringToHex("https://example.com/token/");
 	const { collectionId } = argv as unknown as { collectionId: number };
 
-	const extrinsic = api.tx.nft.transfer(collectionId, baseUri);
+	const extrinsic = api.tx.nft.setBaseUri(collectionId, baseUri);
 
 	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
 	const [event] = filterExtrinsicEvents(result.events, ["Nft.BaseUriSet"]);

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { collectArgs } from "@trne/utils/collectArgs";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";

@@ -1,3 +1,4 @@
+import { PalletNftCrossChainCompatibility } from "@polkadot/types/lookup";
 import { stringToHex } from "@polkadot/util";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
@@ -12,7 +13,7 @@ withChainApi("porcini", async (api, caller) => {
 	const royaltiesSchedule = {
 		entitlements: [[tokenOwner, 10_000 /* one percent */]],
 	};
-	const crossChainCompatibility = false;
+	const crossChainCompatibility = { xrpl: false };
 
 	const extrinsic = api.tx.nft.createCollection(
 		name,

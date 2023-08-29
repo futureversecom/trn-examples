@@ -25,7 +25,7 @@ withChainApi("porcini", async (api, caller) => {
 	const proxyType = ProxyType.Any;
 	// recommended low number, 75 blocks ~= 5 minutes
 	const deadline = (await fetchFinalisedHead(api)) + 75;
-	const futurepass = (await api.query.futurepass.holders(caller.address)).toString();
+	const futurepass = (await api.query.futurepass.holders(caller.address)).unwrap();
 
 	const message = ethers
 		.solidityKeccak256(

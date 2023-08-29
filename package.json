@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "prettier --check . && eslint \"**/*.{ts,tsx}\"",
-    "format": "prettier --config .prettierrc.js --write ."
+    "format": "prettier --config .prettierrc.js --write .",
+    "type-check": "tsc --noEmit --jsx react-jsx"
   },
   "dependencies": {
     "envalid": "^7.3.1",
@@ -16,6 +17,8 @@
   },
   "devDependencies": {
     "@eslint/create-config": "^0.4.3",
+    "@polkadot/types": "^10.9.1",
+    "@therootnetwork/api-types": "^1.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/node": "^20.2.1",
     "@types/yargs": "^17.0.24",
