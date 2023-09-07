@@ -7,12 +7,15 @@ import assert from "assert";
 const argv = collectArgs();
 assert("paymentAsset" in argv, "Payment asset ID is required");
 
-const XrpAssetId = 2;
+const ASTO_ASSET_ID = 17_508;
 
 interface AmountsIn {
 	Ok: [number, number];
 }
 
+/**
+ * Simple `feeProxy.callWithFeePreferences` call that wraps around `system.remarkWithEvent` call
+ */
 withChainApi("porcini", async (api, caller) => {
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
 	const call = api.tx.system.remarkWithEvent("Hello World");
@@ -26,7 +29,7 @@ withChainApi("porcini", async (api, caller) => {
 		Ok: [amountIn],
 	} = (await api.rpc.dex.getAmountsIn(estimatedFee, [
 		paymentAsset,
-		XrpAssetId,
+		ASTO_ASSET_ID,
 	])) as unknown as AmountsIn;
 	// allow a buffer to prevent extrinsic failure
 	const maxPayment = Number(amountIn * 1.5).toFixed();
