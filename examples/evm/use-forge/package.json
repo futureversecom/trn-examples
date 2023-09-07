@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "install": "forge install --no-commit",
     "test": "forge test",
     "clean": "forge clean",
+    "forge-install": "forge install --no-commit",
     "forge-create": "./script/use-forge-create.sh",
     "forge-script": "./script/use-forge-script.sh"
   }
