@@ -1,13 +1,9 @@
-import { collectArgs } from "@trne/utils/collectArgs";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
-import assert from "assert";
-
-const argv = collectArgs();
-assert("paymentAsset" in argv, "Payment asset ID is required");
 
 const ASTO_ASSET_ID = 17_508;
+const XRP_ASSET_ID = 2;
 
 interface AmountsIn {
 	Ok: [number, number];
@@ -15,6 +11,8 @@ interface AmountsIn {
 
 /**
  * Simple `feeProxy.callWithFeePreferences` call that wraps around `system.remarkWithEvent` call
+ *
+ * Assumes the caller has some ASTO balance
  */
 withChainApi("porcini", async (api, caller) => {
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
@@ -22,19 +20,17 @@ withChainApi("porcini", async (api, caller) => {
 	const paymentInfo = await call.paymentInfo(caller.address);
 	const estimatedFee = paymentInfo.partialFee.toString();
 
-	const { paymentAsset } = argv as unknown as { paymentAsset: number };
-
 	// querying the dex for swap price, to determine the `maxPayment` you are willing to pay
 	const {
 		Ok: [amountIn],
 	} = (await api.rpc.dex.getAmountsIn(estimatedFee, [
-		paymentAsset,
 		ASTO_ASSET_ID,
+		XRP_ASSET_ID,
 	])) as unknown as AmountsIn;
 	// allow a buffer to prevent extrinsic failure
 	const maxPayment = Number(amountIn * 1.5).toFixed();
 
-	const extrinsic = api.tx.feeProxy.callWithFeePreferences(paymentAsset, maxPayment, call);
+	const extrinsic = api.tx.feeProxy.callWithFeePreferences(ASTO_ASSET_ID, maxPayment, call);
 
 	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
 	const [proxyEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
@@ -43,8 +39,8 @@ withChainApi("porcini", async (api, caller) => {
 		"System.Remarked",
 	]);
 
-	console.log("Extrinsic Result", {
-		proxy: proxyEvent.toJSON(),
-		remark: remarkEvent.toJSON(),
+	console.log("Extrinsic Result:", {
+		proxy: proxyEvent.event.data.toJSON(),
+		remark: remarkEvent.event.data.toJSON(),
 	});
 });
