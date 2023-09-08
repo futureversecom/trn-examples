@@ -1,6 +1,7 @@
 {
   "scripts": {
     "call": "ts-node --project ../../../tsconfig.json",
-    "call:callWithFeePreferences": "pnpm call src/callWithFeePreferences.ts"
+    "call:callSystemRemark": "pnpm call src/callSystemRemark.ts",
+    "call:callProxyExtrinsic": "pnpm call src/callProxyExtrinsic.ts"
   }
 }
