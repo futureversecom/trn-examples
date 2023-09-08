@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "run": "ts-node --project ../../../tsconfig.json",
-    "run:callWithFeePreferences": "pnpm run src/callWithFeePreferences.ts"
+    "call": "ts-node --project ../../../tsconfig.json",
+    "call:callWithFeePreferences": "pnpm call src/callWithFeePreferences.ts"
   }
 }
