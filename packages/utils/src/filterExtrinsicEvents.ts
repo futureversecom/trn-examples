@@ -4,14 +4,20 @@ import assert from "assert";
 
 export function filterExtrinsicEvents(
 	events: SubmittableResultValue["events"],
-	names: `${string}.${string}`[]
+	eventNames: `${string}.${string}`[]
 ): EventRecord[] {
 	assert(events);
-	return events.filter(({ event }) => {
-		const name = `${event.section[0].toUpperCase() + event.section.slice(1)}.${
-			event.method
-		}` as `${string}.${string}`;
 
-		return names.includes(name);
+	return eventNames.map((eventName) => {
+		const event = events.find(({ event }) => {
+			const name = `${event.section[0].toUpperCase() + event.section.slice(1)}.${
+				event.method
+			}` as `${string}.${string}`;
+
+			return name === eventName;
+		});
+
+		assert(event);
+		return event;
 	});
 }
