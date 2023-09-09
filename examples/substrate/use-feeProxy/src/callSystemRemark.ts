@@ -1,4 +1,5 @@
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
+import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
@@ -10,8 +11,8 @@ interface AmountsIn {
 }
 
 /**
- * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call,
- * and pay gas in ASTO token
+ * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call, and pay gas
+ * in ASTO token.
  *
  * Assumes the caller has some ASTO balance.
  */
@@ -44,7 +45,7 @@ withChainApi("porcini", async (api, caller) => {
 	]);
 
 	console.log("Extrinsic Result:", {
-		proxy: proxyEvent.event.data.toJSON(),
-		remark: remarkEvent.event.data.toJSON(),
+		proxy: formatEventData(proxyEvent.event),
+		remark: formatEventData(remarkEvent.event),
 	});
 });

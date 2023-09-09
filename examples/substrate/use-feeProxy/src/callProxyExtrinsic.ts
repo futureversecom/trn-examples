@@ -12,8 +12,8 @@ interface AmountsIn {
 }
 
 /**
- * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call
- * via `futurepass.proxyExtrinsic`, and have Futurepass account pays gas in ASTO.
+ * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call via
+ * `futurepass.proxyExtrinsic`, and have Futurepass account pays gas in ASTO.
  *
  * Assumes the caller has a valid Futurepass account and some ASTO balance in it.
  */

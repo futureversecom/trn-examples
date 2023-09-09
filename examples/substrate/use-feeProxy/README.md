@@ -18,4 +18,7 @@ pnpm call:callSystemRemark
 # `feeProxy.callWithFeePreferences` that wraps around `futurepass.proxyExtrinsic`
 pnpm call:callProxyExtrinsic
 
+# `feeProxy.callWithFeePreferences` that wraps around `utility.batchAll`
+pnpm call:callBatchAll
+
 ```
