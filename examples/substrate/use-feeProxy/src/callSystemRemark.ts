@@ -10,14 +10,15 @@ interface AmountsIn {
 }
 
 /**
- * Simple `feeProxy.callWithFeePreferences` call that wraps around `system.remarkWithEvent` call
+ * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call,
+ * and pay gas in ASTO token
  *
- * Assumes the caller has some ASTO balance
+ * Assumes the caller has some ASTO balance.
  */
 withChainApi("porcini", async (api, caller) => {
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
-	const call = api.tx.system.remarkWithEvent("Hello World");
-	const paymentInfo = await call.paymentInfo(caller.address);
+	const remarkCall = api.tx.system.remarkWithEvent("Hello World");
+	const paymentInfo = await remarkCall.paymentInfo(caller.address);
 	const estimatedFee = paymentInfo.partialFee.toString();
 
 	// querying the dex for swap price, to determine the `maxPayment` you are willing to pay
@@ -30,12 +31,15 @@ withChainApi("porcini", async (api, caller) => {
 	// allow a buffer to prevent extrinsic failure
 	const maxPayment = Number(amountIn * 1.5).toFixed();
 
-	const extrinsic = api.tx.feeProxy.callWithFeePreferences(ASTO_ASSET_ID, maxPayment, call);
+	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(
+		ASTO_ASSET_ID,
+		maxPayment,
+		remarkCall
+	);
 
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
+	const { result } = await sendExtrinsic(feeProxyCall, caller, { log: console });
 	const [proxyEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
 		"FeeProxy.CallWithFeePreferences",
-		// depending on what extrinsic call you have, filter out the right event here
 		"System.Remarked",
 	]);
 

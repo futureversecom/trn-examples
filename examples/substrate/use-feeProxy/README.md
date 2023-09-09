@@ -5,7 +5,7 @@
 > [!IMPORTANT]
 > Ensure the following ENV vars are available before running the examples
 
-- `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with test tokens](../../../GUIDES.md).
+- `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with test tokens](../../../GUIDES.md) if you don't have one yet.
 
 ## Examples
 
