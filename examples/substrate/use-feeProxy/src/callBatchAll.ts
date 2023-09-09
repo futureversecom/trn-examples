@@ -48,7 +48,7 @@ withChainApi("porcini", async (api, caller) => {
 		batchAllCall
 	);
 
-	const { result } = await sendExtrinsic(feeProxyCall, caller, { log: console });
+	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: console });
 	const [proxyEvent, batchEvent, aliceTransferEvent, bobTransferEvent, charlieTransferEvent] =
 		filterExtrinsicEvents(result.events, [
 			"FeeProxy.CallWithFeePreferences",
@@ -58,6 +58,7 @@ withChainApi("porcini", async (api, caller) => {
 			{ name: "Assets.Transferred", key: "to", data: { value: CHARLIE, type: "T::AccountId" } },
 		]);
 
+	console.log("Extrinsic ID:", extrinsicId);
 	console.log("Extrinsic Result:", {
 		proxy: formatEventData(proxyEvent.event),
 		batchEvent: formatEventData(batchEvent.event),

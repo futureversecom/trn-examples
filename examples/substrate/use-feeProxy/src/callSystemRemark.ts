@@ -38,12 +38,13 @@ withChainApi("porcini", async (api, caller) => {
 		remarkCall
 	);
 
-	const { result } = await sendExtrinsic(feeProxyCall, caller, { log: console });
+	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: console });
 	const [proxyEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
 		"FeeProxy.CallWithFeePreferences",
 		"System.Remarked",
 	]);
 
+	console.log("Extrinsic ID:", extrinsicId);
 	console.log("Extrinsic Result:", {
 		proxy: formatEventData(proxyEvent.event),
 		remark: formatEventData(remarkEvent.event),

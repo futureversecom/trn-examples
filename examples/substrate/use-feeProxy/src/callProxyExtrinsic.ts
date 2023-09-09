@@ -50,13 +50,14 @@ withChainApi("porcini", async (api, caller) => {
 		futurepassCall
 	);
 
-	const { result } = await sendExtrinsic(feeProxyCall, caller, { log: console });
+	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: console });
 	const [proxyEvent, futurepassEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
 		"FeeProxy.CallWithFeePreferences",
 		"Futurepass.ProxyExecuted",
 		"System.Remarked",
 	]);
 
+	console.log("Extrinsic ID:", extrinsicId);
 	console.log("Extrinsic Result:", {
 		proxy: formatEventData(proxyEvent.event),
 		futurepass: formatEventData(futurepassEvent.event),
