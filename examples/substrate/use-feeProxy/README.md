@@ -4,15 +4,15 @@
 
 > [!IMPORTANT]
 > Ensure the following ENV vars are available before running the examples
-
-- `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with test tokens](../../../GUIDES.md) if you don't have one yet.
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with test tokens](../../../GUIDES.md) if you don't have one yet.
 
 ## Examples
 
 ```bash
 export CALLER_PRIVATE_KEY=
 
-# `feeProxy.callWithFeePreferences`` that wraps around `system.remarkWithEvent`
+# `feeProxy.callWithFeePreferences` that wraps around `system.remarkWithEvent`
 pnpm call:callSystemRemark
 
 # `feeProxy.callWithFeePreferences` that wraps around `futurepass.proxyExtrinsic`
