@@ -1,11 +1,9 @@
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { formatEventData } from "@trne/utils/formatEventData";
+import { ASTO_ASSET_ID, XRP_ASSET_ID } from "@trne/utils/porcini-assets";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 import assert from "assert";
-
-const ASTO_ASSET_ID = 17_508;
-const XRP_ASSET_ID = 2;
 
 interface AmountsIn {
 	Ok: [number, number];
