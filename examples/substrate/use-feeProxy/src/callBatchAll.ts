@@ -30,7 +30,7 @@ withChainApi("porcini", async (api, caller) => {
 	const paymentInfo = await batchAllCall.paymentInfo(caller.address);
 	const estimatedFee = paymentInfo.partialFee.toString();
 
-	// querying the dex for swap price, to determine the `maxPayment` you are willing to pay
+	// query the the `dex` to determine the `maxPayment` you are willing to pay
 	const {
 		Ok: [amountIn],
 	} = (await api.rpc.dex.getAmountsIn(estimatedFee, [
