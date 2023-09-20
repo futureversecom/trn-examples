@@ -1,10 +1,6 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
-  },
-  "eslintConfig": {
-    "rules": {
-      "@typescript-eslint/no-explicit-any": "off"
-    }
+    "call": "ts-node --project ../../../tsconfig.json",
+    "call:callERC20Transfer": "pnpm call src/callERC20Transfer.ts"
   }
 }

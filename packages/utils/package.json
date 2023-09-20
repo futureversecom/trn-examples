@@ -6,7 +6,10 @@
     "@polkadot/util": "^12.3.2",
     "@polkadot/util-crypto": "^12.3.2",
     "@therootnetwork/api": "^1.0.2",
-    "@therootnetwork/evm": "^1.0.0",
-    "realm-web": "^2.0.0"
+    "@therootnetwork/evm": "^1.0.3",
+    "realm-web": "^2.0.0",
+    "pino": "^8.15.1",
+    "pino-pretty": "^10.2.0",
+    "pretty-error": "^4.0.0"
   }
 }

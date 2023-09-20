@@ -1,52 +1,22 @@
-# Use FeeProxy
+# FeeProxy Precompile
 
-First run
+[![Run in StackBlitz](https://img.shields.io/badge/Open_in_StackBlitz-1269D3?style=for-the-badge&logo=stackblitz&logoColor=white)](https://stackblitz.com/github/futureversecom/trn-examples?file=examples%2Fevm%2Fuse-feeProxy%2FREADME.md&title=FeeProxy%20Precompile%20Examples) [![Precompile Documentation](https://img.shields.io/badge/Pallet_Documentation-black?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs-beta.therootnetwork.com/buidl/evm/precompile-feeProxy)
 
-```
-export CALLER_PRIVATE_KEY=0x000...
-```
+> [!IMPORTANT]
+> Ensure the following ENV vars are available before running the examples
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
 
-## Contract Read/Write
+## Examples
 
-Specify the payment asset id to get paymentPrecompileAddress
+```bash
+# change your working directory to this example first
+cd examples/evm/use-feeProxy
 
-```js
-const { erc20Precompile, wallet } = getERC20PrecompileForAssetId(
-	env.CALLER_PRIVATE_KEY,
-	paymentAsset
-);
-const feeToken = erc20Precompile;
-```
+# export all required environments
+export CALLER_PRIVATE_KEY=
 
-Create FeeToken contract
+# `feeProxy.callWithFeePreferences` that wraps around `ERC20.transfer`
+pnpm call:callERC20Transfer
 
-```
-const feeProxy = new Contract(FEE_PROXY_ADDRESS, FEE_PROXY_ABI, wallet);
-```
-
-### `callWithFeePreferences(address asset, uint128 maxPayment, address target, bytes input)`
-
-- `asset` - precompile address for payment asset
-- `maxPayment` - max payment user is willing to be pay in payment asset
-- `target` - precompile address for payment asset
-- `input` - transaction for which fee is to be paid in payment asset
-
-```js
-const unsignedTx = {
-	type: 0,
-	from: wallet.address,
-	to: FEE_PROXY_ADDRESS,
-	nonce: nonce,
-	data: feeProxy.interface.encodeFunctionData("callWithFeePreferences", [
-		feeToken.address,
-		maxFeePaymentInToken,
-		feeToken.address,
-		transferInput,
-	]),
-	gasLimit: gasEstimate,
-	gasPrice: fees.gasPrice,
-};
-
-await wallet.signTransaction(unsignedTx);
-const tx = await wallet.sendTransaction(unsignedTx);
 ```
