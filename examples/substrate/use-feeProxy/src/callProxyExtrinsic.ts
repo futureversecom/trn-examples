@@ -13,24 +13,36 @@ interface AmountsIn {
  * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call via
  * `futurepass.proxyExtrinsic`, and have Futurepass account pays gas in ASTO.
  *
- * Assumes the caller has a valid Futurepass account and some ASTO balance in it.
+ * Assumes the caller has a valid Futurepass account and some ASTO balance in that account.
  */
-withChainApi("porcini", async (api, caller) => {
-	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
-	const remarkCall = api.tx.system.remarkWithEvent("Hello World");
+withChainApi("porcini", async (api, caller, logger) => {
 	const fpAccount = (await api.query.futurepass.holders(caller.address)).unwrap();
-
-	console.log("Futurepass Details: ", {
-		holder: caller.address,
-		futurepass: fpAccount.toString(),
-	});
+	logger.info(
+		{
+			futurepass: {
+				holder: caller.address,
+				account: fpAccount.toString(),
+			},
+		},
+		"futurepass details"
+	);
 
 	assert(fpAccount);
 
+	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
+	const remarkCall = api.tx.system.remarkWithEvent("Hello World");
 	// wrap `remarkCall` with `proxyCall`, effetively request Futurepass account to pay for gas
 	const futurepassCall = api.tx.futurepass.proxyExtrinsic(fpAccount, remarkCall);
-	const paymentInfo = await remarkCall.paymentInfo(caller.address);
+	// we need a dummy feeProxy call (with maxPayment=0) to do a proper fee estimation
+	const feeProxyCallForEstimation = api.tx.feeProxy.callWithFeePreferences(
+		ASTO_ASSET_ID,
+		0,
+		futurepassCall
+	);
+	const paymentInfo = await feeProxyCallForEstimation.paymentInfo(caller.address);
 	const estimatedFee = paymentInfo.partialFee.toString();
+
+	console.log(estimatedFee);
 
 	// query the the `dex` to determine the `maxPayment` you are willing to pay
 	const {
@@ -39,26 +51,30 @@ withChainApi("porcini", async (api, caller) => {
 		ASTO_ASSET_ID,
 		XRP_ASSET_ID,
 	])) as unknown as AmountsIn;
-	// allow a buffer to prevent extrinsic failure
-	const maxPayment = Number(amountIn * 1.5).toFixed();
 
+	// allow a buffer to avoid slippage, 5%
+	const maxPayment = Number(amountIn * 1.05).toFixed();
 	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(
 		ASTO_ASSET_ID,
 		maxPayment,
 		futurepassCall
 	);
 
-	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: console });
+	logger.info(`dispatch a feeProxy call with maxPayment="${maxPayment}"`);
+	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 	const [proxyEvent, futurepassEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
 		"FeeProxy.CallWithFeePreferences",
 		"Futurepass.ProxyExecuted",
 		"System.Remarked",
 	]);
 
-	console.log("Extrinsic ID:", extrinsicId);
-	console.log("Extrinsic Result:", {
-		proxy: formatEventData(proxyEvent.event),
-		futurepass: formatEventData(futurepassEvent.event),
-		remark: formatEventData(remarkEvent.event),
+	logger.info({
+		result: {
+			extrinsicId,
+			blockNumber: result.blockNumber,
+			proxyEvent: formatEventData(proxyEvent.event),
+			futurepassEvent: formatEventData(futurepassEvent.event),
+			remarkEvent: formatEventData(remarkEvent.event),
+		},
 	});
 });

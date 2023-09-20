@@ -15,7 +15,7 @@ interface AmountsIn {
  *
  * Assumes the caller has some ASTO balance.
  */
-withChainApi("porcini", async (api, caller) => {
+withChainApi("porcini", async (api, caller, logger) => {
 	const oneASTO = 1 * Math.pow(10, 18); // 1 ASTO in `wei` unit
 	const transferToAliceCall = api.tx.assets.transfer(ASTO_ASSET_ID, ALICE, oneASTO.toString());
 	const transferToBobCall = api.tx.assets.transfer(ASTO_ASSET_ID, BOB, oneASTO.toString());
@@ -27,7 +27,14 @@ withChainApi("porcini", async (api, caller) => {
 		transferToCharlieCall,
 	]);
 
-	const paymentInfo = await batchAllCall.paymentInfo(caller.address);
+	// we need a dummy feeProxy call (with maxPayment=0) to do a proper fee estimation
+	const feeProxyCallForEstimation = api.tx.feeProxy.callWithFeePreferences(
+		ASTO_ASSET_ID,
+		0,
+		batchAllCall
+	);
+
+	const paymentInfo = await feeProxyCallForEstimation.paymentInfo(caller.address);
 	const estimatedFee = paymentInfo.partialFee.toString();
 
 	// query the the `dex` to determine the `maxPayment` you are willing to pay
@@ -37,16 +44,17 @@ withChainApi("porcini", async (api, caller) => {
 		ASTO_ASSET_ID,
 		XRP_ASSET_ID,
 	])) as unknown as AmountsIn;
-	// allow a buffer to prevent extrinsic failure
-	const maxPayment = Number(amountIn * 1.5).toFixed();
 
+	// allow a buffer to avoid slippage, 5%
+	const maxPayment = Number(amountIn * 1.05).toFixed();
 	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(
 		ASTO_ASSET_ID,
 		maxPayment,
 		batchAllCall
 	);
 
-	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: console });
+	logger.info(`dispatch a feeProxy call with maxPayment="${maxPayment}"`);
+	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 	const [proxyEvent, batchEvent, aliceTransferEvent, bobTransferEvent, charlieTransferEvent] =
 		filterExtrinsicEvents(result.events, [
 			"FeeProxy.CallWithFeePreferences",
@@ -56,12 +64,18 @@ withChainApi("porcini", async (api, caller) => {
 			{ name: "Assets.Transferred", key: "to", data: { value: CHARLIE, type: "T::AccountId" } },
 		]);
 
-	console.log("Extrinsic ID:", extrinsicId);
-	console.log("Extrinsic Result:", {
-		proxy: formatEventData(proxyEvent.event),
-		batchEvent: formatEventData(batchEvent.event),
-		aliceTransferEvent: formatEventData(aliceTransferEvent.event),
-		bobTransferEvent: formatEventData(bobTransferEvent.event),
-		charlieTransferEvent: formatEventData(charlieTransferEvent.event),
-	});
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				proxyEvent: formatEventData(proxyEvent.event),
+				batchEvent: formatEventData(batchEvent.event),
+				aliceTransferEvent: formatEventData(aliceTransferEvent.event),
+				bobTransferEvent: formatEventData(bobTransferEvent.event),
+				charlieTransferEvent: formatEventData(charlieTransferEvent.event),
+			},
+		},
+		"receive result"
+	);
 });

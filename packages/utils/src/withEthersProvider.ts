@@ -4,7 +4,7 @@ import { cleanEnv, str } from "envalid";
 import { providers, Wallet } from "ethers";
 import PrettyError from "pretty-error";
 
-import { getLogger, Logger } from "./getLogger";
+import { getLogger, type Logger } from "./getLogger";
 
 const env = cleanEnv(process.env, {
 	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
@@ -24,7 +24,7 @@ export async function withEthersProvider(
 	logger.info(`create a JsonRpcProvider instance with network="${network}"`);
 
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
-	logger.info(`create a Wallet from a private key of address="${wallet.address}"`);
+	logger.info(`create a Wallet instance from a private key of address="${wallet.address}"`);
 
 	await callback(provider, wallet, logger).catch((error) => {
 		console.log(pe.render(error));

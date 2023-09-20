@@ -62,13 +62,15 @@ withEthersProvider("porcini", async (provider, wallet, logger) => {
 
 	logger.info(
 		{
-			transferEvent: {
-				name: transferEvent.name,
-				args: transferEvent.args,
+			result: {
 				transactionHash: receipt.transactionHash,
 				blockNumber: receipt.blockNumber,
+				transferEvent: {
+					name: transferEvent.name,
+					args: transferEvent.args,
+				},
 			},
 		},
-		"receive event"
+		"receive result"
 	);
 });
