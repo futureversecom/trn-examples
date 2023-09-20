@@ -61,7 +61,14 @@ withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const [transferEvent] = filterTransactionEvents(ERC20_ABI, receipt.logs, ["Transfer"]);
 
 	logger.info(
-		{ transferEvent: { name: transferEvent.name, args: transferEvent.args } },
+		{
+			transferEvent: {
+				name: transferEvent.name,
+				args: transferEvent.args,
+				transactionHash: receipt.transactionHash,
+				blockNumber: receipt.blockNumber,
+			},
+		},
 		"receive event"
 	);
 });
