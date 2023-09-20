@@ -28,6 +28,7 @@
     "prettier": "^2.8.8",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^3.12.10",
     "typescript": "^5.0.4",
     "xrpl": "^2.7.0",
     "yargs": "^17.7.2"
