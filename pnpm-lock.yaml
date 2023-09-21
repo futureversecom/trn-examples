@@ -8,6 +8,24 @@ importers:
 
   .:
     dependencies:
+      '@polkadot/api':
+        specifier: ^10.9.1
+        version: 10.9.1
+      '@polkadot/keyring':
+        specifier: ^12.3.2
+        version: 12.3.2(@polkadot/util-crypto@12.3.2)(@polkadot/util@12.3.2)
+      '@polkadot/util':
+        specifier: ^12.3.2
+        version: 12.3.2
+      '@polkadot/util-crypto':
+        specifier: ^12.3.2
+        version: 12.3.2(@polkadot/util@12.3.2)
+      '@therootnetwork/api':
+        specifier: ^1.0.2
+        version: 1.0.2(@polkadot/api@10.9.1)(@polkadot/types@10.9.1)
+      '@therootnetwork/evm':
+        specifier: ^1.0.3
+        version: 1.0.3
       envalid:
         specifier: ^7.3.1
         version: 7.3.1
@@ -273,24 +291,6 @@ importers:
 
   packages/utils:
     dependencies:
-      '@polkadot/api':
-        specifier: ^10.9.1
-        version: 10.9.1
-      '@polkadot/keyring':
-        specifier: ^12.3.2
-        version: 12.3.2(@polkadot/util-crypto@12.3.2)(@polkadot/util@12.3.2)
-      '@polkadot/util':
-        specifier: ^12.3.2
-        version: 12.3.2
-      '@polkadot/util-crypto':
-        specifier: ^12.3.2
-        version: 12.3.2(@polkadot/util@12.3.2)
-      '@therootnetwork/api':
-        specifier: ^1.0.2
-        version: 1.0.2(@polkadot/api@10.9.1)(@polkadot/types@10.9.1)
-      '@therootnetwork/evm':
-        specifier: ^1.0.3
-        version: 1.0.3
       pino:
         specifier: ^8.15.1
         version: 8.15.1
@@ -2241,13 +2241,13 @@ packages:
   /@types/bn.js@4.11.6:
     resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
     dependencies:
-      '@types/node': 20.4.2
+      '@types/node': 20.6.2
     dev: true
 
   /@types/bn.js@5.1.1:
     resolution: {integrity: sha512-qNrYbZqMx0uJAfKnKclPh+dTwK33KfLHYqtyODwd5HnXOjnkhc4qgn3BrK6RWyGZm5+sIFE7Q7Vz6QQtJB7w7g==}
     dependencies:
-      '@types/node': 20.4.2
+      '@types/node': 20.6.2
 
   /@types/chai-as-promised@7.1.5:
     resolution: {integrity: sha512-jStwss93SITGBwt/niYrkf2C+/1KTeZCZl1LaeezTlqppAKeoQC7jxyqYuP72sxBGKCIbw7oHgbYssIRzT5FCQ==}
@@ -2266,20 +2266,20 @@ packages:
   /@types/concat-stream@1.6.1:
     resolution: {integrity: sha512-eHE4cQPoj6ngxBZMvVf6Hw7Mh4jMW4U9lpGmS5GBPB9RYxlFg+CHaVN7ErNY4W9XfLIEn20b4VDYaIrbq0q4uA==}
     dependencies:
-      '@types/node': 20.4.2
+      '@types/node': 20.6.2
     dev: true
 
   /@types/form-data@0.0.33:
     resolution: {integrity: sha512-8BSvG1kGm83cyJITQMZSulnl6QV8jqAGreJsc5tPu1Jq0vTSOiY/k24Wx82JRpWwZSqrala6sd5rWi6aNXvqcw==}
     dependencies:
-      '@types/node': 20.4.2
+      '@types/node': 20.6.2
     dev: true
 
   /@types/glob@7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.4.2
+      '@types/node': 20.6.2
     dev: true
 
   /@types/json-schema@7.0.12:
@@ -2319,10 +2319,10 @@ packages:
 
   /@types/node@20.4.2:
     resolution: {integrity: sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==}
+    dev: true
 
   /@types/node@20.6.2:
     resolution: {integrity: sha512-Y+/1vGBHV/cYk6OI1Na/LHzwnlNCAfU3ZNGrc1LdRe/LAIbdDPTTv/HU3M7yXN448aTVDq3eKRm2cg7iKLb8gw==}
-    dev: true
 
   /@types/node@8.10.66:
     resolution: {integrity: sha512-tktOkFUA4kXx2hhhrB8bIFb5TbwzS4uOhKEmwiD+NoiL0qtP2OQ9mFldbgD4dV1djrlBYP6eBuQZiWjuHUpqFw==}
@@ -2331,7 +2331,7 @@ packages:
   /@types/pbkdf2@3.1.0:
     resolution: {integrity: sha512-Cf63Rv7jCQ0LaL8tNXmEyqTHuIJxRdlS5vMh1mj5voN4+QFhVZnlZruezqpWYDiJ8UTzhP0VmeLXCmBk66YrMQ==}
     dependencies:
-      '@types/node': 20.4.2
+      '@types/node': 20.6.2
     dev: true
 
   /@types/prettier@2.7.3:
@@ -2371,7 +2371,7 @@ packages:
   /@types/secp256k1@4.0.3:
     resolution: {integrity: sha512-Da66lEIFeIz9ltsdMZcpQvmrmmoqrfju8pm1BH8WbYjZSwUgCwXLb9C+9XYogwBITnbsSaMdVPb2ekf7TV+03w==}
     dependencies:
-      '@types/node': 20.4.2
+      '@types/node': 20.6.2
     dev: true
 
   /@types/semver@7.5.0:

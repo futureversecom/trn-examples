@@ -1,7 +1,7 @@
+import { ERC20_ABI } from "@therootnetwork/evm";
 import { ALICE } from "@trne/utils/accounts";
 import { filterTransactionEvents } from "@trne/utils/filterTransactionEvents";
 import { getERC20Contract } from "@trne/utils/getERC20Contract";
-import { ERC20_ABI } from "@trne/utils/getERC20PrecompileAddress";
 import { getFeeProxyContract } from "@trne/utils/getFeeProxyContract";
 import { getFeeProxyPricePair } from "@trne/utils/getFeeProxyPricePair";
 import { ASTO_ASSET_ID, SYLO_ASSET_ID } from "@trne/utils/porcini-assets";
