@@ -18,6 +18,16 @@ export async function withEthersProvider(
 	network: NetworkName,
 	callback: (provider: EthersProvider, wallet: Wallet, logger: Logger) => Promise<void>
 ) {
+	const { provider, wallet, logger } = await provideEthersProvider(network);
+
+	await callback(provider, wallet, logger).catch((error) => {
+		console.log(pe.render(error));
+	});
+
+	logger.info("call ended 🎉 ");
+}
+
+export async function provideEthersProvider(network: NetworkName) {
 	const logger = getLogger();
 
 	const provider = new providers.JsonRpcProvider(getPublicProviderUrl(network));
@@ -26,9 +36,5 @@ export async function withEthersProvider(
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
 	logger.info(`create a Wallet instance from a private key of address="${wallet.address}"`);
 
-	await callback(provider, wallet, logger).catch((error) => {
-		console.log(pe.render(error));
-	});
-
-	logger.info("call ended 🎉 ");
+	return { provider, wallet, logger };
 }

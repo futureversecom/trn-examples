@@ -25,4 +25,7 @@ pnpm call:callProxyExtrinsic
 # `feeProxy.callWithFeePreferences` that wraps around `utility.batchAll`
 pnpm call:callBatchAll
 
+# `feeProxy.callWithFeePreferences` that wraps around `evm.call`
+pnpm call:callEVMCall
+
 ```

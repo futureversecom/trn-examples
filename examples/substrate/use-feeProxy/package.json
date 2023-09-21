@@ -3,6 +3,7 @@
     "call": "tsx --tsconfig ../../../tsconfig.json",
     "call:callSystemRemark": "pnpm call src/callSystemRemark.ts",
     "call:callProxyExtrinsic": "pnpm call src/callProxyExtrinsic.ts",
-    "call:callBatchAll": "pnpm call src/callBatchAll.ts"
+    "call:callBatchAll": "pnpm call src/callBatchAll.ts",
+    "call:callEVMCall": "pnpm call src/callEVMCall.ts"
   }
 }
