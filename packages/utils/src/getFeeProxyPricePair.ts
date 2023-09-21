@@ -19,7 +19,7 @@ export async function getFeeProxyPricePair(
 	assert(maxFeePerGas);
 
 	// convert gasPrice in ETH to gasPrice in XRP, which has different decimals, one is 18 & one is 6
-	const gasPriceInEth = gasEstimate.mul(maxFeePerGas);
+	const gasPriceInEth = gasEstimate.mul((maxFeePerGas.toNumber() * (1 + slippage)).toFixed());
 	const remainder = gasPriceInEth.mod(10 ** 12);
 	const gasPriceInXRP = gasPriceInEth
 		.div(10 ** 12)
@@ -34,5 +34,5 @@ export async function getFeeProxyPricePair(
 		[feeAssetId, XRP_ASSET_ID],
 	])) as unknown as AmountsIn;
 
-	return { maxPayment: BigNumber.from((maxPayment * (1 + slippage)).toString()), maxFeePerGas };
+	return { maxPayment: BigNumber.from(maxPayment.toString()), maxFeePerGas };
 }
