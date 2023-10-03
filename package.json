@@ -13,8 +13,13 @@
   "dependencies": {
     "envalid": "^7.3.1",
     "ethers": "^5.7.2",
-    "pretty-error": "^4.0.0",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "@polkadot/api": "^10.9.1",
+    "@polkadot/keyring": "^12.3.2",
+    "@polkadot/util": "^12.3.2",
+    "@polkadot/util-crypto": "^12.3.2",
+    "@therootnetwork/api": "^1.0.2",
+    "@therootnetwork/evm": "^1.0.3"
   },
   "devDependencies": {
     "@eslint/create-config": "^0.4.3",
@@ -29,6 +34,7 @@
     "prettier": "^2.8.8",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^3.12.10",
     "typescript": "^5.0.4",
     "xrpl": "^2.7.0",
     "yargs": "^17.7.2"

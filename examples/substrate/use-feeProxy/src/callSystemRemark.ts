@@ -1,10 +1,8 @@
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { formatEventData } from "@trne/utils/formatEventData";
+import { ASTO_ASSET_ID, XRP_ASSET_ID } from "@trne/utils/porcini-assets";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
-
-const ASTO_ASSET_ID = 17_508;
-const XRP_ASSET_ID = 2;
 
 interface AmountsIn {
 	Ok: [number, number];
@@ -16,37 +14,52 @@ interface AmountsIn {
  *
  * Assumes the caller has some ASTO balance.
  */
-withChainApi("porcini", async (api, caller) => {
+withChainApi("porcini", async (api, caller, logger) => {
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
 	const remarkCall = api.tx.system.remarkWithEvent("Hello World");
-	const paymentInfo = await remarkCall.paymentInfo(caller.address);
+	// we need a dummy feeProxy call (with maxPayment=0) to do a proper fee estimation
+	const feeProxyCallForEstimation = api.tx.feeProxy.callWithFeePreferences(
+		ASTO_ASSET_ID,
+		0,
+		remarkCall
+	);
+	const paymentInfo = await feeProxyCallForEstimation.paymentInfo(caller.address);
 	const estimatedFee = paymentInfo.partialFee.toString();
 
-	// querying the dex for swap price, to determine the `maxPayment` you are willing to pay
+	logger.info(`prepare a "system.remark" call with estimatedFee="${estimatedFee}"`);
+
+	// query the the `dex` to determine the `maxPayment` you are willing to pay
 	const {
 		Ok: [amountIn],
 	} = (await api.rpc.dex.getAmountsIn(estimatedFee, [
 		ASTO_ASSET_ID,
 		XRP_ASSET_ID,
 	])) as unknown as AmountsIn;
-	// allow a buffer to prevent extrinsic failure
-	const maxPayment = Number(amountIn * 1.5).toFixed();
 
+	// allow a buffer to avoid slippage, 5%
+	const maxPayment = Number(amountIn * 1.05).toFixed();
 	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(
 		ASTO_ASSET_ID,
 		maxPayment,
 		remarkCall
 	);
 
-	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: console });
+	logger.info(`dispatch a feeProxy call with maxPayment="${maxPayment}"`);
+	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 	const [proxyEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
 		"FeeProxy.CallWithFeePreferences",
 		"System.Remarked",
 	]);
 
-	console.log("Extrinsic ID:", extrinsicId);
-	console.log("Extrinsic Result:", {
-		proxy: formatEventData(proxyEvent.event),
-		remark: formatEventData(remarkEvent.event),
-	});
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				proxyEvent: formatEventData(proxyEvent.event),
+				remarkEvent: formatEventData(remarkEvent.event),
+			},
+		},
+		"receive result"
+	);
 });

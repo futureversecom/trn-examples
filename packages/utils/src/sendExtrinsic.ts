@@ -15,7 +15,7 @@ export interface SubmittableResponse {
 }
 
 type SubmitOptions = Partial<SignerOptions> & {
-	log?: typeof console;
+	log?: { info: (msg: string) => void };
 };
 
 /**
@@ -39,7 +39,7 @@ export async function sendExtrinsic(
 			.signAndSend(signer, signerOptions, (result) => {
 				const { status, dispatchError, txHash, txIndex, blockNumber } =
 					result as SubmittableResultValue;
-				log?.debug(`Extrinsic Status: `, status.type);
+				log?.info(`extrinsic status="${status.type}"`);
 				if (!status.isFinalized) return;
 				if (!txIndex || !blockNumber) return;
 
