@@ -23,8 +23,14 @@ interface AmountsIn {
  * the transfer
  */
 withChainApi("porcini", async (api, caller, logger) => {
+	/**
+	 * 1. Create `emv.call` call
+	 */
 	const { call: evmCall, estimateGasCost } = await createEVMCall(caller.address, api, logger);
 
+	/**
+	 * 2. Determine the `maxPayment` in ASTO by estimate the gas cost and use `dex` to get a quote
+	 */
 	// we need a dummy feeProxy call (with maxPayment=0) to do a proper fee estimation
 	const feeProxyCallForEstimation = api.tx.feeProxy.callWithFeePreferences(
 		ASTO_ASSET_ID,
@@ -49,6 +55,9 @@ withChainApi("porcini", async (api, caller, logger) => {
 	// allow a buffer to avoid slippage, 5%
 	const maxPayment = Number(amountIn * 1.05).toFixed();
 
+	/**
+	 * 3. Create and dispatch `feeProxy.callWithFeePreferences` extrinsic
+	 */
 	logger.info(
 		{
 			parameters: {
