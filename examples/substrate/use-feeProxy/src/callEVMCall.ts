@@ -1,9 +1,11 @@
+import { ApiPromise } from "@polkadot/api";
 import { ERC20_ABI } from "@therootnetwork/evm";
 import { ALICE } from "@trne/utils/accounts";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { formatEventData } from "@trne/utils/formatEventData";
 import { getERC20Contract } from "@trne/utils/getERC20Contract";
 import { getFeeProxyPricePair } from "@trne/utils/getFeeProxyPricePair";
+import { Logger } from "@trne/utils/getLogger";
 import { ASTO_ASSET_ID, SYLO_ASSET_ID, XRP_ASSET_ID } from "@trne/utils/porcini-assets";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
@@ -15,37 +17,13 @@ interface AmountsIn {
 }
 
 /**
- * Use `feeProxy.callWithFeePreferencs` to trigger `evm.call` call
+ * Use `feeProxy.callWithFeePreferencs` to trigger `evm.call`
  *
- * Assumes the caller has some ASTO balance.
+ * Assumes the caller has some ASTO balance to pay for gas and some SYLO balance to demonstrate
+ * the transfer
  */
 withChainApi("porcini", async (api, caller, logger) => {
-	// setup the evmCall
-	const { provider, wallet } = await provideEthersProvider("porcini");
-	const transferToken = getERC20Contract(SYLO_ASSET_ID).connect(wallet);
-	const transferAmount = utils.parseUnits("1.0", 18); // 1 SYLO
-	const transferInput = new utils.Interface(ERC20_ABI).encodeFunctionData("transfer", [
-		ALICE,
-		transferAmount,
-	]);
-	const transferEstimate = await transferToken.estimateGas.transfer(ALICE, transferAmount);
-	const { maxFeePerGas, estimateGasCost } = await getFeeProxyPricePair(
-		provider,
-		transferEstimate,
-		ASTO_ASSET_ID,
-		0.05
-	);
-	const evmCall = api.tx.evm.call(
-		caller.address,
-		transferToken.address,
-		transferInput,
-		0,
-		transferEstimate.toString(),
-		maxFeePerGas.toString(),
-		0,
-		null,
-		[]
-	);
+	const { call: evmCall, estimateGasCost } = await createEVMCall(caller.address, api, logger);
 
 	// we need a dummy feeProxy call (with maxPayment=0) to do a proper fee estimation
 	const feeProxyCallForEstimation = api.tx.feeProxy.callWithFeePreferences(
@@ -60,8 +38,6 @@ withChainApi("porcini", async (api, caller, logger) => {
 		.add(estimateGasCost)
 		.toString();
 
-	logger.info(`prepare a "evm.call" call with estimatedFee="${estimatedFee}"`);
-
 	// query the the `dex` to determine the `maxPayment` you are willing to pay
 	const {
 		Ok: [amountIn],
@@ -72,8 +48,20 @@ withChainApi("porcini", async (api, caller, logger) => {
 
 	// allow a buffer to avoid slippage, 5%
 	const maxPayment = Number(amountIn * 1.05).toFixed();
+
+	logger.info(
+		{
+			parameters: {
+				paymentAsset: ASTO_ASSET_ID,
+				maxPayment,
+				call: evmCall.toJSON(),
+			},
+		},
+		`create a "feeProxy.callWithFeePreferences"`
+	);
 	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(ASTO_ASSET_ID, maxPayment, evmCall);
-	logger.info(`dispatch a feeProxy call with maxPayment="${maxPayment}"`);
+
+	logger.info(`dispatch extrinsic as caller="${caller.address}"`);
 	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 
 	const [proxyEvent, aliceTransferEvent] = filterExtrinsicEvents(result.events, [
@@ -93,3 +81,49 @@ withChainApi("porcini", async (api, caller, logger) => {
 		"receive result"
 	);
 });
+
+export async function createEVMCall(caller: string, api: ApiPromise, logger: Logger) {
+	// setup the actual EVM transaction, as interface
+	const { provider, wallet } = await provideEthersProvider("porcini");
+	const transferToken = getERC20Contract(SYLO_ASSET_ID).connect(wallet);
+	const transferAmount = utils.parseUnits("0.1", 18); // 0.1 SYLO
+	const transferInput = new utils.Interface(ERC20_ABI).encodeFunctionData("transfer", [
+		ALICE,
+		transferAmount,
+	]);
+	const transferEstimate = await transferToken.estimateGas.transfer(ALICE, transferAmount);
+	const { maxFeePerGas, estimateGasCost } = await getFeeProxyPricePair(
+		provider,
+		transferEstimate,
+		ASTO_ASSET_ID,
+		0.05
+	);
+
+	logger.info(
+		{
+			parameters: {
+				source: caller,
+				target: transferToken.address,
+				input: transferInput,
+				gasLimit: transferEstimate.toString(),
+				maxFeePerGas: maxFeePerGas.toString(),
+			},
+		},
+		`create an "emv.call"`
+	);
+
+	return {
+		call: api.tx.evm.call(
+			caller,
+			transferToken.address,
+			transferInput,
+			0,
+			transferEstimate.toString(),
+			maxFeePerGas.toString(),
+			0,
+			null,
+			[]
+		),
+		estimateGasCost,
+	};
+}

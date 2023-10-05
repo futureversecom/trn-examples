@@ -21,6 +21,16 @@ withChainApi("porcini", async (api, caller, logger) => {
 	const transferToBobCall = api.tx.assets.transfer(ASTO_ASSET_ID, BOB, oneASTO.toString());
 	const transferToCharlieCall = api.tx.assets.transfer(ASTO_ASSET_ID, CHARLIE, oneASTO.toString());
 
+	logger.info(
+		{
+			parameters: [
+				transferToAliceCall.toJSON(),
+				transferToBobCall.toJSON(),
+				transferToCharlieCall.toJSON(),
+			],
+		},
+		`create a "system.remarkWithEvent"`
+	);
 	const batchAllCall = api.tx.utility.batchAll([
 		transferToAliceCall,
 		transferToBobCall,
@@ -47,13 +57,24 @@ withChainApi("porcini", async (api, caller, logger) => {
 
 	// allow a buffer to avoid slippage, 5%
 	const maxPayment = Number(amountIn * 1.05).toFixed();
+
+	logger.info(
+		{
+			parameters: {
+				paymentAsset: ASTO_ASSET_ID,
+				maxPayment,
+				call: batchAllCall.toJSON(),
+			},
+		},
+		`create a "feeProxy.callWithFeePreferences"`
+	);
 	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(
 		ASTO_ASSET_ID,
 		maxPayment,
 		batchAllCall
 	);
 
-	logger.info(`dispatch a feeProxy call with maxPayment="${maxPayment}"`);
+	logger.info(`dispatch extrinsic as caller="${caller.address}"`);
 	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 	const [proxyEvent, batchEvent, aliceTransferEvent, bobTransferEvent, charlieTransferEvent] =
 		filterExtrinsicEvents(result.events, [

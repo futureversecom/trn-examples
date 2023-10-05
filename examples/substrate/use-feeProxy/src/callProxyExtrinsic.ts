@@ -13,7 +13,7 @@ interface AmountsIn {
  * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call via
  * `futurepass.proxyExtrinsic`, and have Futurepass account pays gas in ASTO.
  *
- * Assumes the caller has a valid Futurepass account and some ASTO balance in that account.
+ * Assumes the caller has a valid Futurepass account and some ASTO balance to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const fpAccount = (await api.query.futurepass.holders(caller.address)).unwrap();
@@ -32,6 +32,15 @@ withChainApi("porcini", async (api, caller, logger) => {
 	// can be any extrinsic, using `system.remarkWithEvent` for simplicity
 	const remarkCall = api.tx.system.remarkWithEvent("Hello World");
 	// wrap `remarkCall` with `proxyCall`, effetively request Futurepass account to pay for gas
+	logger.info(
+		{
+			parameters: {
+				futurepass: fpAccount,
+				call: remarkCall.toJSON(),
+			},
+		},
+		`create a "futurepass.proxyExtrinsic"`
+	);
 	const futurepassCall = api.tx.futurepass.proxyExtrinsic(fpAccount, remarkCall);
 	// we need a dummy feeProxy call (with maxPayment=0) to do a proper fee estimation
 	const feeProxyCallForEstimation = api.tx.feeProxy.callWithFeePreferences(
@@ -41,8 +50,6 @@ withChainApi("porcini", async (api, caller, logger) => {
 	);
 	const paymentInfo = await feeProxyCallForEstimation.paymentInfo(caller.address);
 	const estimatedFee = paymentInfo.partialFee.toString();
-
-	console.log(estimatedFee);
 
 	// query the the `dex` to determine the `maxPayment` you are willing to pay
 	const {
@@ -54,13 +61,24 @@ withChainApi("porcini", async (api, caller, logger) => {
 
 	// allow a buffer to avoid slippage, 5%
 	const maxPayment = Number(amountIn * 1.05).toFixed();
+
+	logger.info(
+		{
+			parameters: {
+				paymentAsset: ASTO_ASSET_ID,
+				maxPayment,
+				call: futurepassCall.toJSON(),
+			},
+		},
+		`create a "feeProxy.callWithFeePreferences"`
+	);
 	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(
 		ASTO_ASSET_ID,
 		maxPayment,
 		futurepassCall
 	);
 
-	logger.info(`dispatch a feeProxy call with maxPayment="${maxPayment}"`);
+	logger.info(`dispatch extrinsic as caller="${caller.address}"`);
 	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 	const [proxyEvent, futurepassEvent, remarkEvent] = filterExtrinsicEvents(result.events, [
 		"FeeProxy.CallWithFeePreferences",
@@ -68,13 +86,16 @@ withChainApi("porcini", async (api, caller, logger) => {
 		"System.Remarked",
 	]);
 
-	logger.info({
-		result: {
-			extrinsicId,
-			blockNumber: result.blockNumber,
-			proxyEvent: formatEventData(proxyEvent.event),
-			futurepassEvent: formatEventData(futurepassEvent.event),
-			remarkEvent: formatEventData(remarkEvent.event),
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				proxyEvent: formatEventData(proxyEvent.event),
+				futurepassEvent: formatEventData(futurepassEvent.event),
+				remarkEvent: formatEventData(remarkEvent.event),
+			},
 		},
-	});
+		"receive result"
+	);
 });
