@@ -4,6 +4,7 @@
     "call:callSystemRemark": "pnpm call src/callSystemRemark.ts",
     "call:callProxyExtrinsic": "pnpm call src/callProxyExtrinsic.ts",
     "call:callBatchAll": "pnpm call src/callBatchAll.ts",
-    "call:callEVMCall": "pnpm call src/callEVMCall.ts"
+    "call:callEVMCall": "pnpm call src/callEVMCall.ts",
+    "call:callProxyExtrinsicEVMCall": "pnpm call src/callProxyExtrinsicEVMCall.ts"
   }
 }

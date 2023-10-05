@@ -28,4 +28,7 @@ pnpm call:callBatchAll
 # `feeProxy.callWithFeePreferences` that wraps around `evm.call`
 pnpm call:callEVMCall
 
+# `feeProxy.callWithFeePreferences` that wraps around `futurepass.proxyExtrinsic` then `emv.call`
+pnpm call:callProxyExtrinsicEVMCall
+
 ```
