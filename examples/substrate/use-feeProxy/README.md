@@ -19,14 +19,14 @@ export CALLER_PRIVATE_KEY=
 # `feeProxy.callWithFeePreferences` that wraps around `system.remarkWithEvent`
 pnpm call:callSystemRemark
 
-# `feeProxy.callWithFeePreferences` that wraps around `futurepass.proxyExtrinsic`
-pnpm call:callProxyExtrinsic
-
 # `feeProxy.callWithFeePreferences` that wraps around `utility.batchAll`
 pnpm call:callBatchAll
 
 # `feeProxy.callWithFeePreferences` that wraps around `evm.call`
 pnpm call:callEVMCall
+
+# `feeProxy.callWithFeePreferences` that wraps around `futurepass.proxyExtrinsic`
+pnpm call:callProxyExtrinsic
 
 # `feeProxy.callWithFeePreferences` that wraps around `futurepass.proxyExtrinsic` then `emv.call`
 pnpm call:callProxyExtrinsicEVMCall
