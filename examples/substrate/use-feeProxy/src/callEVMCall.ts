@@ -70,7 +70,7 @@ withChainApi("porcini", async (api, caller, logger) => {
 	);
 	const feeProxyCall = api.tx.feeProxy.callWithFeePreferences(ASTO_ASSET_ID, maxPayment, evmCall);
 
-	logger.info(`dispatch extrinsic as caller="${caller.address}"`);
+	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
 	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 
 	const [proxyEvent, evmLogEvent, aliceTransferEvent] = filterExtrinsicEvents(result.events, [

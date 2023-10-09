@@ -83,7 +83,7 @@ withChainApi("porcini", async (api, caller, logger) => {
 		batchAllCall
 	);
 
-	logger.info(`dispatch extrinsic as caller="${caller.address}"`);
+	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
 	const { result, extrinsicId } = await sendExtrinsic(feeProxyCall, caller, { log: logger });
 	const [proxyEvent, batchEvent, aliceTransferEvent, bobTransferEvent, charlieTransferEvent] =
 		filterExtrinsicEvents(result.events, [
