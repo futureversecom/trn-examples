@@ -15,7 +15,7 @@ const pe = new PrettyError();
 export type EthersProvider = providers.JsonRpcProvider;
 
 export async function withEthersProvider(
-	network: NetworkName,
+	network: NetworkName | "local",
 	callback: (provider: EthersProvider, wallet: Wallet, logger: Logger) => Promise<void>
 ) {
 	const { provider, wallet, logger } = await provideEthersProvider(network);
@@ -27,10 +27,12 @@ export async function withEthersProvider(
 	logger.info("call ended 🎉 ");
 }
 
-export async function provideEthersProvider(network: NetworkName) {
+export async function provideEthersProvider(network: NetworkName | "local") {
 	const logger = getLogger();
 
-	const provider = new providers.JsonRpcProvider(getPublicProviderUrl(network));
+	const provider = new providers.JsonRpcProvider(
+		network !== "local" ? getPublicProviderUrl(network) : "http://localhost:9933"
+	);
 	logger.info(`create a JsonRpcProvider instance with network="${network}"`);
 
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);

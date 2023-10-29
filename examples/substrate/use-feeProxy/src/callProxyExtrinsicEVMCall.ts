@@ -28,7 +28,8 @@ withChainApi("porcini", async (api, caller, logger) => {
 	/**
 	 * 1. Create `futurepass.proxyExtrinsic` call that wraps around `evm.call`
 	 */
-	const fpAccount = (await api.query.futurepass.holders(caller.address)).unwrap();
+	const fpAccount = (await api.query.futurepass.holders(caller.address)).unwrapOr(undefined);
+	assert(fpAccount);
 	logger.info(
 		{
 			futurepass: {
@@ -38,7 +39,6 @@ withChainApi("porcini", async (api, caller, logger) => {
 		},
 		"futurepass details"
 	);
-	assert(fpAccount);
 
 	const { call: evmCall, estimateGasCost } = await createEVMCall(fpAccount.toString(), api, logger);
 	logger.info(
