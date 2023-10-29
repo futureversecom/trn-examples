@@ -1,13 +1,13 @@
-import { PalletNftCrossChainCompatibility } from "@polkadot/types/lookup";
 import { stringToHex } from "@polkadot/util";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
+import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
-withChainApi("porcini", async (api, caller) => {
-	const name = "MyToken";
-	const initialIssuance = 1_000;
-	const maxIssuance = 10_000;
+withChainApi("porcini", async (api, caller, logger) => {
+	const name = "MyCollection";
+	const initialIssuance = 0; // start from token 0
+	const maxIssuance = null; // no max issuance
 	const tokenOwner = caller.address;
 	const metadataScheme = stringToHex("https://example.com/token/");
 	const royaltiesSchedule = {
@@ -15,6 +15,20 @@ withChainApi("porcini", async (api, caller) => {
 	};
 	const crossChainCompatibility = { xrpl: false };
 
+	logger.info(
+		{
+			parameters: {
+				name,
+				initialIssuance,
+				maxIssuance,
+				tokenOwner,
+				metadataScheme,
+				royaltiesSchedule,
+				crossChainCompatibility,
+			},
+		},
+		`create a "nft.createCollection"`
+	);
 	const extrinsic = api.tx.nft.createCollection(
 		name,
 		initialIssuance,
@@ -25,17 +39,18 @@ withChainApi("porcini", async (api, caller) => {
 		crossChainCompatibility
 	);
 
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-	const [event] = filterExtrinsicEvents(result.events, ["Nft.CollectionCreate"]);
+	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
+	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
+	const [createEvent] = filterExtrinsicEvents(result.events, ["Nft.CollectionCreate"]);
 
-	console.log("Extrinsic Result", event.toJSON());
-
-	const collectionId = (
-		event.toJSON() as {
-			event: {
-				data: [number];
-			};
-		}
-	).event.data[0];
-	console.log("Collection ID", collectionId);
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				createEvent: formatEventData(createEvent.event),
+			},
+		},
+		"receive result"
+	);
 });

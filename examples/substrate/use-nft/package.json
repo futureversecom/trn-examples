@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
-  },
-  "dependencies": {
-    "@polkadot/util": "^12.3.2"
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:createCollection": "pnpm call src/createCollection.ts",
+    "call:updateCollection": "pnpm call src/updateCollection.ts",
+    "call:mint": "pnpm call src/mint"
   }
 }
