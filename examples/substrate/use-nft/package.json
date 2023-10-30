@@ -3,6 +3,7 @@
     "call": "tsx --tsconfig ../../../tsconfig.json",
     "call:createCollection": "pnpm call src/createCollection.ts",
     "call:updateCollection": "pnpm call src/updateCollection.ts",
-    "call:mint": "pnpm call src/mint"
+    "call:mint": "pnpm call src/mint.ts",
+    "call:transfer": "pnpm call src/transfer.ts"
   }
 }

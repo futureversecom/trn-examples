@@ -22,7 +22,10 @@ pnpm call:createCollection
 # update collection info
 pnpm call:updateCollection
 
-# mint nft(s) from a collection
+# mint nft(s)
 pnpm call:mint
+
+# transfer nft(s)
+pnpm call:transfer
 
 ```
