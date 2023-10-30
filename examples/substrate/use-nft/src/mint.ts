@@ -3,17 +3,15 @@ import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
-const COLLECTION_ID = 269412;
+const COLLECTION_ID = 1124;
 
 /**
- * Use `sft.createToken` extrinsic to create a new token for a collection.
+ * Use `nft.mint` extrinsic to mint new tokens.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller is the owner of the collection, and has some XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
-	const tokenName = "MyToken";
-	const initialIssuance = 0;
-	const maxIssuance = null;
+	const quantity = 10;
 	const tokenOwner = caller.address;
 	const collectionId = COLLECTION_ID;
 
@@ -21,33 +19,25 @@ withChainApi("porcini", async (api, caller, logger) => {
 		{
 			parameters: {
 				collectionId,
-				tokenName,
-				initialIssuance,
-				maxIssuance,
+				quantity,
 				tokenOwner,
 			},
 		},
-		`create a "sft.createToken" extrinsic`
+		`create a "nft.mint" extrinsic`
 	);
 
-	const extrinsic = api.tx.sft.createToken(
-		collectionId,
-		tokenName,
-		initialIssuance,
-		maxIssuance,
-		tokenOwner
-	);
+	const extrinsic = api.tx.nft.mint(collectionId, quantity, tokenOwner);
 
 	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
 	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
-	const [createEvent] = filterExtrinsicEvents(result.events, ["Sft.TokenCreate"]);
+	const [mintEvent] = filterExtrinsicEvents(result.events, ["Nft.Mint"]);
 
 	logger.info(
 		{
 			result: {
 				extrinsicId,
 				blockNumber: result.blockNumber,
-				createEvent: formatEventData(createEvent.event),
+				mintEvent: formatEventData(mintEvent.event),
 			},
 		},
 		"receive result"

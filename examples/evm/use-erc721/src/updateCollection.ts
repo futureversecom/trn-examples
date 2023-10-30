@@ -2,54 +2,49 @@ import { ERC721_PRECOMPILE_ABI } from "@therootnetwork/evm";
 import { filterTransactionEvents } from "@trne/utils/filterTransactionEvents";
 import { getERC721Contract } from "@trne/utils/getERC721Contract";
 import { withEthersProvider } from "@trne/utils/withEthersProvider";
-import { ContractReceipt } from "ethers";
+import { ContractReceipt, utils } from "ethers";
 
 const COLLECTION_ID = 1124;
 
 /**
- * Use `TRN721.mint` call to mint new token(s)
+ * Use `TRN721.setBaseURI` call to update the collection `metadataScheme`.
+ *
+ * Similar extrinsics are available to update different properties of a collection
+ *  - setMaxSupply
+ *  Check out the precompile documentation (linked in README) for more details
  *
  * Assumes the caller is the owner of the collection, and has some XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const erc721 = getERC721Contract(COLLECTION_ID).connect(wallet);
-	const tokenOwner = wallet.address;
-	const quantity = 2;
+	const baseUri = utils.hexlify(utils.toUtf8Bytes("https://example.com/token/"));
 
 	logger.info(
 		{
 			parameters: {
 				contractAddress: erc721.address,
-				tokenOwner,
-				quantity,
+				baseUri,
 			},
 		},
-		`create "mint" call`
+		`create "setBaseURI" call`
 	);
 
 	logger.info(`dispatch transaction from wallet=${wallet.address}`);
-	const tx = await erc721.mint(tokenOwner, quantity);
+	const tx = await erc721.setBaseURI(baseUri);
 	const receipt = (await tx.wait()) as unknown as ContractReceipt;
 
-	// 2 tokens minted = 2 transfers event
-	const [transferEvent1, transferEvent2] = filterTransactionEvents(
-		ERC721_PRECOMPILE_ABI,
-		receipt.logs,
-		["Transfer"]
-	);
+	const [setEvent] = filterTransactionEvents(ERC721_PRECOMPILE_ABI, receipt.logs, [
+		"BaseURIUpdated",
+	]);
 
 	logger.info(
 		{
 			result: {
 				transactionHash: receipt.transactionHash,
 				blockNumber: receipt.blockNumber,
-				transferEvent1: {
-					name: transferEvent1.name,
-					args: transferEvent1.args,
-				},
-				transferEvent2: {
-					name: transferEvent2.name,
-					args: transferEvent2.args,
+				setEvent: {
+					name: setEvent.name,
+					args: setEvent.args,
 				},
 			},
 		},

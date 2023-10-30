@@ -1,47 +1,63 @@
-import { getNFTPrecompile } from "@trne/utils/getNFTPrecompile";
-import assert from "assert";
-import { cleanEnv, str } from "envalid";
-import { BigNumber, ethers } from "ethers";
+import { NFT_PRECOMPILE_ABI } from "@therootnetwork/evm";
+import { filterTransactionEvents } from "@trne/utils/filterTransactionEvents";
+import { getNFTContract } from "@trne/utils/getNFTContract";
+import { withEthersProvider } from "@trne/utils/withEthersProvider";
+import { ContractReceipt, utils } from "ethers";
 
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
-
-export async function main() {
-	const { nftPrecompile, wallet } = getNFTPrecompile(env.CALLER_PRIVATE_KEY);
-
-	const maxIssuance = BigNumber.from(0);
-	const metadataPath = ethers.utils.hexlify(
-		ethers.utils.toUtf8Bytes("https://example.com/metadata/")
-	);
-	const name = "test";
+/**
+ * Use `nft.initializeCollection` to to create a new ERC-721 compatible collection.
+ *
+ * Assumes the caller has some XRP to pay for gas.
+ */
+withEthersProvider("porcini", async (provider, wallet, logger) => {
+	const nft = getNFTContract().connect(wallet);
+	const collectionName = utils.hexlify(utils.toUtf8Bytes("MyCollection"));
+	const maxIssuance = 0; // no max issuance
+	const collectionOwner = wallet.address;
+	const baseUri = utils.hexlify(utils.toUtf8Bytes("https://example.com/token/"));
 	const royaltyAddresses = [wallet.address];
-	const royaltyEntitlements = [1000];
-	// new collection with unlimited mintable supply
-	const tx = await nftPrecompile
-		.connect(wallet)
-		.initializeCollection(
-			wallet.address,
-			ethers.utils.hexlify(ethers.utils.toUtf8Bytes(name)),
-			maxIssuance,
-			metadataPath,
-			royaltyAddresses,
-			royaltyEntitlements
-		);
-	const receipt = await tx.wait();
-	const erc721PrecompileAddress = (receipt?.events as any)[0].args.precompileAddress;
-	//InitializeCollection
-	const { event } = (receipt?.events as any)[0];
-	const { collectionOwner, precompileAddress } = (receipt?.events as any)[0].args;
-	console.log("(receipt?.events as any)[0];::", (receipt?.events as any)[0]);
-	console.log("(receipt?.events as any)[0].args;::", (receipt?.events as any)[0].args);
-	console.log("erc721PrecompileAddress::", erc721PrecompileAddress);
-	assert(event === "InitializeCollection", `Incorrect event ${event}`);
-	assert(collectionOwner === wallet.address, `Incorrect from field ${collectionOwner}`);
-	assert(
-		precompileAddress.toLowerCase().startsWith("0xaaaaaa"),
-		`Incorrect to field ${precompileAddress}`
-	);
-}
+	const royaltyEntitlements = [10_000]; // one percent
 
-main();
+	logger.info(
+		{
+			parameters: {
+				collectionOwner,
+				collectionName,
+				maxIssuance,
+				baseUri,
+				royaltyAddresses,
+				royaltyEntitlements,
+			},
+		},
+		`create "initializeCollection" call`
+	);
+
+	logger.info(`dispatch transaction from wallet=${wallet.address}`);
+	const tx = await nft.initializeCollection(
+		collectionOwner,
+		collectionName,
+		maxIssuance,
+		baseUri,
+		royaltyAddresses,
+		royaltyEntitlements
+	);
+	const receipt = (await tx.wait()) as unknown as ContractReceipt;
+
+	const [intializeEvent] = filterTransactionEvents(NFT_PRECOMPILE_ABI, receipt.logs, [
+		"InitializeCollection",
+	]);
+
+	logger.info(
+		{
+			result: {
+				transactionHash: receipt.transactionHash,
+				blockNumber: receipt.blockNumber,
+				intializeEvent: {
+					name: intializeEvent.name,
+					args: intializeEvent.args,
+				},
+			},
+		},
+		"receive result"
+	);
+});

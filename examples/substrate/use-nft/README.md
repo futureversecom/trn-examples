@@ -1,100 +1,31 @@
-# Use NFT
+# NFT (Non-Fungible Token) Pallet
 
-First run
+[![Run in StackBlitz](https://img.shields.io/badge/Open_in_StackBlitz-1269D3?style=for-the-badge&logo=stackblitz&logoColor=white)](https://stackblitz.com/github/futureversecom/trn-examples?file=examples%2Fsubstrate%2Fuse-nft%2FREADME.md&title=NFT%20Pallet%20Examples) [![Pallet Documentation](https://img.shields.io/badge/Pallet_Documentation-black?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs-beta.therootnetwork.com/buidl/substrate/pallet-nft)
 
-```
-export CALLER_PRIVATE_KEY=0x000...
-```
+> [!IMPORTANT]
+> Ensure the following ENV vars are available before running the examples
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
 
-### Create Collection
+## Examples
 
-Using the `nft.createCollection(name, initialIssuance, maxIssuance, tokenOwner, metadataScheme, royaltiesSchedule, crossChainCompatibility)` extrinsic
+```bash
+# change your working directory to this example first
+cd examples/substrate/use-nft
 
-- `name` - The name of the collection
-- `initialIssuance` - Number of tokens to mint now
-- `maxIssuance` - Maximum number of tokens allowed in collection
-- `tokenOwner` - The token owner, defaults to the caller
-- `metadataScheme` - The off-chain metadata referencing scheme for tokens in this
-- `royaltiesSchedule` - Defacto royalties plan for secondary sales, this will apply to all tokens in the collection by default
+# export all required environments
+export CALLER_PRIVATE_KEY=
 
-```
-api.tx.nft.createCollection(
-    "MyCollection",
-    1_000,
-    null,
-    null,
-    "0x8324...",
-    null,
-    false
-);
-```
+# creates new collection
+pnpm call:createCollection
 
-Run the command below to execute the example script
+# update collection info
+pnpm call:updateCollection
 
-```
-pnpm call src/createCollection.ts
-```
+# mint token(s)
+pnpm call:mint
 
-### Mint NFT
+# transfer token(s)
+pnpm call:transfer
 
-Using the `nft.mint(collectionId, quantity, tokenOwner)` extrinsic
-
-- `collectionId` - The ID of the collection
-- `quantity` - Number of tokens to mintnow
-- `tokenOwner` - The token owner, defaults to the caller
-
-```
-api.tx.nft.mint(
-    97380,
-    10,
-    "0x8324...",
-);
-```
-
-Run the command below to execute the example script passing in a Collection ID
-
-```
-pnpm call src/mintNft.ts --collectionId=<Collection ID>
-```
-
-### Transfer NFT
-
-Using the `nft.transfer(collectionId, serialNumbers, newOwner)` extrinsic
-
-- `collectionId` - The ID of the collection
-- `serialNumbers` - Array of token IDs to transfer
-- `newOwner` - The new token owner
-
-```
-api.tx.nft.mint(
-    97380,
-    [1, 2, 3],
-    "0x8324...",
-);
-```
-
-Run the command below to execute the example script passing in a Collection ID
-
-```
-pnpm call src/transferNft.ts --collectionId=<Collection ID>
-```
-
-## Set NFT BaseURI
-
-Using the `nft.setBaseUri(collectionId, baseUri)` extrinsic
-
-- `collectionId` - The ID of the collection
-- `baseUri` - Hex of the new BaseURI
-
-```
-api.tx.nft.setBaseUri(
-    97380,
-    "0x8324...",
-);
-```
-
-Run the command below to execute the example script passing in a Collection ID
-
-```
-pnpm call src/setBaseUri.ts --collectionId=<Collection ID>
 ```

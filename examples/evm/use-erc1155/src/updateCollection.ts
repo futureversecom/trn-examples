@@ -2,40 +2,39 @@ import { ERC1155_PRECOMPILE_ABI } from "@therootnetwork/evm";
 import { filterTransactionEvents } from "@trne/utils/filterTransactionEvents";
 import { getERC1155Contract } from "@trne/utils/getERC1155Contract";
 import { withEthersProvider } from "@trne/utils/withEthersProvider";
-import { ContractReceipt } from "ethers";
+import { ContractReceipt, utils } from "ethers";
 
 const COLLECTION_ID = 269412;
-const TOKEN_ID = 1;
 
 /**
- * Use `TRN1155.mint` call to mint new tokens.
+ * Use `TRN1155.setBaseURI` call to update the collection `metadataScheme`.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Similar extrinsics are available to update different properties of a collection
+ *  - setMaxSupply
+ *  Check out the precompile documentation (linked in README) for more details
+ *
+ * Assumes the caller is the owner of the collection, and has some XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const erc1155 = getERC1155Contract(COLLECTION_ID).connect(wallet);
-	const tokenOwner = wallet.address;
-	const tokenId = TOKEN_ID;
-	const amount = 10;
+	const baseUri = utils.hexlify(utils.toUtf8Bytes("https://example.com/token/"));
 
 	logger.info(
 		{
 			parameters: {
 				contractAddress: erc1155.address,
-				tokenOwner,
-				tokenId,
-				amount,
+				baseUri,
 			},
 		},
-		`create "mint" call`
+		`create "setBaseURI" call`
 	);
 
 	logger.info(`dispatch transaction from wallet=${wallet.address}`);
-	const tx = await erc1155.mint(tokenOwner, tokenId, amount);
+	const tx = await erc1155.setBaseURI(baseUri);
 	const receipt = (await tx.wait()) as unknown as ContractReceipt;
 
-	const [transferEvent] = filterTransactionEvents(ERC1155_PRECOMPILE_ABI, receipt.logs, [
-		"TransferSingle",
+	const [setEvent] = filterTransactionEvents(ERC1155_PRECOMPILE_ABI, receipt.logs, [
+		"BaseURIUpdated",
 	]);
 
 	logger.info(
@@ -43,9 +42,9 @@ withEthersProvider("porcini", async (provider, wallet, logger) => {
 			result: {
 				transactionHash: receipt.transactionHash,
 				blockNumber: receipt.blockNumber,
-				transferEvent: {
-					name: transferEvent.name,
-					args: transferEvent.args,
+				setEvent: {
+					name: setEvent.name,
+					args: setEvent.args,
 				},
 			},
 		},
