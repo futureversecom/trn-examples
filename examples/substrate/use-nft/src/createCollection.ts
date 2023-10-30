@@ -4,6 +4,11 @@ import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
+/**
+ * Use `nft.createCollection` extrinsic to create a new NFT collection.
+ *
+ * Assumes the caller has some XRP to pay for gas.
+ */
 withChainApi("porcini", async (api, caller, logger) => {
 	const name = "MyCollection";
 	const initialIssuance = 0; // start from token 0
@@ -27,7 +32,7 @@ withChainApi("porcini", async (api, caller, logger) => {
 				crossChainCompatibility,
 			},
 		},
-		`create a "nft.createCollection"`
+		`create a "nft.createCollection" extrinsic`
 	);
 	const extrinsic = api.tx.nft.createCollection(
 		name,
