@@ -4,50 +4,38 @@ import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
 const COLLECTION_ID = 269412;
+const TOKEN_ID = 0;
 
 /**
- * Use `sft.createToken` extrinsic to create a new token for a collection.
+ * Use `sft.setMaxIssuance` extrinsic to update the token `maxIssuance`.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller is the owner of the token, and has some XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
-	const tokenName = "MyToken";
-	const initialIssuance = 0;
-	const maxIssuance = null;
-	const tokenOwner = caller.address;
-	const collectionId = COLLECTION_ID;
+	const maxIssuance = 1000;
+	const tokenId = [COLLECTION_ID, TOKEN_ID] as [number, number];
 
 	logger.info(
 		{
 			parameters: {
-				collectionId,
-				tokenName,
-				initialIssuance,
+				tokenId,
 				maxIssuance,
-				tokenOwner,
 			},
 		},
-		`create a "sft.createToken" extrinsic`
+		`create a "sft.setMaxIssuance" extrinsic`
 	);
-
-	const extrinsic = api.tx.sft.createToken(
-		collectionId,
-		tokenName,
-		initialIssuance,
-		maxIssuance,
-		tokenOwner
-	);
+	const extrinsic = api.tx.sft.setMaxIssuance(tokenId, maxIssuance);
 
 	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
 	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
-	const [createEvent] = filterExtrinsicEvents(result.events, ["Sft.TokenCreate"]);
+	const [setEvent] = filterExtrinsicEvents(result.events, ["Sft.MaxIssuanceSet"]);
 
 	logger.info(
 		{
 			result: {
 				extrinsicId,
 				blockNumber: result.blockNumber,
-				createEvent: formatEventData(createEvent.event),
+				setEvent: formatEventData(setEvent.event),
 			},
 		},
 		"receive result"

@@ -14,7 +14,7 @@ const COLLECTION_ID = 1124;
  *  - setName
  *  - setOwner
  *  - setRoyaltiesSchedule
- *  Check out the pallet documentation (linked in README file) for more details
+ *  Check out the pallet documentation (linked in README) for more details
  *
  * Assumes the caller is the owner of the collection, and has some XRP to pay for gas.
  */

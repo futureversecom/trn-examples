@@ -10,23 +10,23 @@ import { withChainApi } from "@trne/utils/withChainApi";
  * Assumes the caller has some XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
-	const name = "MyCollection";
+	const collectionName = "MyCollection";
 	const initialIssuance = 0; // start from token 0
 	const maxIssuance = null; // no max issuance
-	const tokenOwner = caller.address;
+	const collectionOwner = caller.address;
 	const metadataScheme = stringToHex("https://example.com/token/");
 	const royaltiesSchedule = {
-		entitlements: [[tokenOwner, 10_000 /* one percent */]],
+		entitlements: [[collectionOwner, 10_000 /* one percent */]],
 	};
 	const crossChainCompatibility = { xrpl: false };
 
 	logger.info(
 		{
 			parameters: {
-				name,
+				collectionName,
 				initialIssuance,
 				maxIssuance,
-				tokenOwner,
+				collectionOwner,
 				metadataScheme,
 				royaltiesSchedule,
 				crossChainCompatibility,
@@ -35,10 +35,10 @@ withChainApi("porcini", async (api, caller, logger) => {
 		`create a "nft.createCollection" extrinsic`
 	);
 	const extrinsic = api.tx.nft.createCollection(
-		name,
+		collectionName,
 		initialIssuance,
 		maxIssuance,
-		tokenOwner,
+		collectionOwner,
 		metadataScheme,
 		royaltiesSchedule,
 		crossChainCompatibility
