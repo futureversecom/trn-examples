@@ -1,10 +1,8 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
-  },
-  "eslintConfig": {
-    "rules": {
-      "@typescript-eslint/no-explicit-any": "off"
-    }
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:createCollection": "pnpm call src/createCollection.ts",
+    "call:updateCollection": "pnpm call src/updateCollection.ts",
+    "call:mint": "pnpm call src/mint.ts"
   }
 }

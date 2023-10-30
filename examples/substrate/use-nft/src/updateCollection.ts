@@ -7,7 +7,7 @@ import { withChainApi } from "@trne/utils/withChainApi";
 const COLLECTION_ID = 1124;
 
 /**
- * Use `nft.setBaseUri` extrinsic to update the collection `metadataSchheme`.
+ * Use `nft.setBaseUri` extrinsic to update the collection `metadataScheme`.
  *
  * Similar extrinsics are available to update different properties of a collection
  *  - setMaxIssuanace
