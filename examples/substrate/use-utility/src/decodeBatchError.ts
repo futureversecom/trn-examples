@@ -1,11 +1,12 @@
 import { BN, hexToU8a } from "@polkadot/util";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
+import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
 /**
- * Use `utility.batch` extrinsic to dispatch a group of extrinsics with one failed deliberately
- * to demostrate how to extract and decode the error.
+ * Use `utility.batch` extrinsic to dispatch a group of extrinsics with one set to failed
+ * deliberately to demostrate how to extract and decode the error.
  *
  * Assumes the caller has some XRP to pay for gas.
  */
@@ -25,14 +26,14 @@ withChainApi("porcini", async (api, caller, logger) => {
 	const extrinsic = api.tx.utility.batch(calls);
 
 	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: logger });
-	const [event] = filterExtrinsicEvents(result.events, ["Utility.BatchInterrupted"]);
+	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
+	const [interrupptedEvent] = filterExtrinsicEvents(result.events, ["Utility.BatchInterrupted"]);
 
 	const {
 		event: {
 			data: [index, err],
 		},
-	} = event.toJSON() as {
+	} = interrupptedEvent.toJSON() as {
 		event: {
 			data: [
 				number,
@@ -60,5 +61,16 @@ withChainApi("porcini", async (api, caller, logger) => {
 			},
 		},
 		`batch interrupted`
+	);
+
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				interrupptedEvent: formatEventData(interrupptedEvent.event),
+			},
+		},
+		"receive result"
 	);
 });

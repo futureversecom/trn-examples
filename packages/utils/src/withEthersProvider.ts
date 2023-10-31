@@ -30,13 +30,21 @@ export async function withEthersProvider(
 export async function provideEthersProvider(network: NetworkName | "local") {
 	const logger = getLogger();
 
-	const provider = new providers.JsonRpcProvider(
-		network !== "local" ? getPublicProviderUrl(network) : "http://localhost:9933"
-	);
-	logger.info(`create a JsonRpcProvider instance with network="${network}"`);
+	const provider = getEthersProvider(network);
 
 	const wallet = new Wallet(env.CALLER_PRIVATE_KEY, provider);
 	logger.info(`create a Wallet instance from a private key of address="${wallet.address}"`);
 
 	return { provider, wallet, logger };
+}
+
+export function getEthersProvider(network: NetworkName | "local") {
+	const logger = getLogger();
+
+	const provider = new providers.JsonRpcProvider(
+		network !== "local" ? getPublicProviderUrl(network) : "http://localhost:9933"
+	);
+	logger.info(`create a JsonRpcProvider instance with network="${network}"`);
+
+	return provider;
 }

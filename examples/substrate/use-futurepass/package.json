@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
-  },
-  "dependencies": {
-    "@polkadot/util": "^12.3.2"
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:createAccount": "pnpm call src/createAccount.ts",
+    "call:proxyExtrinsic": "pnpm call src/proxyExtrinsic.ts",
+    "call:decodeProxyError": "pnpm call src/decodeProxyError.ts",
+    "call:registerDelegate": "pnpm call src/registerDelegate.ts"
   }
 }
