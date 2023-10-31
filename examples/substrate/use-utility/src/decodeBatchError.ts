@@ -3,15 +3,29 @@ import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
-withChainApi("porcini", async (api, caller) => {
+/**
+ * Use `utility.batch` extrinsic to dispatch a group of extrinsics with one failed deliberately
+ * to demostrate how to extract and decode the error.
+ *
+ * Assumes the caller has some XRP to pay for gas.
+ */
+withChainApi("porcini", async (api, caller, logger) => {
 	const calls = new Array(10).fill(1).map((n, i) => {
 		// Force error as Asset ID 3 does not exist
 		if (i === 6) return api.tx.assets.transfer(3, caller.address, 1);
 		return api.tx.system.remark(`Call ${n + i}`);
 	});
+
+	logger.info(
+		{
+			parameters: [...calls],
+		},
+		`create a "utility.batch" extrinsic`
+	);
 	const extrinsic = api.tx.utility.batch(calls);
 
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
+	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
+	const { result } = await sendExtrinsic(extrinsic, caller, { log: logger });
 	const [event] = filterExtrinsicEvents(result.events, ["Utility.BatchInterrupted"]);
 
 	const {
@@ -36,5 +50,15 @@ withChainApi("porcini", async (api, caller) => {
 		index: new BN(err.module.index),
 		error: hexToU8a(err.module.error),
 	});
-	console.log(`Batch interrupted at index ${index}, [${section}.${name}] ${docs}`);
+
+	logger.info(
+		{
+			error: {
+				index,
+				code: `${section}.${name}`,
+				docs,
+			},
+		},
+		`batch interrupted`
+	);
 });
