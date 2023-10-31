@@ -1,23 +1,22 @@
-# Use FuturePass
+# Assets Pallet
 
-### Transfer Asset
+[![Run in StackBlitz](https://img.shields.io/badge/Open_in_StackBlitz-1269D3?style=for-the-badge&logo=stackblitz&logoColor=white)](https://stackblitz.com/github/futureversecom/trn-examples?file=examples%2Fsubstrate%2Fuse-assets%2FREADME.md&title=Assets%20Pallet%20Examples) [![Pallet Documentation](https://img.shields.io/badge/Pallet_Documentation-black?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs-beta.therootnetwork.com/buidl/substrate/pallet-assets)
 
-Using the `assets.transfer(assetId, target, amount)` extrinsic
+> [!IMPORTANT]
+> Ensure the following ENV vars are available before running the examples
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
 
-- `assetId` - Asset ID to transfer
-- `target` - Recipient address
-- `amount` - Amount to transfer
+## Examples
 
-```
-const ASTO = {
-  id: 17508,
-  decimals: 18,
-};
-api.tx.assets.transfer(ASTO.id, "0x25451A4de12dcCc2D166922fA938E900fCc4ED24", 1 * 10 ** ASTO.decimals);
-```
+```bash
+# change your working directory to this example first
+cd examples/substrate/use-assets
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+# export all required environments
+export CALLER_PRIVATE_KEY=
 
-```
-CALLER_PRIVATE_KEY=0x000... pnpm call src/transferAsset.ts
+# creates new collection
+pnpm call:transfer
+
 ```

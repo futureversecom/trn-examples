@@ -1,10 +1,6 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
-  },
-  "eslintConfig": {
-    "rules": {
-      "@typescript-eslint/no-explicit-any": "off"
-    }
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:transfer": "pnpm call src/transfer.ts"
   }
 }

@@ -16,9 +16,6 @@ cd examples/evm/use-erc721
 # export all required environments
 export CALLER_PRIVATE_KEY=
 
-# export all required environments
-export CALLER_PRIVATE_KEY=
-
 # creates new collection
 pnpm call:createCollection
 
