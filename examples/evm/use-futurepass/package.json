@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:createAccount": "pnpm call src/createAccount.ts",
+    "call:proxyCall": "pnpm call src/proxyCall.ts",
+    "call:registerDelegate": "pnpm call src/registerDelegate.ts"
+  }
+}

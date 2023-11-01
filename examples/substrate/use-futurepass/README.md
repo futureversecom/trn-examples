@@ -28,5 +28,4 @@ pnpm call:decodeProxyError
 # register a delegate to FPass account
 pnpm call:registerDelegate
 
-
 ```

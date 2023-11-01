@@ -45,6 +45,5 @@ export function getEthersProvider(network: NetworkName | "local") {
 		network !== "local" ? getPublicProviderUrl(network) : "http://localhost:9933"
 	);
 	logger.info(`create a JsonRpcProvider instance with network="${network}"`);
-
 	return provider;
 }
