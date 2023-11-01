@@ -21,8 +21,8 @@ interface AmountsIn {
  * Use `feeProxy.callWithFeePreferences` to trigger `emv.call` call via
  * `futurepass.proxyExtrinsic`, and have Futurepass account pays gas in ASTO.
  *
- * Assumes the caller has a valid Futurepass account, some ASTO balance to pay for gas and
- * some SYLO balance to demonstrate the transfer
+ * Assumes the caller has a valid Futurepass account, ASTO balance to pay for gas and
+ * SYLO balance to demonstrate the transfer
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	/**

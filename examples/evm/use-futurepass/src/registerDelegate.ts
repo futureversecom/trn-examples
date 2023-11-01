@@ -14,7 +14,7 @@ enum ProxyType {
 /**
  * Use `futurepass.registerDelegateWithSignature` call to add delegate to an existing FPass account
  *
- * Assumes wallet has some XRP to pay for gas.
+ * Assumes wallet has XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const delegate = Wallet.createRandom();

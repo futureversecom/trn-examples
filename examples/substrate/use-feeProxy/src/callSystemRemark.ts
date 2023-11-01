@@ -12,7 +12,7 @@ interface AmountsIn {
  * Use `feeProxy.callWithFeePreferences` to trigger `system.remarkWithEvent` call, and pay gas
  * in ASTO token.
  *
- * Assumes the caller has some ASTO balance.
+ * Assumes the caller has ASTO balance.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	/**

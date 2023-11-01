@@ -7,7 +7,7 @@ import { ContractReceipt, Wallet } from "ethers";
 /**
  * Use `registrar.create` call to create a FPass account.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const owner = Wallet.createRandom();

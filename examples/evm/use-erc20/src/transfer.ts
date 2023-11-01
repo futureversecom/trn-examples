@@ -8,7 +8,7 @@ import { ContractReceipt } from "ethers";
 /**
  * Use `ERC20.transfer` call to transfer token.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const erc20 = getERC20Contract(ASTO_ASSET_ID).connect(wallet);

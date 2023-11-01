@@ -9,7 +9,7 @@ import assert from "node:assert";
  * Use `futurepass.proxyExtrinsic` to dispatch an extrinsic that is set to failed deliberately
  * to demostrate how to extract and decode the error.
  *
- * Assumes the FPass account has some XRP to pay for gas.
+ * Assumes the FPass account has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const fpAccount = (await api.query.futurepass.holders(caller.address)).unwrapOr(undefined);

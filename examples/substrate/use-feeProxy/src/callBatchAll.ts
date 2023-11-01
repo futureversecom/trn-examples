@@ -13,7 +13,7 @@ interface AmountsIn {
  * Use `feeProxy.callWithFeePreferences` to trigger `utility.batchAll` call, which contain multiple
  * calls of `assets.trafer`, and pay gas in ASTO token.
  *
- * Assumes the caller has some ASTO balance.
+ * Assumes the caller has ASTO balance.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	/**

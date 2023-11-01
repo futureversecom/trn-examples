@@ -8,7 +8,7 @@ import { withChainApi } from "@trne/utils/withChainApi";
  * Use `utility.batch` extrinsic to dispatch a group of extrinsics with one set to failed
  * deliberately to demostrate how to extract and decode the error.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const calls = new Array(10).fill(1).map((n, i) => {

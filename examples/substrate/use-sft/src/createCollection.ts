@@ -7,7 +7,7 @@ import { withChainApi } from "@trne/utils/withChainApi";
 /**
  * Use `sft.createCollection` extrinsic to create a new SFT collection.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const collectionName = "MyCollection";

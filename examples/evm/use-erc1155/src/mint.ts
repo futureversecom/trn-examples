@@ -10,7 +10,7 @@ const TOKEN_ID = 1;
 /**
  * Use `TRN1155.mint` call to mint new tokens.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const erc1155 = getERC1155Contract(COLLECTION_ID).connect(wallet);

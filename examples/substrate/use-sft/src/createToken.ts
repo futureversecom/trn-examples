@@ -8,7 +8,7 @@ const COLLECTION_ID = 269412;
 /**
  * Use `sft.createToken` extrinsic to create a new token for a collection.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const tokenName = "MyToken";

@@ -15,7 +15,7 @@ const COLLECTION_ID = 269412;
  *  - setRoyaltiesSchedule
  *  Check out the pallet documentation (linked in README) for more details
  *
- * Assumes the caller is the owner of the collection, and has some XRP to pay for gas.
+ * Assumes the caller is the owner of the collection, and has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const baseUri = stringToHex("https://example.com/token/");

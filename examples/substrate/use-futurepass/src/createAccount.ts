@@ -7,7 +7,7 @@ import { Wallet } from "ethers";
 /**
  * Use `futurepass.create` extrinsic to create a new FPass account
  *
- * Assumes the caller has some XRP to pay for gas, and some ROOT to reserve the account
+ * Assumes the caller has XRP to pay for gas, and some ROOT to reserve the account
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const account = Wallet.createRandom();

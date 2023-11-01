@@ -7,7 +7,7 @@ import { ContractReceipt, utils } from "ethers";
 /**
  * Use `sft.initializeCollection` to to create a new ERC-721 compatible collection.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const sft = getSFTContract().connect(wallet);
