@@ -1,36 +1,68 @@
-import { collectArgs } from "@trne/utils/collectArgs";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
+import { formatEventData } from "@trne/utils/formatEventData";
+import { ASTO_ASSET_ID, XRP_ASSET_ID } from "@trne/utils/porcini-assets";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
-import assert from "assert";
+import assert from "node:assert";
 
-const argv = collectArgs();
-assert("liquidity" in argv, "Liquidity is required");
+interface LiquidityToken {
+	Ok: number;
+}
 
-const XrpAssetId = 2;
-const RootAssetId = 1;
+withChainApi("porcini", async (api, caller, logger) => {
+	const tokenA = XRP_ASSET_ID;
+	const tokenB = ASTO_ASSET_ID;
 
-withChainApi("porcini", async (api, caller) => {
-	const tokenA = RootAssetId;
-	const tokenB = XrpAssetId;
+	const lpAssetId = (await api.rpc.dex.getLPTokenID(tokenA, tokenB)) as unknown as LiquidityToken;
+	const liquidity = await api.query.assets.account(lpAssetId.Ok, caller.address);
+	assert(liquidity.isSome);
+
+	logger.info(
+		{
+			liquidityBalance: {
+				lpAssetId: lpAssetId.Ok,
+				liquidity,
+			},
+		},
+		`${caller.address} liquidity balance`
+	);
+
 	const amountAMin = 0;
 	const amountBMin = 0;
 
-	const { liquidity } = argv as unknown as { liquidity: number };
-
+	logger.info(
+		{
+			parameters: {
+				tokenA,
+				tokenB,
+				liquidity: liquidity.unwrap().balance.toString(),
+				amountAMin,
+				amountBMin,
+			},
+		},
+		`create a "futurepass.proxyExtrinsic" extrinsic`
+	);
 	const extrinsic = api.tx.dex.removeLiquidity(
 		tokenA,
 		tokenB,
-		liquidity,
+		liquidity.unwrap().balance,
 		amountAMin,
 		amountBMin,
 		null, // to
 		null // deadline
 	);
 
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-	// depending on what extrinsic call you have, filter out the right event here
-	const [event] = filterExtrinsicEvents(result.events, ["Dex.RemoveLiquidity"]);
+	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
+	const [removeEvent] = filterExtrinsicEvents(result.events, ["Dex.RemoveLiquidity"]);
 
-	console.log("Extrinsic Result", event.toJSON());
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				removeEvent: formatEventData(removeEvent.event),
+			},
+		},
+		"receive result"
+	);
 });

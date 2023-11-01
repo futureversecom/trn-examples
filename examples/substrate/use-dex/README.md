@@ -1,72 +1,28 @@
-# Use Dex
+# Dex Pallet
 
-First run
+[![Run in StackBlitz](https://img.shields.io/badge/Open_in_StackBlitz-1269D3?style=for-the-badge&logo=stackblitz&logoColor=white)](https://stackblitz.com/github/futureversecom/trn-examples?file=examples%2Fsubstrate%2Fuse-dex%2FREADME.md&title=Dex%20Pallet%20Examples) [![Pallet Documentation](https://img.shields.io/badge/Pallet_Documentation-black?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs-beta.therootnetwork.com/buidl/substrate/pallet-deDex
 
-```
-export CALLER_PRIVATE_KEY=0x000...
-```
+> [!IMPORTANT]
+> Ensure the following ENV vars are available before running the examples
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
 
-### Swap Tokens
+## Examples
 
-Using the `dex.swapWithExactSupply(amountIn, amountOutMin, path, to, deadline)` extrinsic
+```bash
+# change your working directory to this example first
+cd examples/substrate/use-dex
 
-- `amountIn` - Exact supply amount
-- `amountOutMin` - Acceptable minimum target amount
-- `path` - Trading path
-- `to` - The recipient of the swapped token asset. The caller is the default recipient if it is set to None
-- `deadline` - The deadline of executing this extrinsic. The deadline won't be checked if it is set to None
+# export all required environments
+export CALLER_PRIVATE_KEY=
 
-```
-api.tx.dex.swapWithExactSupply(1_000_000, 500_000, [1, 2], null, null);
-```
+# swap one token to another
+pnpm call:swap
 
-Run the command below to execute the example script, ensure you have specified a valid `CALLER_PRIVATE_KEY`
+# add liquidity to liquidity pool
+pnpm call:addLiquidity
 
-```
-pnpm call src/swapTokens.ts
-```
+# remove liquidity from liquidity pool
+pnpm call:removeLiquidity
 
-### Add Liquidity
-
-Using the `dex.addLiquidity(tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin, to, deadline)` extrinsic
-
-- `tokenA` - Asset id A
-- `tokenB` - Asset id B
-- `amountADesired` - Amount A desired to add
-- `amountBDesired` - Amount B desired to add
-- `amountAMin` - Amount A minimum willing to add
-- `amountBMin` - Amount B minimum willing to add
-- `to` - The recipient of the LP token. The caller is the default recipient if it is set to None
-- `deadline` - The deadline of executing this extrinsic. The deadline won't be checked if it is set to None
-
-```
-api.tx.dex.addLiquidity(1, 2, 1_000_000, 1_000_000, 0, 0, null, null);
-```
-
-Run the command below to execute the example script
-
-```
-pnpm call src/addLiquidity.ts
-```
-
-### Remove Liquidity
-
-Using the `dex.removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline)` extrinsic
-
-- `tokenA` - Asset id A
-- `tokenB` - Asset id B
-- `liquidity` - Liquidity amount to remove
-- `amountAMin` - Minimum amount of asset A to be withdrawn from LP token
-- `amountBMin` - Minimum amount of asset B to be withdrawn from LP token
-- `to` - The recipient of the withdrawn token assets. The caller is the default recipient if it is set to None
-- `deadline` - The deadline of executing this extrinsic. The deadline won't be checked if it is set to None
-
-```
-api.tx.dex.removeLiquidity(1, 2, 1_000_000, 0, 0, null, null);
-```
-
-Run the command below to execute the example script, passing in `Liquidity` from `src/addLiquidity`
-
-```
-pnpm call src/removeLiquidity.ts --liquidity=<Liquidity>
 ```

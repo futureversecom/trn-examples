@@ -13,7 +13,7 @@ export function formatEventData(event: EventRecord["event"]): EventData {
 	const fields = event.meta.fields.toJSON() as { name: string; typeName: string }[];
 
 	return fields.reduce((record, { name, typeName: type }, index) => {
-		record[name] = { value: data[index], type };
+		record[name ?? `arg${index}`] = { value: data[index], type };
 		return record;
 	}, {} as EventData);
 }
