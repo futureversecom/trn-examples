@@ -1,4 +1,4 @@
-# Deploying and Verifying Smart Contract using `forge` CLI
+# Using `forge create` & `force script`
 
 This project showcases the deployment and verification of a basic smart contract on the TRN Porcini network using Foundry's `forge` CLI. It includes a sample contract, a corresponding test, and a deployment script.
 

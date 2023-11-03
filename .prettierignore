@@ -10,4 +10,9 @@ examples/evm/use-forge/cache
 examples/evm/use-forge/forge-artifacts
 examples/evm/use-forge/lib/*
 
+examples/evm/use-hardhat/artifacts
+examples/evm/use-hardhat/cache
+examples/evm/use-hardhat/deployments
+examples/evm/use-hardhat/typechain-types
+
 *.sublime-*

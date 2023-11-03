@@ -2,13 +2,15 @@ import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-toolbox";
 import { getPublicProviderUrl } from "@therootnetwork/api";
 import { cleanEnv, str } from "envalid";
+import { Wallet } from "ethers";
 import "hardhat-deploy";
 import type { HardhatUserConfig } from "hardhat/config";
 
 const env = cleanEnv(process.env, {
-	DEPLOYER_PRIVATE_KEY: str(), // private key of deployer account
-	DEPLOYER_ADDRESS: str(), // public key/address of deployer account
+	CALLER_PRIVATE_KEY: str(),
 });
+
+const wallet = new Wallet(env.CALLER_PRIVATE_KEY);
 
 const config: HardhatUserConfig = {
 	solidity: {
@@ -24,11 +26,11 @@ const config: HardhatUserConfig = {
 		porcini: {
 			url: getPublicProviderUrl("porcini", false),
 			chainId: 7672,
-			accounts: [env.DEPLOYER_PRIVATE_KEY],
+			accounts: [env.CALLER_PRIVATE_KEY],
 		},
 	},
 	namedAccounts: {
-		deployer: env.DEPLOYER_ADDRESS,
+		deployer: wallet.address,
 	},
 };
 
