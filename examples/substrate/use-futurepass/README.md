@@ -1,106 +1,31 @@
-# Use Futurepass
+# Futurepass Pallet
 
-First run
+[![Run in StackBlitz](https://img.shields.io/badge/Open_in_StackBlitz-1269D3?style=for-the-badge&logo=stackblitz&logoColor=white)](https://stackblitz.com/github/futureversecom/trn-examples?file=examples%2Fsubstrate%2Fuse-futurepass%2FREADME.md&title=Futurepass%20Pallet%20Examples) [![Pallet Documentation](https://img.shields.io/badge/Pallet_Documentation-black?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs-beta.therootnetwork.com/buidl/substrate/pallet-futurepass)
 
-```
-export CALLER_PRIVATE_KEY=0x000...
-export DELEGATE_PRIVATE_KEY=0x000...
-```
+> [!IMPORTANT]
+> Ensure the following ENV vars are available before running the examples
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
 
-### Create Futurepass account
+## Examples
 
-Using the `futurepass.create(account)` extrinsic
+```bash
+# change your working directory to this example first
+cd examples/substrate/use-futurepass
 
-- `account` - Owner of the newly created FuturePass account
+# export all required environments
+export CALLER_PRIVATE_KEY=
 
-```
-api.tx.futurepass.create("0x25451A4de12dcCc2D166922fA938E900fCc4ED24");
-```
+# creates new FPass account
+pnpm call:createAccount
 
-Run the command below to execute the example script
+# call an extrinsic as FPass account
+pnpm call:proxyExtrinsic
 
-```
-pnpm call src/createFuturepassAccount.ts
-```
+# decode error when using proxyExtrinsic
+pnpm call:decodeProxyError
 
-### Register a Delegate
+# register a delegate to FPass account
+pnpm call:registerDelegate
 
-Using the `futurepass.registerDelegateWithSignature(futurepass, delegate, proxyType, deadline, signature)` extrinsic
-
-- `futurepass` - Futurepass account to register the account as delegate
-- `delegate` - The delegated account for the futurepass
-- `proxyType` - Delegate permission level
-- `deadline` - Deadline for the signature
-- `signature` - Signature of the message parameters
-
-```
-api.tx.futurepass.registerDelegateWithSignature(
-    "0xfFfFfFFF0000000000000000000000000000001F",
-    "0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
-    1,
-    10_000,
-    "0x2324u..."
-);
-```
-
-Run the command below to execute the example script
-
-```
-pnpm call src/registerDelegate.ts
-```
-
-### Unregister a Delegate
-
-Using the `futurepass.unregisterDelegate(futurepass, delegate)` extrinsic
-
-- `futurepass` - Futurepass account to unregister the delegate from
-- `delegate` - The delegated account for the futurepass
-
-```
-api.tx.futurepass.unregisterDelegate(
-    "0xfFfFfFFF0000000000000000000000000000001F",
-    "0x25451A4de12dcCc2D166922fA938E900fCc4ED24",
-);
-```
-
-Run the command below to execute the example script
-
-```
-pnpm call src/unregisterDelegate.ts
-```
-
-### Proxy Extrinsic
-
-Using the `futurepass.proxyExtrinsic(futurepass, call)` extrinsic
-
-- `futurepass` - The FuturePass account though which the call is dispatched
-- `call` - The call that needs to be dispatched through the FuturePass account
-
-```
-api.tx.futurepass.proxyExtrinsic("0xFfFfFfff...", api.tx.system.remark("Hello World"));
-```
-
-Run the command below to execute the example script
-
-```
-pnpm call src/proxyExtrinsic.ts
-```
-
-### Decoding Proxy Error
-
-Using the `api.registry.findMetaError({index, error})` utility
-
-```
-import { BN, hexToU8a } from "@polkadot/util";
-
-const { section, name, docs } = api.registry.findMetaError({
-  index: new BN(index),
-  error: hexToU8a(error),
-});
-```
-
-Run the command below to execute the example script
-
-```
-pnpm call src/decodeProxyError.ts
 ```

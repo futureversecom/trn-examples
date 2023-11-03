@@ -9,7 +9,7 @@ const TOKEN_ID = 0;
 /**
  * Use `sft.setMaxIssuance` extrinsic to update the token `maxIssuance`.
  *
- * Assumes the caller is the owner of the token, and has some XRP to pay for gas.
+ * Assumes the caller is the owner of the token, and has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const maxIssuance = 1000;

@@ -1,20 +1,48 @@
 import { BN, hexToU8a } from "@polkadot/util";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
+import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
+import assert from "node:assert";
 
-withChainApi("porcini", async (api, caller) => {
-	const futurepass = (await api.query.futurepass.holders(caller.address)).unwrap();
+/**
+ * Use `futurepass.proxyExtrinsic` to dispatch an extrinsic that is set to failed deliberately
+ * to demostrate how to extract and decode the error.
+ *
+ * Assumes the FPass account has XRP to pay for gas.
+ */
+withChainApi("porcini", async (api, caller, logger) => {
+	const fpAccount = (await api.query.futurepass.holders(caller.address)).unwrapOr(undefined);
+	assert(fpAccount);
+	logger.info(
+		{
+			futurepass: {
+				holder: caller.address,
+				account: fpAccount.toString(),
+			},
+		},
+		"futurepass details"
+	);
 
-	// Force error as Asset ID 3 does not exist
-	const call = api.tx.assets.transfer(3, futurepass, 1);
+	// force error as Asset ID 3 does not exist
+	const call = api.tx.assets.transfer(3, fpAccount, 1);
 
-	const extrinsic = api.tx.futurepass.proxyExtrinsic(futurepass, call);
+	logger.info(
+		{
+			parameters: {
+				fpAccount,
+				call,
+			},
+		},
+		`create a "futurepass.proxyExtrinsic" extrinsic`
+	);
+	const extrinsic = api.tx.futurepass.proxyExtrinsic(fpAccount, call);
 
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-	const [{ event }] = filterExtrinsicEvents(result.events, ["Proxy.ProxyExecuted"]);
+	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
+	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
+	const [executedEvent] = filterExtrinsicEvents(result.events, ["Proxy.ProxyExecuted"]);
 
-	const { err } = event.data[0].toJSON() as {
+	const { err } = executedEvent.event.data[0].toJSON() as {
 		err: {
 			module: {
 				index: number;
@@ -27,5 +55,25 @@ withChainApi("porcini", async (api, caller) => {
 		index: new BN(err.module.index),
 		error: hexToU8a(err.module.error),
 	});
-	console.log(`Proxy extrinsic failed, [${section}.${name}] ${docs}`);
+
+	logger.info(
+		{
+			error: {
+				code: `${section}.${name}`,
+				docs,
+			},
+		},
+		`proxy executed error`
+	);
+
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				executedEvent: formatEventData(executedEvent.event),
+			},
+		},
+		"receive result"
+	);
 });

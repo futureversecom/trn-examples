@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "deploy:porcini": "hardhat deploy --network porcini",
-    "verify:porcini": "hardhat sourcify --network porcini",
-    "clean": "hardhat clean && rm -rf cache/",
-    "test": "hardhat test"
+    "hardhat:deploy": "hardhat deploy --network porcini",
+    "hardhat:verify": "hardhat sourcify --network porcini",
+    "hardhat:clean": "hardhat clean && rm -rf cache/",
+    "hardhat:test": "hardhat test"
   },
   "devDependencies": {
     "@ethersproject/hash": "^5.7.0",

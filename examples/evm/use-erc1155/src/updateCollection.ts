@@ -13,7 +13,7 @@ const COLLECTION_ID = 269412;
  *  - setMaxSupply
  *  Check out the precompile documentation (linked in README) for more details
  *
- * Assumes the caller is the owner of the collection, and has some XRP to pay for gas.
+ * Assumes the caller is the owner of the collection, and has XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const erc1155 = getERC1155Contract(COLLECTION_ID).connect(wallet);

@@ -12,7 +12,7 @@ import { ContractReceipt, utils } from "ethers";
  * Use `feeProxy.callWithFeePreferences` to trigger a `transfer` call of SYLO token, and pay gas
  * in ASTO token.
  *
- * Assumes the caller has some ASTO balance to pay for gas and some SYLO balance to demonstrate
+ * Assumes the caller has ASTO balance to pay for gas and SYLO balance to demonstrate
  * the transfer
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {

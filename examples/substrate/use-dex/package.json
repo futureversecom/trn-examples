@@ -1,5 +1,8 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:swap": "pnpm call src/swap.ts",
+    "call:addLiquidity": "pnpm call src/addLiquidity.ts",
+    "call:removeLiquidity": "pnpm call src/removeLiquidity.ts"
   }
 }

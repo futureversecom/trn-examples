@@ -9,7 +9,7 @@ const COLLECTION_ID = 269412;
 /**
  * Use `TRN1155.createToken` call to create a new token for a collection.
  *
- * Assumes the caller has some XRP to pay for gas.
+ * Assumes the caller has XRP to pay for gas.
  */
 withEthersProvider("porcini", async (provider, wallet, logger) => {
 	const erc1155 = getERC1155Contract(COLLECTION_ID).connect(wallet);

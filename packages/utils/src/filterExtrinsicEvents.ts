@@ -1,6 +1,6 @@
 import { SubmittableResultValue } from "@polkadot/api/types";
 import { EventRecord } from "@polkadot/types/interfaces";
-import assert from "assert";
+import assert from "node:assert";
 
 import { type EventData, formatEventData } from "./formatEventData";
 

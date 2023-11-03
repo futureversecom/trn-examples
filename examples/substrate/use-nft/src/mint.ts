@@ -8,7 +8,7 @@ const COLLECTION_ID = 1124;
 /**
  * Use `nft.mint` extrinsic to mint new tokens.
  *
- * Assumes the caller is the owner of the collection, and has some XRP to pay for gas.
+ * Assumes the caller is the owner of the collection, and has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const quantity = 10;

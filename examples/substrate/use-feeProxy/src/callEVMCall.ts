@@ -19,7 +19,7 @@ interface AmountsIn {
 /**
  * Use `feeProxy.callWithFeePreferencs` to trigger `evm.call`
  *
- * Assumes the caller has some ASTO balance to pay for gas and some SYLO balance to demonstrate
+ * Assumes the caller has ASTO balance to pay for gas and SYLO balance to demonstrate
  * the transfer
  */
 withChainApi("porcini", async (api, caller, logger) => {

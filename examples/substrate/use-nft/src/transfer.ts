@@ -9,7 +9,7 @@ const COLLECTION_ID = 1124;
 /**
  * Use `nft.transfer` extrinsic to transfer tokens to someone else.
  *
- * Assumes the caller is the owner of the transferring tokens, and has some XRP to pay for gas.
+ * Assumes the caller is the owner of the transferring tokens, and has XRP to pay for gas.
  */
 withChainApi("porcini", async (api, caller, logger) => {
 	const serialNumbers = [1, 2, 3];

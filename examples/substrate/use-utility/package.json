@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:batchExtrinsics": "pnpm call src/batchExtrinsics.ts",
+    "call:decodeBatchError": "pnpm call src/decodeBatchError.ts"
+  },
+  "dependencies": {
+    "@polkadot/util": "^12.3.2"
+  }
+}
