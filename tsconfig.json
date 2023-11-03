@@ -12,8 +12,5 @@
       "@trne/utils/*": ["./packages/utils/src/*"],
       "@trne/ui-utils/*": ["./packages/ui/*"]
     }
-  },
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
   }
 }

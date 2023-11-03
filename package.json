@@ -13,7 +13,6 @@
   "dependencies": {
     "envalid": "^7.3.1",
     "ethers": "^5.7.2",
-    "yargs": "^17.7.2",
     "@polkadot/api": "^10.9.1",
     "@polkadot/keyring": "^12.3.2",
     "@polkadot/util": "^12.3.2",
@@ -27,16 +26,12 @@
     "@therootnetwork/api-types": "^1.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/node": "^20.2.1",
-    "@types/yargs": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
     "@typescript-eslint/parser": "^5.59.6",
     "eslint": "^8.40.0",
     "prettier": "^2.8.8",
-    "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^3.12.10",
-    "typescript": "^5.0.4",
-    "xrpl": "^2.7.0",
-    "yargs": "^17.7.2"
+    "typescript": "^5.0.4"
   }
 }

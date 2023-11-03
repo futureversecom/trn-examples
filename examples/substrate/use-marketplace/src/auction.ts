@@ -3,7 +3,7 @@ import { formatEventData } from "@trne/utils/formatEventData";
 import { XRP_ASSET_ID } from "@trne/utils/porcini-assets";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
-import assert from "assert";
+import assert from "node:assert";
 
 interface OwnedTokens {
 	0: number;
