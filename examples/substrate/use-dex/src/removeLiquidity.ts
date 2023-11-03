@@ -9,6 +9,11 @@ interface LiquidityToken {
 	Ok: number;
 }
 
+/**
+ * Use `dex.removeLiquidity` to remove your own liqidity from the pair [XRP, ASTO]
+ *
+ * Assumes caller liquidity of the pair and XRP to pay gas.
+ */
 withChainApi("porcini", async (api, caller, logger) => {
 	const tokenA = XRP_ASSET_ID;
 	const tokenB = ASTO_ASSET_ID;

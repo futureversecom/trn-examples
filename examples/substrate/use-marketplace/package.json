@@ -1,5 +1,10 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:registerMarketplace": "pnpm call src/registerMarketplace.ts",
+    "call:sell": "pnpm call src/sell.ts",
+    "call:buy": "pnpm call src/buy.ts",
+    "call:auction": "pnpm call src/auction.ts",
+    "call:bid": "pnpm call src/bid.ts"
   }
 }

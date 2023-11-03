@@ -1,127 +1,34 @@
-# Use Marketplace
+# Marketplace Pallet
 
-First run
+[![Run in StackBlitz](https://img.shields.io/badge/Open_in_StackBlitz-1269D3?style=for-the-badge&logo=stackblitz&logoColor=white)](https://stackblitz.com/github/futureversecom/trn-examples?file=examples%2Fsubstrate%2Fuse-marketplace%2FREADME.md&title=Marketplace%20Pallet%20Examples) [![Pallet Documentation](https://img.shields.io/badge/Pallet_Documentation-black?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs-beta.therootnetwork.com/buidl/substrate/pallet-marketplace)
 
-```
-export CALLER_PRIVATE_KEY=0x000...
-```
+> [!IMPORTANT]
+> Ensure the following ENV vars are available before running the examples
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
 
-### Register Marketplace
+## Examples
 
-Using the `marketplace.registerMarketplace(marketplaceAccount, entitlement)` extrinsic
+```bash
+# change your working directory to this example first
+cd examples/substrate/use-marketplace
 
-- `marketplaceAccount` - If specified, this account will be registered, otherwise the caller will be registered
-- `entitlement` - Permill, percentage of sales to go to the marketplace
+# export all required environments
+export CALLER_PRIVATE_KEY=
 
-```
-api.tx.marketplace.registerMarketplace(
-    null,
-    10_000,
-);
-```
+# register a new marketplace
+pnpm call:registerMarketplace
 
-Run the command below to execute the example script
+# list a bundle of NFTs as fixed price sell
+pnpm call:sell
 
-```
-pnpm call src/registerMarketplace.ts
-```
+# buy a listing
+pnpm call:buy
 
-### Auction NFT
+# list a bundle NFT as auction
+pnpm call:auction
 
-Using the `marketplace.auctionNft(collectionId, serialNumbers, paymentAsset, reservePrice, duration, marketplaceId)` extrinsic
+# submit a bid to an auction listing
+pnpm call:bid
 
-- `collectionId` - The ID of the collection
-- `serialNumbers` - Array of token IDs to transfer
-- `paymentAsset` - Fungible Asset ID to receive payment with
-- `reservePrice` - Winning bid must be over this threshold
-- `duration` - Length of the auction (in blocks), uses default duration if unspecified
-- `marketplaceId` - The ID of the marketplace
-
-```
-api.tx.marketplace.auctionNft(
-    100,
-    [1, 2, 3],
-    1,
-    100_000,
-    100,
-    2
-);
-```
-
-Run the command below to execute the example script, passing in a Collection ID & Serial Numbers
-
-```
-pnpm call src/auctionNft.ts --collectionId=<CollectionID> --serialNumbers=<Serial Numbers>
-```
-
-### Sell NFT
-
-Using the `marketplace.sellNft(collectionId, serialNumbers, buyer, paymentAsset, fixedPrice, duration, marketplaceId)` extrinsic
-
-- `collectionId` - The ID of the collection
-- `serialNumbers` - Array of token IDs to transfer
-- `buyer` - Optionally, the account to receive the NFT. If unspecified, then any account may purchase
-- `paymentAsset` - Fungible Asset ID to receive payment with
-- `fixedPrice` - Ask price
-- `duration` - Length of the auction (in blocks), uses default duration if unspecified
-- `marketplaceId` - The ID of the marketplace
-
-```
-api.tx.marketplace.sellNft(
-    100,
-    [1, 2, 3],
-    null,
-    1,
-    100_000,
-    100,
-    2
-);
-```
-
-Run the command below to execute the example script, passing in a Collection ID & Serial Numbers
-
-```
-pnpm call src/sellNft.ts --collectionId=<CollectionID> --serialNumbers=<Serial Numbers>
-```
-
-### Buy NFT
-
-Using the `marketplace.buy(listingId)` extrinsic
-
-- `listingId` - The ID of the listing
-
-```
-api.tx.marketplace.buy(
-    4
-);
-```
-
-Run the command below to execute the example script, passing in a Listing ID
-
-```
-pnpm call src/buyNft.ts --listingId=<Listing ID>
-```
-
-### Make Simple Offer
-
-Using the `marketplace.makeSimpleOffer(tokenId, amount, assetId, marketplaceId)` extrinsic
-
-- `tokenId` - The ID of the token (CollectionId, TokenId)
-- `amount` - Offer price
-- `assetId` - Fungible Asset ID to make payment with
-- `marketplaceId` - The ID of the marketplace
-
-```
-api.tx.marketplace.makeSimpleOffer(
-    12,
-    10_000,
-    1,
-    2
-);
-```
-
-Run the command below to execute the example script, passing in a Collection, Token & Marketplace ID
-
-```
-pnpm call src/simpleOffer.ts --collectionId=<Collection ID> --tokenId=<Token ID> --marketplaceId=<Marketplace ID>
 ```
