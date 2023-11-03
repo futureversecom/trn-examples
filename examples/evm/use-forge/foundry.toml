@@ -10,4 +10,4 @@ optimizer-runs = 200
 verbosity = 2
 
 [rpc_endpoints]
-porcini = "${PORCINI_RPC_URL}"
+porcini = "https://porcini.rootnet.app"

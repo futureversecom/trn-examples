@@ -2,8 +2,8 @@
 
 forge script \
   ./script/Counter.s.sol:CounterScript \
-  --rpc-url $PORCINI_RPC_URL \
-  --private-key $DEPLOYER_PRIVATE_KEY \
+  --rpc-url "https://porcini.rootnet.app" \
+  --private-key $CALLER_PRIVATE_KEY \
   --legacy \
   --broadcast \
   --verify \

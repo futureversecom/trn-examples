@@ -1,28 +1,31 @@
-# Deploying and Verifying Smart Contracts with Foundry's forge CLI
+# Deploying and Verifying Smart Contract using `forge` CLI
 
-This project showcases the deployment and verification of a basic smart contract on the TRN Porcini network using Foundry's `forge`` CLI. It includes a sample contract, a corresponding test, and a deployment script.
+This project showcases the deployment and verification of a basic smart contract on the TRN Porcini network using Foundry's `forge` CLI. It includes a sample contract, a corresponding test, and a deployment script.
 
-## Prerequisites:
+> [!IMPORTANT]
+> Ensure the following ENV vars are available before running the examples
+>
+> - `CALLER_PRIVATE_KEY` - Private key of an account that submits the transaction. Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
+> - Make sure you have install Foundry, follow the guide [here](https://book.getfoundry.sh/getting-started/installation)
 
-To begin, make sure you have installed Foundry by following these steps:
+## Examples
 
-1.  Run the command: `curl -L https://foundry.paradigm.xyz | bash`
-2.  Restart your terminal
-3.  Execute: `foundryup`
-4.  Install the forge CLI tool by running: `cargo install --git https://github.com/gakonst/foundry --bin forge --locked`
-5.  Run the commands below to your terminal:
+```bash
+# change your working directory to this example first
+cd examples/substrate/use-forge
 
-    ```
-    export DEPLOYER_PRIVATE_KEY={DEPLOYER_PRIVATE_KEY}
-    export PORCINI_RPC_URL=https://porcini.rootnet.app/
-    ```
+# export all required environments
+export CALLER_PRIVATE_KEY=
 
-    Note:
-    Replace the placeholders such as `{DEPLOYER_PRIVATE_KEY}` with the appropriate value according to your specific setup.
+pnpm forge:install
 
-6.  Then, run `forge install --no-commit` to install the required libraries for this project.
+# deploy contract using `forge create`
+pnpm forge:create
 
-For more detailed instructions on the installation process, refer to the [official Foundry repository](https://github.com/foundry-rs/foundry).
+# deploy contract using `forge script`
+pnpm forge:script
+
+```
 
 ## Procedure:
 
@@ -35,7 +38,7 @@ There are two methods to deploy contracts using Foundry:
     ```
     forge create \
         --rpc-url $PORCINI_RPC_URL \
-        --private-key $DEPLOYER_PRIVATE_KEY \
+        --private-key $DEPLOYER_PRIVATE_KEY \0
         --legacy \
         --optimize \
         --optimizer-runs 200 \
@@ -51,7 +54,7 @@ There are two methods to deploy contracts using Foundry:
 
     In this example, we set the `--rpc-url` to TRN Porcini and specify the `--private-key` using environment variables (see #5 of Prerequisites section).
 
-    Pay special attention to the `--legacy`` flag, as it is necessary for successful contract deployment on the TRN Porcini network. Failure to include this flag may result in errors (refer to the troubleshooting section for more information).
+    Pay special attention to the `--legacy` flag, as it is necessary for successful contract deployment on the TRN Porcini network. Failure to include this flag may result in errors (refer to the troubleshooting section for more information).
 
 2.  Using `forge script`
 
@@ -61,7 +64,7 @@ There are two methods to deploy contracts using Foundry:
 
 ## Testing:
 
-This project includes a test script written in Solidity (see `examples/evm/use-forge/test/Counter.t.sol` file). To run the test, execute the ff. in your terminal:
+This project includes a test script written in Solidity (see `examples/evm/use-forge/test/Counter.t.sol` file). To run the test, execute the following command in your terminal:
 
 ```
 forge test
@@ -71,11 +74,11 @@ forge test
 
 - `Deserialization Error: invalid type: null, expected f64 at line 1 column 240.`
 
-  This error occurs when the `--legacy flag`` is not used during contract deployment. Including this flag will resolve the issue.
+  This error occurs when the `--legacy` flag is not used during contract deployment. Including this flag will resolve the issue.
 
 - `Failed to get EIP-1559 fees`
 
-  This error also arises when the `--legacy`` flag is missing. Adding the flag will resolve the problem.
+  This error also arises when the `--legacy` flag is missing. Adding the flag will resolve the problem.
 
 - `Transaction Failure: 0x9cfe621bac130205088168a30470f0cbfdacb22ebb7ce5869a348a7552b7e8b8`
 

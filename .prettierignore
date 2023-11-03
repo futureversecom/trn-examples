@@ -4,3 +4,10 @@
 build
 coverage
 pnpm-*.yaml
+
+examples/evm/use-forge/broadcast
+examples/evm/use-forge/cache
+examples/evm/use-forge/forge-artifacts
+examples/evm/use-forge/lib/*
+
+*.sublime-*
