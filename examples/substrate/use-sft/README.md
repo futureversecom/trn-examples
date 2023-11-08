@@ -34,4 +34,7 @@ pnpm call:mint
 # transfer tokens(s)
 pnpm call:transfer
 
+# enable public minting
+pnpm call:enablePublicMint
+
 ```
