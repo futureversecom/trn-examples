@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "call": "ts-node --project ../../../tsconfig.json"
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:transfer": "pnpm call src/transfer.ts"
   }
 }

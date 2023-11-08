@@ -7,7 +7,6 @@ Enjoy our curated collection of examples and solutions on how to interact with t
 
 - [EVM](/examples/evm) – Provide examples on how to deploy Solidity smart contracts on TRN or interact with native pallets via the precompiles
 - [Substrate](/examples/substrate) – Provide examples on how to interact with TRN native pallets using [extrinsics](https://docs.substrate.io/learn/transaction-types/)
-- [UI](/examples/ui) – Examples on how use popular UI solutions, e.g MetaMask with TRN
 
 ## Requirements
 

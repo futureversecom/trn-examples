@@ -1,40 +1,61 @@
 import { stringToHex } from "@polkadot/util";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
+import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
 
-withChainApi("porcini", async (api, caller) => {
-	const name = "MyToken";
-	const initialIssuance = 1_000;
-	const maxIssuance = 10_000;
-	const tokenOwner = caller.address;
+/**
+ * Use `nft.createCollection` extrinsic to create a new NFT collection.
+ *
+ * Assumes the caller has XRP to pay for gas.
+ */
+withChainApi("porcini", async (api, caller, logger) => {
+	const collectionName = "MyCollection";
+	const initialIssuance = 0; // start from token 0
+	const maxIssuance = null; // no max issuance
+	const collectionOwner = caller.address;
 	const metadataScheme = stringToHex("https://example.com/token/");
 	const royaltiesSchedule = {
-		entitlements: [[tokenOwner, 10_000 /* one percent */]],
+		entitlements: [[collectionOwner, 10_000 /* one percent */]],
 	};
-	const crossChainCompatibility = false;
+	const crossChainCompatibility = { xrpl: false };
 
+	logger.info(
+		{
+			parameters: {
+				collectionName,
+				initialIssuance,
+				maxIssuance,
+				collectionOwner,
+				metadataScheme,
+				royaltiesSchedule,
+				crossChainCompatibility,
+			},
+		},
+		`create a "nft.createCollection" extrinsic`
+	);
 	const extrinsic = api.tx.nft.createCollection(
-		name,
+		collectionName,
 		initialIssuance,
 		maxIssuance,
-		tokenOwner,
+		collectionOwner,
 		metadataScheme,
 		royaltiesSchedule,
 		crossChainCompatibility
 	);
 
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-	const [event] = filterExtrinsicEvents(result.events, ["Nft.CollectionCreate"]);
+	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
+	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
+	const [createEvent] = filterExtrinsicEvents(result.events, ["Nft.CollectionCreate"]);
 
-	console.log("Extrinsic Result", event.toJSON());
-
-	const collectionId = (
-		event.toJSON() as {
-			event: {
-				data: [number];
-			};
-		}
-	).event.data[0];
-	console.log("Collection ID", collectionId);
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				createEvent: formatEventData(createEvent.event),
+			},
+		},
+		"receive result"
+	);
 });

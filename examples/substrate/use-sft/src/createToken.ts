@@ -1,18 +1,34 @@
-import { collectArgs } from "@trne/utils/collectArgs";
 import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
+import { formatEventData } from "@trne/utils/formatEventData";
 import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
 import { withChainApi } from "@trne/utils/withChainApi";
-import assert from "assert";
 
-const argv = collectArgs();
-assert("collectionId" in argv, "Collection ID is required");
+const COLLECTION_ID = 269412;
 
-withChainApi("porcini", async (api, caller) => {
+/**
+ * Use `sft.createToken` extrinsic to create a new token for a collection.
+ *
+ * Assumes the caller has XRP to pay for gas.
+ */
+withChainApi("porcini", async (api, caller, logger) => {
 	const tokenName = "MyToken";
-	const initialIssuance = 10;
-	const maxIssuance = 1000;
+	const initialIssuance = 0;
+	const maxIssuance = null;
 	const tokenOwner = caller.address;
-	const { collectionId } = argv as unknown as { collectionId: number };
+	const collectionId = COLLECTION_ID;
+
+	logger.info(
+		{
+			parameters: {
+				collectionId,
+				tokenName,
+				initialIssuance,
+				maxIssuance,
+				tokenOwner,
+			},
+		},
+		`create a "sft.createToken" extrinsic`
+	);
 
 	const extrinsic = api.tx.sft.createToken(
 		collectionId,
@@ -22,18 +38,18 @@ withChainApi("porcini", async (api, caller) => {
 		tokenOwner
 	);
 
-	const { result } = await sendExtrinsic(extrinsic, caller, { log: console });
-	const [event] = filterExtrinsicEvents(result.events, ["Sft.TokenCreate"]);
+	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
+	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
+	const [createEvent] = filterExtrinsicEvents(result.events, ["Sft.TokenCreate"]);
 
-	console.log("Extrinsic Result", event.toJSON());
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_collectionId, tokenId] = (
-		event.toJSON() as {
-			event: {
-				data: [[number, number]];
-			};
-		}
-	).event.data[0];
-	console.log("Token ID", tokenId);
+	logger.info(
+		{
+			result: {
+				extrinsicId,
+				blockNumber: result.blockNumber,
+				createEvent: formatEventData(createEvent.event),
+			},
+		},
+		"receive result"
+	);
 });

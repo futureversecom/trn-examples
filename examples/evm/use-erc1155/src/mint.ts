@@ -1,46 +1,54 @@
-import { getERC1155Precompile } from "@trne/utils/getERC1155PrecompileContract";
-import assert from "assert";
-import { cleanEnv, str } from "envalid";
-import { ethers } from "ethers";
+import { ERC1155_PRECOMPILE_ABI } from "@therootnetwork/evm";
+import { filterTransactionEvents } from "@trne/utils/filterTransactionEvents";
+import { getERC1155Contract } from "@trne/utils/getERC1155Contract";
+import { withEthersProvider } from "@trne/utils/withEthersProvider";
+import { ContractReceipt } from "ethers";
 
-const env = cleanEnv(process.env, {
-	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
-});
+const COLLECTION_ID = 269412;
+const TOKEN_ID = 1;
 
-const COLLECTION_ID = null; // If user knows the collection id, can pass collection over erc1155PrecompileAddress
-const erc1155PrecompileAddress = "0xbbbbbBbb00000864000000000000000000000000";
+/**
+ * Use `TRN1155.mint` call to mint new tokens.
+ *
+ * Assumes the caller has XRP to pay for gas.
+ */
+withEthersProvider("porcini", async (provider, wallet, logger) => {
+	const erc1155 = getERC1155Contract(COLLECTION_ID).connect(wallet);
+	const tokenOwner = wallet.address;
+	const tokenId = TOKEN_ID;
+	const amount = 10;
 
-export async function main() {
-	const { erc1155Precompile, wallet } = getERC1155Precompile(
-		env.CALLER_PRIVATE_KEY,
-		erc1155PrecompileAddress,
-		COLLECTION_ID
+	logger.info(
+		{
+			parameters: {
+				contractAddress: erc1155.address,
+				tokenOwner,
+				tokenId,
+				amount,
+			},
+		},
+		`create "mint" call`
 	);
 
-	const tokenName = ethers.utils.hexlify(ethers.utils.toUtf8Bytes("MyToken"));
-	const maxIssuance = 0;
-	const initialIssuance = 100;
-	const tx = await erc1155Precompile
-		.connect(wallet)
-		.createToken(tokenName, initialIssuance, maxIssuance, wallet.address);
-	let receipt = await tx.wait();
+	logger.info(`dispatch transaction from wallet=${wallet.address}`);
+	const tx = await erc1155.mint(tokenOwner, tokenId, amount);
+	const receipt = (await tx.wait()) as unknown as ContractReceipt;
 
-	let event = (receipt?.events as any)[0].event;
-	const serialNumber = (receipt?.events as any)[0].args.serialNumber;
-	assert(event === "TokenCreated", `Incorrect event when token created ${event}`);
-	assert(serialNumber >= 0, `Incorrect serial number when token created ${serialNumber}`);
-	const quantity = 105;
-	//
-	const mintTx = await erc1155Precompile.connect(wallet).mint(wallet.address, 0, quantity);
-	receipt = await mintTx.wait();
+	const [transferEvent] = filterTransactionEvents(ERC1155_PRECOMPILE_ABI, receipt.logs, [
+		"TransferSingle",
+	]);
 
-	event = (receipt?.events as any)[0].event;
-	const { from, to, value } = (receipt?.events as any)[0].args;
-	console.log("quantity minted::", value.toString());
-	assert(event === "TransferSingle", `Incorrect event ${event}`);
-	assert(from === "0x0000000000000000000000000000000000000000", `Incorrect from field ${from}`);
-	assert(to === wallet.address, `Incorrect to field ${to}`);
-	assert(value.toNumber() >= 0, `Incorrect to quantity ${value.toString()}`);
-}
-
-main();
+	logger.info(
+		{
+			result: {
+				transactionHash: receipt.transactionHash,
+				blockNumber: receipt.blockNumber,
+				transferEvent: {
+					name: transferEvent.name,
+					args: transferEvent.args,
+				},
+			},
+		},
+		"receive result"
+	);
+});

@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "install": "forge install --no-commit",
     "test": "forge test",
     "clean": "forge clean",
-    "forge-create": "./script/use-forge-create.sh",
-    "forge-script": "./script/use-forge-script.sh"
+    "forge:install": "forge install foundry-rs/forge-std --no-commit --shallow",
+    "forge:create": "./script/use-forge-create.sh",
+    "forge:script": "./script/use-forge-script.sh",
+    "forge:test": "forge test"
   }
 }
