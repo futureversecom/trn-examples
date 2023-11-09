@@ -37,4 +37,7 @@ pnpm call:transfer
 # enable public minting
 pnpm call:enablePublicMint
 
+# public minting
+pnpm call:publicMint
+
 ```
