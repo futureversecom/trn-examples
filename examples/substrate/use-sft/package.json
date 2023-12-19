@@ -6,6 +6,8 @@
     "call:createToken": "pnpm call src/createToken.ts",
     "call:updateToken": "pnpm call src/updateToken.ts",
     "call:mint": "pnpm call src/mint.ts",
-    "call:transfer": "pnpm call src/transfer.ts"
+    "call:transfer": "pnpm call src/transfer.ts",
+    "call:enablePublicMint": "pnpm call src/enablePublicMint.ts",
+    "call:publicMint": "pnpm call src/publicMint.ts"
   }
 }
