@@ -14,7 +14,7 @@ const env = cleanEnv(process.env, {
 const pe = new PrettyError();
 
 export async function withChainApi(
-	network: NetworkName | "local",
+	network: NetworkName | "local" | `ws${string}`,
 	callback: (api: ApiPromise, signer: Signer, logger: Logger) => Promise<void>
 ) {
 	const logger = getLogger();
