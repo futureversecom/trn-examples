@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:createMultisigWallet": "pnpm call src/createMultisigWallet.ts",
+    "call:proxyExtrinsic": "pnpm call src/proxyExtrinsic.ts",
+    "call:signByOtherWallet": "pnpm call src/signByOtherWallet.ts"
+  }
+}
