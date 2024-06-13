@@ -154,7 +154,11 @@ importers:
 
   examples/substrate/use-futurepass: {}
 
+  examples/substrate/use-futurepass-multisig: {}
+
   examples/substrate/use-marketplace: {}
+
+  examples/substrate/use-multisig: {}
 
   examples/substrate/use-nft: {}
 
