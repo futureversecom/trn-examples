@@ -5,9 +5,9 @@
 > [!IMPORTANT]
 > Ensure the following ENV vars are available before running the examples
 >
-> - `CALLER_1_PRIVATE_KEY` - Private key of an account #1 that submits the multisig transaction.
-> - `CALLER_2_PRIVATE_KEY` - Private key of an account #2 that submits the multisig transaction.
-> - `CALLER_3_PRIVATE_KEY` - Private key of an account #3 that submits the multisig transaction.
+> - `CALLER_1_PRIVATE_KEY` - Private key of account #1 that submits the multisig transaction.
+> - `CALLER_2_PRIVATE_KEY` - Private key of account #2 that submits the multisig transaction.
+> - `CALLER_3_PRIVATE_KEY` - Private key of account #3 that submits the multisig transaction.
 
 > Follow this guide to [create and fund an account with some test tokens](../../GUIDES.md) on Porcini (testnet) if you don't have one yet.
 
