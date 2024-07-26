@@ -31,4 +31,7 @@ pnpm call:callProxyExtrinsic
 # `feeProxy.callWithFeePreferences` that wraps around `futurepass.proxyExtrinsic` then `emv.call`
 pnpm call:callProxyExtrinsicEVMCall
 
+# `feeProxy.callWithFeePreferences` that wraps around `xrplBridge.withdrawXrp`
+pnpm call:callXRPLBridgeWithdraw
+
 ```
