@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:transfer": "pnpm call src/transfer.ts",
+    "call:toTRNAddress": "pnpm call src/convertToTRNAddress.ts",
+    "call:toRippleAddress": "pnpm call src/convertToRippleAddress.ts",
+    "call:trustline": "pnpm call src/trustline.ts"
+  }
+}
