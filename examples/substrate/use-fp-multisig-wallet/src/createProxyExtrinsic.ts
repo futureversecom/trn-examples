@@ -24,7 +24,6 @@ withChainApi("porcini", async (api, caller, logger) => {
 	console.log("signatoryList::", signatoryList);
 	const threshold = signatoryList.length;
 	const maybeTimepoint = null;
-	const storeCall = false;
 	const maxWeight = 0;
 
 	const multiSigCall = await api.tx.multisig.asMulti(
@@ -32,7 +31,6 @@ withChainApi("porcini", async (api, caller, logger) => {
 		signatoryList,
 		maybeTimepoint,
 		encodedCallData,
-		storeCall,
 		maxWeight
 	);
 	const proxyExtrinsic = await api.tx.futurepass.proxyExtrinsic(fpassAccount, multiSigCall);

@@ -25,7 +25,6 @@ withChainApi("porcini", async (api, caller, logger) => {
 	const multiSigWallet = "0xe944FAd69B79125706D2481f58b66fcDbED358d7";
 	console.log("signatoryList::", signatoryList);
 	const threshold = signatoryList.length;
-	const storeCall = false;
 	let timepoint = {};
 	const allEntries = await api.query.multisig.multisigs.entries(multiSigWallet);
 	allEntries.forEach(
@@ -40,14 +39,14 @@ withChainApi("porcini", async (api, caller, logger) => {
 		}
 	);
 	const maybeTimepoint = api.registry.createType("Option<Timepoint>", timepoint);
-	const maxWeight = 882400098;
+	const proofSize = 882400098;
 	console.log("maybeTimepointData::", maybeTimepoint.toHuman());
+	const maxWeight = api.registry.createType("SpWeightsWeightV2Weight", {refTime: 646755879000, proofSize });
 	const multiSigCall = await api.tx.multisig.asMulti(
 		threshold,
 		signatoryList,
 		maybeTimepoint,
 		encodedCallData,
-		storeCall,
 		maxWeight
 	);
 
