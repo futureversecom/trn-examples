@@ -8,7 +8,7 @@ export const command = "createMultiSigWallet";
 export const desc = "Create a multisig wallet from given addresses";
 
 // Create a multisig wallet from given addresses"
-withChainApi("porcini", async (api, ) => {
+withChainApi("porcini", async (api) => {
 	const genesisHash = api.genesisHash;
 	const signatoryList = [
 		"0xFFfFffFF000000000000000000000000000003CD",

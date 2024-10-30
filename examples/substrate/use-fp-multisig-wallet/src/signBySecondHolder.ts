@@ -41,7 +41,10 @@ withChainApi("porcini", async (api, caller, logger) => {
 	const maybeTimepoint = api.registry.createType("Option<Timepoint>", timepoint);
 	const proofSize = 882400098;
 	console.log("maybeTimepointData::", maybeTimepoint.toHuman());
-	const maxWeight = api.registry.createType("SpWeightsWeightV2Weight", {refTime: 646755879000, proofSize });
+	const maxWeight = api.registry.createType("SpWeightsWeightV2Weight", {
+		refTime: 646755879000,
+		proofSize,
+	});
 	const multiSigCall = await api.tx.multisig.asMulti(
 		threshold,
 		signatoryList,
