@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -80,10 +80,6 @@ importers:
 
   examples/evm/use-forge: {}
 
-  examples/evm/use-forge/lib/forge-std: {}
-
-  examples/evm/use-forge/lib/forge-std/lib/ds-test: {}
-
   examples/evm/use-futurepass: {}
 
   examples/evm/use-hardhat:
@@ -148,6 +144,8 @@ importers:
   examples/substrate/use-dex: {}
 
   examples/substrate/use-feeProxy: {}
+
+  examples/substrate/use-fp-multisig-wallet: {}
 
   examples/substrate/use-futurepass: {}
 
@@ -3990,6 +3988,7 @@ packages:
 
   /glob@7.1.7:
     resolution: {integrity: sha512-OvD9ENzPLbegENnYP5UUfJIirTg4+XwMWGaQfQTY0JenxNvvIKP3U3/tAQSPIu/lHxXYSZmpXlUHeqAIdKzBLQ==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
