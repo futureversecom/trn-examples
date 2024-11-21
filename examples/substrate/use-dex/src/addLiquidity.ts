@@ -1,13 +1,23 @@
-import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { formatEventData } from "@trne/utils/formatEventData";
+import {
+	createDispatcher,
+	filterExtrinsicEvents,
+	nativeWalletSigner,
+} from "@therootnetwork/extrinsic";
+import { createKeyring } from "@trne/utils/createKeyring";
 import { ASTO_ASSET_ID, XRP_ASSET_ID } from "@trne/utils/porcini-assets";
-import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
-import { withChainApi } from "@trne/utils/withChainApi";
+import { withChainContext } from "@trne/utils/withChainContext";
+import { cleanEnv, str } from "envalid";
+import assert from "node:assert";
 
 interface Liquidity {
 	0: number;
 	1: number;
 }
+
+const { CHAIN_ENDPOINT, CALLER_PRIVATE_KEY } = cleanEnv(process.env, {
+	CHAIN_ENDPOINT: str({ default: "porcini" }),
+	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
+});
 
 /**
  * Use `dex.addLiquidity` to add more liquidity for existing pair [XRP, ASTO], following the
@@ -15,7 +25,15 @@ interface Liquidity {
  *
  * Assumes caller has ASTO for liquidity and XRP for both gas and liquidity.
  */
-withChainApi("porcini", async (api, caller, logger) => {
+withChainContext(CHAIN_ENDPOINT, async (api, logger) => {
+	const caller = createKeyring(CALLER_PRIVATE_KEY);
+	const { estimate, signAndSend } = createDispatcher(
+		api,
+		caller.address,
+		[],
+		nativeWalletSigner(caller)
+	);
+
 	const tokenA = XRP_ASSET_ID;
 	const tokenB = ASTO_ASSET_ID;
 
@@ -56,18 +74,29 @@ withChainApi("porcini", async (api, caller, logger) => {
 		null // deadline
 	);
 
-	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
-	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
-	const [addEvent] = filterExtrinsicEvents(result.events, ["Dex.AddLiquidity"]);
+	const feeResult = await estimate(extrinsic);
+	assert(feeResult.ok, (feeResult.value as Error).message);
+	logger.info(
+		{ parameters: { caller: caller.address, fee: feeResult.ok ? feeResult.value : undefined } },
+		`dispatch extrinsic`
+	);
+
+	const result = await signAndSend(extrinsic, (status) => {
+		logger.debug(status);
+	});
+	assert(result.ok, (result.value as Error).message);
+
+	const { id, events } = result.value;
+	const [transferEvent] = filterExtrinsicEvents(events, ["dex.AddLiquidity"]);
+	assert(transferEvent);
 
 	logger.info(
 		{
 			result: {
-				extrinsicId,
-				blockNumber: result.blockNumber,
-				addEvent: formatEventData(addEvent.event),
+				extrinsicId: id,
+				transferEvent,
 			},
 		},
-		"receive result"
+		"dispatch result"
 	);
 });

@@ -1,27 +1,42 @@
-import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { formatEventData } from "@trne/utils/formatEventData";
+import {
+	createDispatcher,
+	filterExtrinsicEvents,
+	nativeWalletSigner,
+} from "@therootnetwork/extrinsic";
+import { createKeyring } from "@trne/utils/createKeyring";
 import { ASTO_ASSET_ID, XRP_ASSET_ID } from "@trne/utils/porcini-assets";
-import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
-import { withChainApi } from "@trne/utils/withChainApi";
+import { withChainContext } from "@trne/utils/withChainContext";
+import { cleanEnv, str } from "envalid";
 import assert from "node:assert";
 
 interface LiquidityToken {
 	Ok: number;
 }
 
+const { CHAIN_ENDPOINT, CALLER_PRIVATE_KEY } = cleanEnv(process.env, {
+	CHAIN_ENDPOINT: str({ default: "porcini" }),
+	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
+});
+
 /**
  * Use `dex.removeLiquidity` to remove your own liqidity from the pair [XRP, ASTO]
  *
  * Assumes caller liquidity of the pair and XRP to pay gas.
  */
-withChainApi("porcini", async (api, caller, logger) => {
+withChainContext(CHAIN_ENDPOINT, async (api, logger) => {
+	const caller = createKeyring(CALLER_PRIVATE_KEY);
+	const { estimate, signAndSend } = createDispatcher(
+		api,
+		caller.address,
+		[],
+		nativeWalletSigner(caller)
+	);
+
 	const tokenA = XRP_ASSET_ID;
 	const tokenB = ASTO_ASSET_ID;
-
 	const lpAssetId = (await api.rpc.dex.getLPTokenID(tokenA, tokenB)) as unknown as LiquidityToken;
 	const liquidity = await api.query.assets.account(lpAssetId.Ok, caller.address);
 	assert(liquidity.isSome);
-
 	logger.info(
 		{
 			liquidityBalance: {
@@ -31,10 +46,8 @@ withChainApi("porcini", async (api, caller, logger) => {
 		},
 		`${caller.address} liquidity balance`
 	);
-
 	const amountAMin = 0;
 	const amountBMin = 0;
-
 	logger.info(
 		{
 			parameters: {
@@ -45,7 +58,7 @@ withChainApi("porcini", async (api, caller, logger) => {
 				amountBMin,
 			},
 		},
-		`create a "futurepass.proxyExtrinsic" extrinsic`
+		`create a "dex.removeLiquidity" extrinsic`
 	);
 	const extrinsic = api.tx.dex.removeLiquidity(
 		tokenA,
@@ -57,17 +70,29 @@ withChainApi("porcini", async (api, caller, logger) => {
 		null // deadline
 	);
 
-	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
-	const [removeEvent] = filterExtrinsicEvents(result.events, ["Dex.RemoveLiquidity"]);
+	const feeResult = await estimate(extrinsic);
+	assert(feeResult.ok, (feeResult.value as Error).message);
+	logger.info(
+		{ parameters: { caller: caller.address, fee: feeResult.ok ? feeResult.value : undefined } },
+		`dispatch extrinsic`
+	);
+
+	const result = await signAndSend(extrinsic, (status) => {
+		logger.debug(status);
+	});
+	assert(result.ok, (result.value as Error).message);
+
+	const { id, events } = result.value;
+	const [transferEvent] = filterExtrinsicEvents(events, ["dex.RemoveLiquidity"]);
+	assert(transferEvent);
 
 	logger.info(
 		{
 			result: {
-				extrinsicId,
-				blockNumber: result.blockNumber,
-				removeEvent: formatEventData(removeEvent.event),
+				extrinsicId: id,
+				transferEvent,
 			},
 		},
-		"receive result"
+		"dispatch result"
 	);
 });

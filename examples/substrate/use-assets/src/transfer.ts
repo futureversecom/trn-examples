@@ -1,10 +1,33 @@
-import { filterExtrinsicEvents } from "@trne/utils/filterExtrinsicEvents";
-import { formatEventData } from "@trne/utils/formatEventData";
+import {
+	createDispatcher,
+	filterExtrinsicEvents,
+	nativeWalletSigner,
+} from "@therootnetwork/extrinsic";
+import { createKeyring } from "@trne/utils/createKeyring";
 import { ASTO_ASSET_ID } from "@trne/utils/porcini-assets";
-import { sendExtrinsic } from "@trne/utils/sendExtrinsic";
-import { withChainApi } from "@trne/utils/withChainApi";
+import { withChainContext } from "@trne/utils/withChainContext";
+import { cleanEnv, str } from "envalid";
+import assert from "node:assert";
 
-withChainApi("porcini", async (api, caller, logger) => {
+const { CHAIN_ENDPOINT, CALLER_PRIVATE_KEY } = cleanEnv(process.env, {
+	CHAIN_ENDPOINT: str({ default: "porcini" }),
+	CALLER_PRIVATE_KEY: str(), // private key of extrinsic caller
+});
+
+/**
+ * Use `assets.transfer` to transfer 0.1 ASTO from caller address to itself
+ *
+ * Assumes caller has ASTO and XRP for transfer and gas.
+ */
+withChainContext(CHAIN_ENDPOINT, async (api, logger) => {
+	const caller = createKeyring(CALLER_PRIVATE_KEY);
+	const { estimate, signAndSend } = createDispatcher(
+		api,
+		caller.address,
+		[],
+		nativeWalletSigner(caller)
+	);
+
 	const assetId = ASTO_ASSET_ID;
 	const target = caller.address;
 	const amount = 0.1 * Math.pow(10, 18); // 0.1 ASTO
@@ -19,20 +42,30 @@ withChainApi("porcini", async (api, caller, logger) => {
 		},
 		`create a "assets.transfer" extrinsic`
 	);
-	const extrinsic = api.tx.assets.transfer(assetId, target, amount.toString());
+	const extrinsic = api.tx.asset.transfer(assetId, target, amount.toString());
+	const feeResult = await estimate(extrinsic);
+	assert(feeResult.ok, (feeResult.value as Error).message);
+	logger.info(
+		{ parameters: { caller: caller.address, fee: feeResult.ok ? feeResult.value : undefined } },
+		`dispatch extrinsic`
+	);
 
-	logger.info(`dispatch extrinsic from caller="${caller.address}"`);
-	const { result, extrinsicId } = await sendExtrinsic(extrinsic, caller, { log: logger });
-	const [transferEvent] = filterExtrinsicEvents(result.events, ["Assets.Transferred"]);
+	const result = await signAndSend(extrinsic, (status) => {
+		logger.debug(status);
+	});
+	assert(result.ok, (result.value as Error).message);
+
+	const { id, events } = result.value;
+	const [transferEvent] = filterExtrinsicEvents(events, ["assets.Transferred"]);
+	assert(transferEvent);
 
 	logger.info(
 		{
 			result: {
-				extrinsicId,
-				blockNumber: result.blockNumber,
-				transferEvent: formatEventData(transferEvent.event),
+				extrinsicId: id,
+				transferEvent,
 			},
 		},
-		"receive result"
+		"dispatch result"
 	);
 });

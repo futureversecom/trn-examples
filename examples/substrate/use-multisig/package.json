@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "call": "tsx --tsconfig ../../../tsconfig.json",
+    "call:callSystemRemark": "pnpm call src/callSystemRemark.ts"
+  }
+}
