@@ -40,12 +40,14 @@ export async function sendExtrinsic(
 				const { status, dispatchError, txHash, txIndex, blockNumber } =
 					result as SubmittableResultValue;
 				log?.info(`extrinsic status="${status.type}"`);
-				if (!status.isFinalized) return;
+				if (!status.isInBlock && !status.isFinalized) return;
 				if (!txIndex || !blockNumber) return;
 
 				if (!dispatchError) {
 					unsubscribe?.();
-					const blockHash = status.asFinalized.toString();
+					const blockHash: status.isFinalized
+							? status.asFinalized.toString()
+							: status.asInBlock.toString(),
 					const height = blockNumber.toString().padStart(10, "0");
 					const index = txIndex.toString().padStart(6, "0");
 					const hash = blockHash.slice(2, 7);
